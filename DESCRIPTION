@@ -1,0 +1,25 @@
+Package: ADtools
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Chun Fung Kwok
+Maintainer: Chun Fung Kwok <kcf.jackson@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+Suggests: testthat
+Depends: methods
+Imports: purrr,
+    Matrix
+Collate: 
+    'ADtools.R'
+    'class_matrix_list_def.R'
+    'class_dual_def.R'
+    'class_dual.R'
+    'class_matrix_list.R'
+    'initialise_derivative.R'
+    'matrix_calculus.R'
+    'special_matrix.R'
