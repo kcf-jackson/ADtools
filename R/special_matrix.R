@@ -13,3 +13,28 @@ elimination_matrix <- function(n) {
     cbind(tgt = 1:(0.5*n*(n+1)))
   Matrix::sparseMatrix(entries[,"tgt"], entries[,"src"], x = 1)
 }
+
+zero_matrix <- function(nr, nc) {
+  Matrix::Matrix(data = 0, nrow = nr, ncol = nc)
+}
+
+memoize <- function(f) {
+  table0 <- list()
+  char_hash <- function(...) {
+    paste0(as.character(list(...)), collapse = ",")
+  }
+  function(...) {
+    char_x <- char_hash(...)
+    res <- table0[[char_x]]
+    if (is.null(res)) {
+      res <- f(...)
+      table0[[char_x]] <<- res
+    }
+    return(res)
+  }
+}
+
+memo_zero_matrix <- memoize(zero_matrix)
+memo_Diagonal <- memoize(Matrix::Diagonal)
+memo_commutation_matrix <- memoize(commutation_matrix)
+memo_elimination_matrix <- memoize(elimination_matrix)
