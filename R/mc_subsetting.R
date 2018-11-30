@@ -6,11 +6,11 @@ subset_fun <- function(x, i, j, drop = F) {
   new("dual",
       x = parent_of(x)[i, j, drop = drop],
       dx = d_subset(x, i, j),
-      param = x@param)
+      param = param_of(x))
 }
-setMethod("[", signature(x = "dual", i = "numeric", j = "missing", drop = "logical"), subset_fun)
-setMethod("[", signature(x = "dual", i = "missing", j = "numeric", drop = "logical"), subset_fun)
-setMethod("[", signature(x = "dual", i = "numeric", j = "numeric", drop = "logical"), subset_fun)
+setMethod("[", signature(x = "dual", i = "numeric", j = "missing"), subset_fun)
+setMethod("[", signature(x = "dual", i = "missing", j = "numeric"), subset_fun)
+setMethod("[", signature(x = "dual", i = "numeric", j = "numeric"), subset_fun)
 
 
 #' Return the First or Last Part of an Object

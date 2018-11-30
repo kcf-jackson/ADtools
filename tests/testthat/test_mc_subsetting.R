@@ -3,11 +3,54 @@ testthat::context("Test subsetting a dual number")
 
 check_len <- function(x, n) { testthat::expect_equal(length(x), n) }
 check_dim <- function(x, n) { testthat::expect_equal(dim(x), n) }
+check_mat_eq <- function(A, B) { testthat::expect_true(all(A == B)) }
 A <- randn(5, 5)
 A_dual <- dual(A, param_dim = c(length(A), 20), 1)
 
 
-testthat::test_that("head", {
+testthat::test_that("Test subsetting X[i, ]", {
+  for (s in 1:5) {
+    ha <- A_dual[s, , drop = F]
+    check_dim(parent_of(ha), c(1, ncol(A)))
+    check_dim(deriv_of(ha), c(ncol(A), length(A) + 20))
+    check_mat_eq(A[s, , drop = F], parent_of(ha))
+  }
+  s <- c(1, 3)
+  ha <- A_dual[s, , drop = F]
+  check_dim(parent_of(ha), c(length(s), ncol(A)))
+  check_dim(deriv_of(ha), c(length(s) * ncol(A), length(A) + 20))
+  check_mat_eq(A[s, , drop = F], parent_of(ha))
+})
+
+
+testthat::test_that("Test subsetting X[, j]", {
+  for (s in 1:5) {
+    ha <- A_dual[, s, drop = F]
+    check_dim(parent_of(ha), c(nrow(A), 1))
+    check_dim(deriv_of(ha), c(nrow(A), length(A) + 20))
+    check_mat_eq(A[, s, drop = F], parent_of(ha))
+  }
+  s <- c(1, 3)
+  ha <- A_dual[, s, drop = F]
+  check_dim(parent_of(ha), c(nrow(A), length(s)))
+  check_dim(deriv_of(ha), c(nrow(A) * length(s), length(A) + 20))
+  check_mat_eq(A[, s, drop = F], parent_of(ha))
+})
+
+
+testthat::test_that("Test subsetting X[i,j]", {
+  for (m in 1:5) {
+    for (n in 1:5) {
+      ha <- A_dual[m, n, drop = F]
+      check_dim(parent_of(ha), c(1,1))
+      check_dim(deriv_of(ha), c(1, length(A) + 20))
+      check_mat_eq(A[m, n, drop = F], parent_of(ha))
+    }
+  }
+})
+
+
+testthat::test_that("Test head", {
   for (s in 1:5) {
     ha <- head(A_dual, s)
     check_dim(parent_of(ha), c(s, ncol(A)))
@@ -17,7 +60,7 @@ testthat::test_that("head", {
 })
 
 
-testthat::test_that("tail", {
+testthat::test_that("Test tail", {
   for (s in 1:5) {
     ta <- tail(A_dual, s)
     check_dim(parent_of(ta), c(s, ncol(A)))
