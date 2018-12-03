@@ -12,7 +12,7 @@ This class attaches a dual component to a number / an array.
 \describe{
 \item{\code{x}}{Any "numeric", i.e. vector, matrix or array.}
 
-\item{\code{dx}}{0 or class "matrix_list", see \link{matrix-list-class} for more detail.}
+\item{\code{dx}}{matrix; also accepts any matrix classes from the "Matrix" package.}
 }}
 
 \examples{
