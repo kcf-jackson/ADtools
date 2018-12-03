@@ -20,7 +20,11 @@ setMethod("head",
   signature(x = "dual"),
   function(x, n = 6) {
     px <- parent_of(x)
-    if (is.vector(px)) return(x[seq(n)])
+    if (is.vector(px)) {
+      n <- max(length(x), n)
+      return(x[seq(n)])
+    }
+    n <- max(nrow(x), n)
     x[seq(n), , drop = F]
   }
 )
@@ -35,10 +39,12 @@ setMethod("tail",
     px <- parent_of(x)
     if (is.vector(px)) {
       L <- length(px)
+      n <- min(L, n)
       ind <- L - max(n-1, 0):0
       return(x[ind])
     }
     L <- nrow(px)
+    n <- min(L, n)
     ind <- L - max(n-1, 0):0
     x[ind, , drop = F]
   }
