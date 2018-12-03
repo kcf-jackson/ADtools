@@ -1,4 +1,5 @@
 testthat::context("Test subsetting a dual number")
+library(Matrix)
 
 
 check_len <- function(x, n) { testthat::expect_equal(length(x), n) }
