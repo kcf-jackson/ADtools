@@ -2,5 +2,7 @@
 "_PACKAGE"
 
 # Suppress R CMD check note
-#' @importFrom stats rnorm
-NULL
+#' @importFrom stats rnorm setNames
+#' @importFrom utils head
+#' @importFrom magrittr %>%
+utils::globalVariables(c("Var1", "Var2", "."))
