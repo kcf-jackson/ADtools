@@ -3,7 +3,7 @@ setMethod("diag",
           signature(x = "dual"),
           function(x) {
             x@dx = d_diagonal(x)
-            x@x = diag(parent_of(x))
+            x@x = Diagonal0(parent_of(x))
             x
           }
 )
@@ -12,8 +12,8 @@ setMethod("diag",
 #' Vectorisation
 #' @param x A matrix.
 #' @export
-vec <- function(x) { 
-  as.matrix(as.numeric(x)) 
+vec <- function(x) {
+  as.matrix(as.numeric(x))
 }
 
 

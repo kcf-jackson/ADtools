@@ -70,7 +70,7 @@ d_diagonal <- function(x) {
 
   if (is.matrix(m0)) {
     diag_ind <- seq(1, length(m0), nrow(m0) + 1)
-    return(dx[diag_ind, ])
+    return(dx[diag_ind, , drop = F])
   }
 
   if (is.vector(m0)) {

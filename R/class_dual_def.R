@@ -3,23 +3,23 @@
 #-------------------------------------------------------------------------
 setClassUnion("array_or_numeric", c("array", "numeric"))
 
+is_matrix <- function(x) {
+  (attr(class(x), "package") == "Matrix") || class(x) == "matrix"
+}
+
 check_dual <- function(object) {
   x <- object@x
   dx <- object@dx
-  x_check <- is.array(x) || is.numeric(x)
-
-  dx_class_check <- attr(class(dx), "package") == "Matrix"
-  dx_class_check_2 <- class(dx) == "matrix"
-
+  # x_check <- is.array(x) || is.numeric(x)
   dx_check <- nrow(dx) == length(x)   # match dimension
-  x_check && (dx_class_check || dx_class_check_2) && dx_check
+  is_matrix(x) && is_matrix(dx) && dx_check
 }
 
 
 #' S4 class "dual"
 #'
 #' @description This class attaches a dual component to a number / an array.
-#' @slot x Any "numeric", i.e. vector, matrix or array.
+#' @slot x Numeric matrix.
 #' @slot dx matrix; also accepts any matrix classes from the "Matrix" package.
 #' @import methods
 #' @examples
@@ -28,7 +28,7 @@ check_dual <- function(object) {
 setClass(
   "dual",
   representation(
-    x = "array_or_numeric",
+    x = "ANY",
     dx = "ANY",
     param = "list"
   ),

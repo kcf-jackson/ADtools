@@ -19,13 +19,22 @@ setMethod("[", signature(x = "dual", i = "numeric", j = "numeric"), subset_fun)
 setMethod("head",
   signature(x = "dual"),
   function(x, n = 6) {
+    assertthat::assert_that(length(n) == 1)
+
     px <- parent_of(x)
-    if (is.vector(px)) {
-      n <- max(length(x), n)
-      return(x[seq(n)])
-    }
-    n <- max(nrow(x), n)
-    x[seq(n), , drop = F]
+    # if (is.vector(px)) {
+    #   L <- length(px)
+    #   assertthat::assert_that((-L < n) && (n != 0))
+    #
+    #   n <- ifelse(n < 0, max(length(x) + n, 0), min(n, L))
+    #   return(x[seq_len(n)])
+    # }
+    # matrix case
+    L <- nrow(px)
+    assertthat::assert_that((-L < n) && (n != 0))
+
+    n <- ifelse(n < 0, max(L + n, 0), min(n, L))
+    x[seq_len(n), , drop = F]
   }
 )
 
@@ -36,16 +45,23 @@ setMethod("head",
 setMethod("tail",
   signature(x = "dual"),
   function(x, n = 6) {
+    assertthat::assert_that(n != 0)
+
     px <- parent_of(x)
-    if (is.vector(px)) {
-      L <- length(px)
-      n <- min(L, n)
-      ind <- L - max(n-1, 0):0
-      return(x[ind])
-    }
+    # if (is.vector(px)) {
+    #   L <- length(px)
+    #   assertthat::assert_that((-L < n) && (n != 0))
+    #
+    #   n <- ifelse(n < 0, max(L + n, 0), min(L, n))
+    #   ind <- seq.int(to = L, length.out = n)
+    #   return(x[ind])
+    # }
+    # matrix case
     L <- nrow(px)
-    n <- min(L, n)
-    ind <- L - max(n-1, 0):0
+    assertthat::assert_that((-L < n) && (n != 0))
+
+    n <- ifelse(n < 0, max(L + n, 0), min(L, n))
+    ind <- seq.int(to = L, length.out = n)
     x[ind, , drop = F]
   }
 )
