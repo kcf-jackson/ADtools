@@ -1,5 +1,4 @@
 testthat::context("Test matrix calculus")
-library(Matrix)
 
 # Helper functions
 relative_diff <- function(x, y) {
@@ -11,11 +10,40 @@ relative_diff <- function(x, y) {
 compare_FD_and_AD <- function(FD, AD, show = F) {
   rel_err <- relative_diff(FD, AD)
   if (show) {
-    print(cbind(as.numeric(FD), as.numeric(AD)))
+    print(cbind(FD = as.numeric(FD), AD = as.numeric(AD)))
     print(glue::glue("Maximum relative error over all entries: {max(rel_err)} (entry: {which.max(rel_err)})"))
   }
   max(rel_err)
 }
+
+
+test_binary_operation <- function(fun, h = 1e-8, epsilon = 1e-6) {
+	set.seed(123)
+	A <- randn(3, 3)
+	B <- randn(3, 3)
+	param <- list(A = length(A), B = length(B))
+	A_dual <- dual(A, param, 1)
+	B_dual <- dual(B, param, 2)
+
+	f1 = function(x) { fun(x, B) }
+	FD_res <- finite_diff(f1, A, h)
+	AD_res <- get_deriv(fun(A_dual, B_dual), "A")
+	testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), epsilon)
+
+	f2 = function(x) { fun(A, x) }
+	FD_res <- finite_diff(f2, B, h)
+	AD_res <- get_deriv(fun(A_dual, B_dual), "B")
+	testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), epsilon)
+}
+
+testthat::test_that("Test tcrossprod (two arguments) against finite difference", {
+  test_binary_operation(tcrossprod)
+})
+
+testthat::test_that("Test crossprod (two arguments) against finite difference", {
+  test_binary_operation(crossprod)
+})
+
 
 
 test_unary_operation <- function(f, A, h = 1e-8, epsilon = 1e-6) {

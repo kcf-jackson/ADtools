@@ -86,7 +86,7 @@ det0 <- function(x, ...) { det(x, ...) }
 #' @param x A "dual" object.
 setMethod("det0",
   signature(x = "dual"),
-  function(x, ...) {
+  function(x) {
     px <- parent_of(x)
     det_x <- det(px)
     x@x <- det_x

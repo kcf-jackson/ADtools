@@ -1,5 +1,4 @@
 testthat::context("Test matrix sum")
-library(Matrix)
 
 
 A <- randn(5, 5)
@@ -34,6 +33,9 @@ testthat::test_that("Test colSums", {
 
 
 testthat::test_that("Test matrix trace", {
+	testthat::expect_error(tr(randn(3, 5)))
+	check_len(tr(randn(3, 3)), 1)
+
 	res <- tr(A_dual)
 	check_len(parent_of(res), 1)
 	check_dim(deriv_of(res), c(1, ncol(deriv_of(A_dual))))

@@ -1,5 +1,4 @@
 testthat::context("Test scalar-dual / dual-scalar arithmetic")
-library(Matrix)
 
 # Helper functions
 relative_diff <- function(x, y) {
@@ -55,6 +54,15 @@ testthat::test_that("Test ANY - dual ; dual - ANY", {
   testthat::expect_equal(parent_of(B) - K, parent_of(B - K))
   testthat::expect_equal(deriv_of(B), deriv_of(B - K))
   testthat::expect_equal(-deriv_of(B), deriv_of(K - B))
+})
+
+testthat::test_that("Test negation of a dual number", {
+  B <- randn(3, 3)
+  B <- dual(x = B, list(B = length(B)), 1)
+  testthat::expect_equal(parent_of(-B), -parent_of(B))
+  testthat::expect_equal(-parent_of(B), parent_of(-B))
+  testthat::expect_equal(deriv_of(-B), -deriv_of(B))
+  testthat::expect_equal(-deriv_of(B), deriv_of(-B))
 })
 
 testthat::test_that("Test ANY * dual ; dual * ANY", {

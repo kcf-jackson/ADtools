@@ -7,11 +7,11 @@
 one_matrix0(...)
 }
 \arguments{
-\item{nr}{integer; number of rows.}
+\item{...}{`nr` integer; number of rows.
 
-\item{nc}{integer; number of columns.}
+`nc` integer; number of columns.
 
-\item{x}{A scalar or a vector to be placed on the diagonal of the matrix.}
+`x` A scalar or a vector to be placed on the diagonal of the matrix.}
 }
 \description{
 Matrix of ones

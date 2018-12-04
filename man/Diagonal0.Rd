@@ -7,9 +7,9 @@
 Diagonal0(...)
 }
 \arguments{
-\item{n}{integer; the dimension of the square matrix.}
+\item{...}{`n` integer; the dimension of the square matrix.
 
-\item{x}{A scalar or a vector to be placed on the diagonal of the matrix.}
+`x` A scalar or a vector to be placed on the diagonal of the matrix.}
 }
 \description{
 Diagonal matrix

@@ -10,9 +10,10 @@ is_matrix <- function(x) {
 check_dual <- function(object) {
   x <- object@x
   dx <- object@dx
-  # x_check <- is.array(x) || is.numeric(x)
+  x_check <- is.array(x) || is.numeric(x)
+  # x_check <- is_matrix(x) || (length(x) == 1)
   dx_check <- nrow(dx) == length(x)   # match dimension
-  is_matrix(x) && is_matrix(dx) && dx_check
+  x_check && is_matrix(dx) && dx_check
 }
 
 
@@ -22,13 +23,12 @@ check_dual <- function(object) {
 #' @slot x Numeric matrix.
 #' @slot dx matrix; also accepts any matrix classes from the "Matrix" package.
 #' @import methods
-#' @examples
-#' a <- new("dual", x = randn(2,2), dx = 0)
-#' b <- new("dual", x = randn(2,2), dx = init_dx(list(c(4, 1), c(4, 2)), 2))
+#' @note Users should not construct the object directly, instead, use the
+#' constructor helper `dual` provided.
 setClass(
   "dual",
   representation(
-    x = "ANY",
+    x = "array_or_numeric",
     dx = "ANY",
     param = "list"
   ),
@@ -63,6 +63,8 @@ dual <- function(x, param_dim, ind) {
     param_name <- paste0("V", seq_along(param_dim))
   }
   param_dim <- unlist(param_dim)
+
+  if (is.null(dim(x)) && length(x) > 1) x <- as.matrix(x)
   new("dual",
       x = x,
       dx = init_dx(length(x), param_dim, ind),
@@ -94,12 +96,13 @@ get_deriv <- function(x, wrt) {
 #' corresponding to x; input -1 if none.
 #'
 #' @examples
+#' \dontrun{
 #' init_dx(4, c(2,5,1), -1)
 #' init_dx(4, c(2,5,1), 1)
 #' init_dx(4, c(2,5,1), 2)
 #' init_dx(4, c(2,5,1), 3)
-#'
-#' @export
+#' }
+#' @keywords interal
 init_dx <- function(num_dim, denom_dim, num_ind) {
   deriv <- purrr::map(denom_dim, ~zero_matrix0(num_dim, .x))
   if (num_ind != -1) {

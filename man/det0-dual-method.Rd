@@ -5,7 +5,7 @@
 \alias{det0,dual-method}
 \title{Determinant of a 'dual'-class object}
 \usage{
-\S4method{det0}{dual}(x, ...)
+\S4method{det0}{dual}(x)
 }
 \arguments{
 \item{x}{A "dual" object.}

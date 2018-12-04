@@ -1,9 +1,10 @@
 #' Diagonal matrix
+#' @param x A "dual" object.
 setMethod("diag",
           signature(x = "dual"),
           function(x) {
             x@dx = d_diagonal(x)
-            x@x = Diagonal0(parent_of(x))
+            x@x = diag(parent_of(x))
             x
           }
 )
@@ -17,6 +18,8 @@ vec <- function(x) {
 }
 
 
+#' Vectorisation
+#' @param x A "dual" object.
 setMethod("vec",
           signature(x = "dual"),
           function(x) {
@@ -36,6 +39,8 @@ vech <- function(x) {
 }
 
 
+#' Half-vectorisation
+#' @param x A "dual" object.
 setMethod("vech",
           signature(x = "dual"),
           function(x) {

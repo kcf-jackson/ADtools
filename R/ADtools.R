@@ -3,6 +3,6 @@
 
 # Suppress R CMD check note
 #' @importFrom stats rnorm setNames
-#' @importFrom utils head
 #' @importFrom magrittr %>%
+#' @import Matrix
 utils::globalVariables(c("Var1", "Var2", "."))

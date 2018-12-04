@@ -10,12 +10,12 @@ This class attaches a dual component to a number / an array.
 \section{Slots}{
 
 \describe{
-\item{\code{x}}{Any "numeric", i.e. vector, matrix or array.}
+\item{\code{x}}{Numeric matrix.}
 
 \item{\code{dx}}{matrix; also accepts any matrix classes from the "Matrix" package.}
 }}
 
-\examples{
-a <- new("dual", x = randn(2,2), dx = 0)
-b <- new("dual", x = randn(2,2), dx = init_dx(list(c(4, 1), c(4, 2)), 2))
+\note{
+Users should not construct the object directly, instead, use the
+constructor helper `dual` provided.
 }

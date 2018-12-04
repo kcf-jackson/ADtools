@@ -7,9 +7,9 @@
 zero_matrix0(...)
 }
 \arguments{
-\item{nr}{integer; number of rows.}
+\item{...}{`nr` integer; number of rows.
 
-\item{nc}{integer; number of columns.}
+`nc` integer; number of columns.}
 }
 \description{
 Matrix of zeroes

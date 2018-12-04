@@ -7,9 +7,9 @@
 commutation_matrix0(...)
 }
 \arguments{
-\item{r}{integer; row dimension.}
+\item{...}{`r` integer; row dimension.
 
-\item{c}{integer; column dimension.}
+`c` integer; column dimension.}
 }
 \description{
 Commutation matrix

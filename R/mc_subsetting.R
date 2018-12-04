@@ -8,8 +8,20 @@ subset_fun <- function(x, i, j, drop = F) {
       dx = d_subset(x, i, j),
       param = param_of(x))
 }
+
+
+#' Extract parts of an object
+#' @param x A "dual" object.
+#' @param i integer; the row index.
+#' @param j integer; the column index.
+#' @param drop T or F; if T, returns a vector when one dimension of the matrix is 1.
+#' @rdname index-subset
 setMethod("[", signature(x = "dual", i = "numeric", j = "missing"), subset_fun)
+
+#' @rdname index-subset
 setMethod("[", signature(x = "dual", i = "missing", j = "numeric"), subset_fun)
+
+#' @rdname index-subset
 setMethod("[", signature(x = "dual", i = "numeric", j = "numeric"), subset_fun)
 
 

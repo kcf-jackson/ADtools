@@ -1,3 +1,5 @@
+#' Sum of matrix elements
+#' @param x A "dual" object.
 setMethod("sum",
            signature(x = "dual"),
            function(x) {
@@ -7,6 +9,8 @@ setMethod("sum",
            }
 )
 
+#' Row sum of a matrix.
+#' @param x A "dual" object.
 setMethod("rowSums",
            signature(x = "dual"),
            function(x) {
@@ -16,6 +20,8 @@ setMethod("rowSums",
            }
 )
 
+#' Column sum of a matrix.
+#' @param x A "dual" object.
 setMethod("colSums",
            signature(x = "dual"),
            function(x) {
@@ -33,6 +39,8 @@ tr <- function(x) {
   sum(diag(x))
 }
 
+#' Trace of a matrix
+#' @param x A "dual" object.
 setMethod("tr",
            signature(x = "dual"),
            function(x) { sum(diag(x)) }

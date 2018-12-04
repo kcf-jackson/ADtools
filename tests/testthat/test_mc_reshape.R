@@ -1,5 +1,4 @@
 testthat::context("Test reshaping dual numbers")
-library(Matrix)
 
 
 A <- randn(5, 5)
@@ -13,9 +12,16 @@ check_eq <- function(x, y) { testthat::expect_true(all(x == y)) }
 
 
 testthat::test_that("Test vectorisation and half-vectorisation", {
+  # vec operator
+  check_len(vec(A), length(A))  # basic check
+
   res <- vec(A_dual)
   check_dim(parent_of(res), c(length(A), 1))
   check_eq(parent_of(res)[2], A[2,1])
+
+  # vech operator
+  check_len(vech(A), sum(upper.tri(A, diag = T)))  # basic check
+  testthat::expect_error(vech(randn(3, 5)))        # basic check
 
   res <- vech(A_dual)
   check_dim(parent_of(res), c(0.5 * nrow(A) * (nrow(A) + 1), 1))

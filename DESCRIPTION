@@ -10,12 +10,14 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
-Suggests: testthat
-Depends: methods
+Suggests:
+    testthat,
+    covr
+Depends: methods, Matrix
 Imports: purrr,
-    Matrix,
     dplyr,
-    magrittr
+    magrittr,
+    assertthat
 Collate:
     'ADtools.R'
     'class_dual_def.R'
@@ -34,4 +36,5 @@ Collate:
     'mc_rv_simulation.R'
     'mc_subsetting.R'
     'mc_sum.R'
+    'set_generic.R'
     'utils.R'

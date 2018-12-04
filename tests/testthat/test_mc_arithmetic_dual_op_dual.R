@@ -1,5 +1,4 @@
 testthat::context("Test dual-dual arithmetic")
-library(Matrix)
 
 # Helper functions
 relative_diff <- function(x, y) {

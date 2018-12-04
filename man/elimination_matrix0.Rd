@@ -7,7 +7,7 @@
 elimination_matrix0(...)
 }
 \arguments{
-\item{n}{integer, row or column dimension.}
+\item{...}{`n` integer, row or column dimension.}
 }
 \description{
 Elimination matrix
