@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.4.9999
+Version: 0.1.5.9999
 Author: Chun Fung Kwok
 Maintainer: Chun Fung Kwok <kcf.jackson@gmail.com>
 Description: More about what it does (maybe more than one line)
@@ -31,6 +31,7 @@ Collate:
     'mc_arithmetic_dual_op_dual.R'
     'mc_binding.R'
     'mc_generic.R'
+    'mc_math.R'
     'mc_matrix_ops.R'
     'mc_reshape.R'
     'mc_rv_simulation.R'

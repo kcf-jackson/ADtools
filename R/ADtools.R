@@ -2,7 +2,7 @@
 "_PACKAGE"
 
 # Suppress R CMD check note
-#' @importFrom stats rnorm setNames
+#' @importFrom stats rnorm setNames dgamma integrate pgamma rgamma
 #' @importFrom magrittr %>%
 #' @import Matrix
 utils::globalVariables(c("Var1", "Var2", "."))

@@ -6,9 +6,11 @@
 \alias{rgamma0,numeric,numeric,dual-method}
 \title{Simulate gamma random variates}
 \usage{
-\S4method{rgamma0}{numeric,dual,dual_or_numeric}(n, shape, scale)
+\S4method{rgamma0}{numeric,dual,dual_or_numeric}(n, shape, scale,
+  method = "base")
 
-\S4method{rgamma0}{numeric,numeric,dual}(n, shape, scale)
+\S4method{rgamma0}{numeric,numeric,dual}(n, shape, scale,
+  method = "base")
 }
 \arguments{
 \item{n}{Positive integer; the number of samples.}
@@ -16,6 +18,9 @@
 \item{shape}{A dual number or a scalar; the shape of the gamma distribution.}
 
 \item{scale}{A dual number or a scalar; the scale of the gamma distribution.}
+
+\item{method}{base or inv_tf; base refers to `stats::rgamma` while
+inv_tf refers to inverse transform.}
 }
 \description{
 Simulate gamma random variates

@@ -10,7 +10,7 @@ This class attaches a dual component to a number / an array.
 \section{Slots}{
 
 \describe{
-\item{\code{x}}{Numeric matrix.}
+\item{\code{x}}{scalar, vector or matrix; also accepts any matrix classes from the "Matrix" package.}
 
 \item{\code{dx}}{matrix; also accepts any matrix classes from the "Matrix" package.}
 }}

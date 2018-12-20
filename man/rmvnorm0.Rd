@@ -4,7 +4,7 @@
 \alias{rmvnorm0}
 \title{Simulate multivariate normal random variates}
 \usage{
-rmvnorm0(n, mean, sigma, ...)
+rmvnorm0(n, mean, sigma)
 }
 \arguments{
 \item{n}{Positive integer; the number of samples.}
@@ -12,8 +12,6 @@ rmvnorm0(n, mean, sigma, ...)
 \item{mean}{mean vector of the normal distribution.}
 
 \item{sigma}{covariance matrix of the normal distribution.}
-
-\item{...}{Other parameters to be passed to `mvtnorm::rmvnorm`}
 }
 \description{
 Simulate multivariate normal random variates
