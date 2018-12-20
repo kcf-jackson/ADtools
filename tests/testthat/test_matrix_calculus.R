@@ -89,7 +89,7 @@ testthat::test_that("Test d_chol against finite difference", {
   # => AD = [d vec(t(chol(A))) / d vec(A)] * [d vec(A) / d vec(t(A))]
   #       = K_nn %*% d_chol(A) %*% K_nn
   #       = K_nn %*% FD %*% K_nn
-  # The other way to look at this is that given the symmetric input A,
+  # The other way to look at this is that given the symmetric 3 x 3 input A,
   # the implmentation in AD discards entries 4, 7, 9, while the implmentation in FD
   # discards entries 2, 3, 6. Hence, there is an "extra" commutation matrix at the end
   # even though chol0 is merely t o chol.

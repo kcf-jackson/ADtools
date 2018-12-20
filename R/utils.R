@@ -6,13 +6,13 @@ randn <- function(...) {
 }
 
 
-mapreduce <- function(x, f, g) {
-  x %>% purrr::map(f) %>% purrr::reduce(g)
+mapreduce <- function(x, f, g, ...) {
+  x %>% purrr::map(f, ...) %>% purrr::reduce(g)
 }
 
 
-map2reduce <- function(x, y, f, g) {
-  purrr::reduce(purrr::map2(x, y, f), g)
+map2reduce <- function(x, y, f, g, ...) {
+  purrr::reduce(purrr::map2(x, y, f, ...), g)
 }
 
 

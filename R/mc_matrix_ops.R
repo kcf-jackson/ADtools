@@ -26,7 +26,10 @@ setMethod("t",
 setMethod("tcrossprod",
   signature(x = "dual", y = "missing"),
   function(x, y) {
-    new("dual", x = tcrossprod(parent_of(x)), dx = d_XXT(x))
+    new("dual",
+        x = tcrossprod(parent_of(x)),
+        dx = d_XXT(x),
+        param = param_of(x))
   }
 )
 
