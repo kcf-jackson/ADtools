@@ -1,27 +1,12 @@
 testthat::context("Test scalar-dual / dual-scalar arithmetic")
 
-# Helper functions
-relative_diff <- function(x, y) {
-  x <- as.numeric(x)
-  y <- as.numeric(y)
-  abs(x - y) / max(abs(x), abs(y))
-}
-
-compare_FD_and_AD <- function(FD, AD, show = F) {
-  rel_err <- relative_diff(FD, AD)
-  if (show) {
-    print(cbind(as.numeric(FD), as.numeric(AD)))
-    print(glue::glue("Maximum relative error over all entries: {max(rel_err)} (entry: {which.max(rel_err)})"))
-  }
-  max(rel_err)
-}
-
 testthat::test_that("Test ANY + dual ; dual + ANY", {
   k <- 5
   K <- randn(3, 3)
+  b <- 3
+  b <- dual(x = b, list(b = length(b), 1), ind = 1)
   B <- randn(3, 3)
-  param_dim <- list(B = length(B))
-  B <- dual(x = B, param_dim, 1)
+  B <- dual(x = B, list(B = length(B), 1), ind = 1)
 
   # scalar + dual
   testthat::expect_equal(k + parent_of(B), parent_of(k + B))
@@ -34,14 +19,44 @@ testthat::test_that("Test ANY + dual ; dual + ANY", {
   testthat::expect_equal(parent_of(B) + K, parent_of(B + K))
   testthat::expect_equal(deriv_of(B), deriv_of(B + K))
   testthat::expect_equal(deriv_of(B), deriv_of(K + B))
+
+  # scalar + dual
+  testthat::expect_equal(k + parent_of(b), parent_of(k + b))
+  testthat::expect_equal(parent_of(b) + k, parent_of(b + k))
+  testthat::expect_equal(deriv_of(b), deriv_of(b + k))
+  testthat::expect_equal(deriv_of(b), deriv_of(k + b))
+
+  # matrix + dual
+  testthat::expect_equal(K + parent_of(b), parent_of(K + b))
+  testthat::expect_equal(parent_of(b) + K, parent_of(b + K))
+  testthat::expect_equal(deriv_of(b), deriv_of(b + K)[1, , drop = F])
+  testthat::expect_equal(deriv_of(b), deriv_of(K + b)[1, , drop = F])
+
+  # Additional tests - should be consistent with dual-dual arithmetic
+  k_dual <- dual(k, list(b = length(b), 1), -1)
+  testthat::expect_equal(k + b, k_dual + b)
+  testthat::expect_equal(b + k, b + k_dual)
+
+  k_dual <- dual(k, list(B = length(B), 1), -1)
+  testthat::expect_equal(k + B, k_dual + B)
+  testthat::expect_equal(B + k, B + k_dual)
+
+  K_dual <- dual(K, list(b = length(b), 1), -1)
+  testthat::expect_equal(K + b, K_dual + b)
+  testthat::expect_equal(b + K, b + K_dual)
+
+  K_dual <- dual(K, list(B = length(B), 1), -1)
+  testthat::expect_equal(K + B, K_dual + B)
+  testthat::expect_equal(B + K, B + K_dual)
 })
 
 testthat::test_that("Test ANY - dual ; dual - ANY", {
   k <- 5
   K <- randn(3, 3)
+  b <- 3
   B <- randn(3, 3)
-  param_dim <- list(B = length(B))
-  B <- dual(x = B, param_dim, 1)
+  b <- dual(x = b, list(b = length(b)), 1)
+  B <- dual(x = B, list(B = length(B)), 1)
 
   # scalar - dual
   testthat::expect_equal(k - parent_of(B), parent_of(k - B))
@@ -54,9 +69,45 @@ testthat::test_that("Test ANY - dual ; dual - ANY", {
   testthat::expect_equal(parent_of(B) - K, parent_of(B - K))
   testthat::expect_equal(deriv_of(B), deriv_of(B - K))
   testthat::expect_equal(-deriv_of(B), deriv_of(K - B))
+
+  # scalar - dual
+  testthat::expect_equal(k - parent_of(b), parent_of(k - b))
+  testthat::expect_equal(parent_of(b) - k, parent_of(b - k))
+  testthat::expect_equal(deriv_of(b), deriv_of(b - k))
+  testthat::expect_equal(-deriv_of(b), deriv_of(k - b))
+
+  # matrix - dual
+  testthat::expect_equal(K - parent_of(b), parent_of(K - b))
+  testthat::expect_equal(parent_of(b) - K, parent_of(b - K))
+  testthat::expect_equal(deriv_of(b), deriv_of(b - K)[1, , drop = F])
+  testthat::expect_equal(-deriv_of(b), deriv_of(K - b)[1, , drop = F])
+
+  # Additional tests - should be consistent with dual-dual arithmetic
+  k_dual <- dual(k, list(b = length(b)), -1)
+  testthat::expect_equal(k - b, k_dual - b)
+  testthat::expect_equal(b - k, b - k_dual)
+
+  k_dual <- dual(k, list(B = length(B)), -1)
+  testthat::expect_equal(k - B, k_dual - B)
+  testthat::expect_equal(B - k, B - k_dual)
+
+  K_dual <- dual(K, list(b = length(b)), -1)
+  testthat::expect_equal(K - b, K_dual - b)
+  testthat::expect_equal(b - K, b - K_dual)
+
+  K_dual <- dual(K, list(B = length(B)), -1)
+  testthat::expect_equal(K - B, K_dual - B)
+  testthat::expect_equal(B - K, B - K_dual)
 })
 
 testthat::test_that("Test negation of a dual number", {
+  b <- 4
+  b <- dual(x = b, list(b = length(b)), 1)
+  testthat::expect_equal(parent_of(-b), -parent_of(b))
+  testthat::expect_equal(-parent_of(b), parent_of(-b))
+  testthat::expect_equal(deriv_of(-b), -deriv_of(b))
+  testthat::expect_equal(-deriv_of(b), deriv_of(-b))
+
   B <- randn(3, 3)
   B <- dual(x = B, list(B = length(B)), 1)
   testthat::expect_equal(parent_of(-B), -parent_of(B))
@@ -68,9 +119,10 @@ testthat::test_that("Test negation of a dual number", {
 testthat::test_that("Test ANY * dual ; dual * ANY", {
   k <- 5
   K <- randn(3, 3)
+  b <- 3
   B <- randn(3, 3)
-  param_dim <- list(B = length(B))
-  B <- dual(x = B, param_dim, 1)
+  b <- dual(x = b, list(b = length(b), other = 2), 1)
+  B <- dual(x = B, list(B = length(B), other = 2), 1)
 
   # scalar * dual
   testthat::expect_equal(k * parent_of(B), parent_of(k * B))
@@ -83,14 +135,48 @@ testthat::test_that("Test ANY * dual ; dual * ANY", {
   testthat::expect_equal(parent_of(B) * K, parent_of(B * K))
   testthat::expect_equal(deriv_of(B) * as.numeric(K), deriv_of(B * K))
   testthat::expect_equal(as.numeric(K) * deriv_of(B), deriv_of(K * B))
+
+  # scalar * dual
+  testthat::expect_equal(k * parent_of(b), parent_of(k * b))
+  testthat::expect_equal(parent_of(b) * k, parent_of(b * k))
+  testthat::expect_equal(deriv_of(b) * k, deriv_of(b * k))
+  testthat::expect_equal(k * deriv_of(b), deriv_of(k * b))
+
+  # matrix * dual
+  testthat::expect_equal(K * parent_of(b), parent_of(K * b))
+  testthat::expect_equal(parent_of(b) * K, parent_of(b * K))
+  testthat::expect_equal(as.numeric(K) %*% deriv_of(b), deriv_of(b * K))
+  testthat::expect_equal(as.numeric(K) %*% deriv_of(b), deriv_of(K * b))
+
+  # Additional tests - should be consistent with dual-dual arithmetic
+  k_dual <- dual(k, list(b = length(b), other = 2), -1)
+  testthat::expect_equal(k * b, k_dual * b)
+  testthat::expect_equal(b * k, b * k_dual)
+
+  k_dual <- dual(k, list(B = length(B), other = 2), -1)
+  testthat::expect_equal(k * B, k_dual * B)
+  testthat::expect_equal(B * k, B * k_dual)
+
+  equal_up_to_type <- function(x, y) {
+    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
+    testthat::expect_equal(type_match(x), type_match(y))
+  }
+  K_dual <- dual(K, list(b = length(b), other = 2), -1)
+  equal_up_to_type(K * b, K_dual * b)
+  equal_up_to_type(b * K, b * K_dual)
+
+  K_dual <- dual(K, list(B = length(B), other = 2), -1)
+  testthat::expect_equal(K * B, K_dual * B)
+  testthat::expect_equal(B * K, B * K_dual)
 })
 
 testthat::test_that("Test ANY / dual ; dual / ANY", {
   k <- 5
   K <- randn(3, 3)
+  b <- 3
   B <- randn(3, 3)
-  param_dim <- list(B = length(B))
-  B <- dual(x = B, param_dim, 1)
+  b <- dual(x = b, list(b = length(b)), 1)
+  B <- dual(x = B, list(B = length(B)), 1)
 
   # scalar / dual
   testthat::expect_equal(k / parent_of(B), parent_of(k / B))
@@ -101,6 +187,38 @@ testthat::test_that("Test ANY / dual ; dual / ANY", {
   testthat::expect_equal(K / parent_of(B), parent_of(K / B))
   testthat::expect_equal(parent_of(B) / K, parent_of(B / K))
   testthat::expect_equal(deriv_of(B) / as.numeric(K), deriv_of(B / K))
+
+  # scalar / dual
+  testthat::expect_equal(k / parent_of(b), parent_of(k / b))
+  testthat::expect_equal(parent_of(b) / k, parent_of(b / k))
+  testthat::expect_equal(deriv_of(b) / k, deriv_of(b / k))
+
+  # matrix / dual
+  testthat::expect_equal(K / parent_of(b), parent_of(K / b))
+  testthat::expect_equal(parent_of(b) / K, parent_of(b / K))
+  testthat::expect_equal(as.numeric(1 / K) %*% deriv_of(b), deriv_of(b / K))
+
+  # Additional tests - should be consistent with dual-dual arithmetic
+  equal_up_to_type <- function(x, y) {
+    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
+    testthat::expect_equal(type_match(x), type_match(y))
+  }
+
+  k_dual <- dual(k, list(b = length(b)), -1)
+  equal_up_to_type(k / b, k_dual / b)
+  testthat::expect_equal(b / k, b / k_dual)
+
+  k_dual <- dual(k, list(B = length(B)), -1)
+  testthat::expect_equal(k / B, k_dual / B)
+  testthat::expect_equal(B / k, B / k_dual)
+
+  K_dual <- dual(K, list(b = length(b)), -1)
+  equal_up_to_type(K / b, K_dual / b)
+  equal_up_to_type(b / K, b / K_dual)
+
+  K_dual <- dual(K, list(B = length(B)), -1)
+  equal_up_to_type(K / B, K_dual / B)
+  testthat::expect_equal(B / K, B / K_dual)
 })
 
 testthat::test_that("Test ANY %*% dual ; dual %*% ANY", {
@@ -129,6 +247,15 @@ testthat::test_that("Test ANY %*% dual ; dual %*% ANY", {
       ) < 1e-8
     )
   )
+
+  # Additional tests - should be consistent with dual-dual arithmetic
+  equal_up_to_type <- function(x, y) {
+    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
+    testthat::expect_equal(type_match(x), type_match(y))
+  }
+  K_dual <- dual(x = K, param_dim, -1)
+  equal_up_to_type(B %*% K, B %*% K_dual)
+  equal_up_to_type(K %*% B, K_dual %*% B)
 })
 
 testthat::test_that("Test ANY %x% dual ; dual %x% ANY", {
@@ -140,4 +267,13 @@ testthat::test_that("Test ANY %x% dual ; dual %x% ANY", {
   # matrix %x% dual
   testthat::expect_equal(K %x% parent_of(B), parent_of(K %x% B))
   testthat::expect_equal(parent_of(B) %x% K, parent_of(B %x% K))
+
+  # Additional tests - should be consistent with dual-dual arithmetic
+  equal_up_to_type <- function(x, y) {
+    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
+    testthat::expect_equal(type_match(x), type_match(y))
+  }
+  K_dual <- dual(x = K, param_dim, -1)
+  equal_up_to_type(B %x% K, B %x% K_dual)
+  equal_up_to_type(K %x% B, K_dual %x% B)
 })
