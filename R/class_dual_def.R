@@ -1,26 +1,28 @@
 #=========================================================================
 # Class "dual"
 #-------------------------------------------------------------------------
-setClassUnion("array_or_numeric", c("array", "numeric"))
+# setClassUnion("array_or_numeric", c("array", "numeric"))
 
 is_matrix <- function(x) {
-  (attr(class(x), "package") == "Matrix") || class(x) == "matrix"
+  if (class(x) == "matrix") return(TRUE)
+  attr_cls <- attr(class(x), "package")
+  !is.null(attr_cls) && (attr_cls == "Matrix")
 }
 
 check_dual <- function(object) {
   x <- object@x
   dx <- object@dx
-  x_check <- is.array(x) || is.numeric(x)
+  x_check <- is.array(x) || is.numeric(x) || is_matrix(x)
   # x_check <- is_matrix(x) || (length(x) == 1)
-  dx_check <- nrow(dx) == length(x)   # match dimension
-  x_check && is_matrix(dx) && dx_check
+  dim_check <- nrow(dx) == length(x)   # match dimension
+  x_check && is_matrix(dx) && dim_check
 }
 
 
 #' S4 class "dual"
 #'
 #' @description This class attaches a dual component to a number / an array.
-#' @slot x Numeric matrix.
+#' @slot x scalar, vector or matrix; also accepts any matrix classes from the "Matrix" package.
 #' @slot dx matrix; also accepts any matrix classes from the "Matrix" package.
 #' @import methods
 #' @note Users should not construct the object directly, instead, use the
@@ -28,7 +30,7 @@ check_dual <- function(object) {
 setClass(
   "dual",
   representation(
-    x = "array_or_numeric",
+    x = "ANY",
     dx = "ANY",
     param = "list"
   ),
@@ -75,6 +77,10 @@ dim_to_col_range <- function(dim0) {
   end <- cumsum(dim0)
   start <- c(1, head(end, -1) + 1)
   map_row(cbind(start, end), identity)
+}
+
+col_range_to_dim <- function(dim0) {
+  dim0 %>% purrr::map_dbl(diff) %>% add(1)
 }
 
 
