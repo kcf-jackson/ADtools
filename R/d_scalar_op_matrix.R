@@ -21,11 +21,8 @@ d_scalar_op_matrix <- function(a, b, d_op) {
   db <- deriv_of(b)
   assertthat::assert_that(length(pa) == 1)
 
-  for (i in 1:nrow(db)) {
-    i <- as.numeric(i)  # sparse matrix requires 'numeric'-class index
-    db[i,] <- d_op(da, db[i,], pa, pb[i])
-  }
-  db
+  da <- matrix(rep(da, nrow(db)), nrow = nrow(db), byrow = T)
+  d_op(da, db, pa, as.numeric(pb))
 }
 
 # Matrix by Scalar: +, -, *, /
@@ -36,20 +33,15 @@ d_matrix_op_scalar <- function(a, b, d_op) {
   db <- deriv_of(b)
   assertthat::assert_that(length(pb) == 1)
 
-  for (i in 1:nrow(da)) {
-    i <- as.numeric(i)  # sparse matrix requires 'numeric'-class index
-    da[i,] <- d_op(da[i,], db, pa[i], pb)
-  }
-  da
+  db <- matrix(rep(db, nrow(da)), nrow = nrow(da), byrow = T)
+  d_op(da, db, as.numeric(pa), pb)
 }
-
 
 # Components
 plus_fun <- function(dx, dy, ...) { dx + dy }
 minus_fun <- function(dx, dy, ...) { dx - dy }
 multiply_fun <- function(dx, dy, x, y) { dx * y + dy * x }
 divide_fun <- function(dx, dy, x, y) { (y * dx - x * dy) / y^2 }
-
 
 # Factory
 d_scalar_plus_scalar <- purrr::partial(d_scalar_op_scalar, d_op = plus_fun)
