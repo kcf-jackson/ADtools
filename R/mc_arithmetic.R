@@ -154,6 +154,32 @@ setMethod("/",
           }
 )
 
+
+#' Powers of 'dual'-class objects
+#' @param e1 A "dual" object.
+#' @param e2 "ANY" object.
+setMethod("^",
+  signature(e1 = "dual", e2 = "ANY"),
+  function(e1, e2) {
+    if (!is_scalar(e2))
+      stop("The exponent must be a scalar.")
+
+    if (e2 == 0) {
+      e1@x <- parent_of(e1)^e2
+      dx_dim <- dim(e1@dx)
+      e1@dx <- zero_matrix0(dx_dim[1], dx_dim[2])
+      return(e1)
+    }
+
+    px <- parent_of(e1)
+    dx <- deriv_of(e1)
+    e1@x <- px^e2
+    e1@dx <- e2 * as.numeric(px^(e2 - 1)) * dx
+    e1
+  }
+)
+
+
 get_param_dim <- function(x) {
   param_dim <- param_of(x)
   param_dim %>%

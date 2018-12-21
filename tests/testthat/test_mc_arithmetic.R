@@ -1,5 +1,13 @@
 testthat::context("Test scalar-dual / dual-scalar arithmetic")
 
+equal_up_to_type <- function(x, y) {
+  type_match <- function(x) {
+    x@dx <- as.matrix(deriv_of(x));
+    x
+  }
+  testthat::expect_equal(type_match(x), type_match(y))
+}
+
 testthat::test_that("Test ANY + dual ; dual + ANY", {
   k <- 5
   K <- randn(3, 3)
@@ -43,7 +51,7 @@ testthat::test_that("Test ANY + dual ; dual + ANY", {
 
   K_dual <- dual(K, list(b = length(b), 1), -1)
   testthat::expect_equal(K + b, K_dual + b)
-  testthat::expect_equal(b + K, b + K_dual)
+  equal_up_to_type(b + K, b + K_dual)
 
   K_dual <- dual(K, list(B = length(B), 1), -1)
   testthat::expect_equal(K + B, K_dual + B)
@@ -93,7 +101,7 @@ testthat::test_that("Test ANY - dual ; dual - ANY", {
 
   K_dual <- dual(K, list(b = length(b)), -1)
   testthat::expect_equal(K - b, K_dual - b)
-  testthat::expect_equal(b - K, b - K_dual)
+  equal_up_to_type(b - K, b - K_dual)
 
   K_dual <- dual(K, list(B = length(B)), -1)
   testthat::expect_equal(K - B, K_dual - B)
@@ -157,10 +165,6 @@ testthat::test_that("Test ANY * dual ; dual * ANY", {
   testthat::expect_equal(k * B, k_dual * B)
   testthat::expect_equal(B * k, B * k_dual)
 
-  equal_up_to_type <- function(x, y) {
-    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
-    testthat::expect_equal(type_match(x), type_match(y))
-  }
   K_dual <- dual(K, list(b = length(b), other = 2), -1)
   equal_up_to_type(K * b, K_dual * b)
   equal_up_to_type(b * K, b * K_dual)
@@ -199,11 +203,6 @@ testthat::test_that("Test ANY / dual ; dual / ANY", {
   testthat::expect_equal(as.numeric(1 / K) %*% deriv_of(b), deriv_of(b / K))
 
   # Additional tests - should be consistent with dual-dual arithmetic
-  equal_up_to_type <- function(x, y) {
-    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
-    testthat::expect_equal(type_match(x), type_match(y))
-  }
-
   k_dual <- dual(k, list(b = length(b)), -1)
   equal_up_to_type(k / b, k_dual / b)
   testthat::expect_equal(b / k, b / k_dual)
@@ -220,6 +219,51 @@ testthat::test_that("Test ANY / dual ; dual / ANY", {
   equal_up_to_type(K / B, K_dual / B)
   testthat::expect_equal(B / K, B / K_dual)
 })
+
+
+testthat::test_that("Test dual ^ ANY", {
+  k <- 5
+  K <- randn(3, 3)
+  b <- 3
+  B <- randn(3, 3)
+  b_dual <- dual(x = b, list(b = length(b)), 1)
+  B_dual <- dual(x = B, list(B = length(B)), 1)
+
+  testthat::expect_equal(parent_of(b_dual ^ k), parent_of(b_dual) ^ k)
+  testthat::expect_equal(parent_of(B_dual ^ k), parent_of(B_dual) ^ k)
+
+  # Compare with AD
+  abs_rel_err <- function(x, y) {
+    x <- as.numeric(x)
+    y <- as.numeric(y)
+    sum(abs(x - y) / max(x, y))
+  }
+  .f <- function(x) { x^k }
+
+  AD_res <- deriv_of(b_dual ^ k)
+  FD_res <- finite_diff(.f, b)
+  testthat::expect_lt(abs_rel_err(AD_res, FD_res), 1e-6)
+
+  AD_res <- deriv_of(B_dual ^ k)
+  FD_res <- finite_diff(.f, B)
+  testthat::expect_lt(abs_rel_err(AD_res, FD_res), 1e-6)
+
+  testthat::expect_error(b_dual ^ K)
+  testthat::expect_error(B_dual ^ K)
+
+  # Check consistence with sqrt
+  eq <- function(x, y, transform) {
+    testthat::expect_equal(transform(x), transform(y))
+  }
+  eq_up_to_eps <- function(x, y, transform, epsilon) {
+    testthat::expect_lt(abs_rel_err(transform(x), transform(y)), epsilon)
+  }
+
+  B_dual@x <- abs(parent_of(B_dual))
+  eq(sqrt(B_dual), B_dual^0.5, parent_of)
+  eq_up_to_eps(sqrt(B_dual), B_dual^0.5, deriv_of, 1e-10)
+})
+
 
 testthat::test_that("Test ANY %*% dual ; dual %*% ANY", {
   K <- randn(3, 3)
@@ -249,10 +293,6 @@ testthat::test_that("Test ANY %*% dual ; dual %*% ANY", {
   )
 
   # Additional tests - should be consistent with dual-dual arithmetic
-  equal_up_to_type <- function(x, y) {
-    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
-    testthat::expect_equal(type_match(x), type_match(y))
-  }
   K_dual <- dual(x = K, param_dim, -1)
   equal_up_to_type(B %*% K, B %*% K_dual)
   equal_up_to_type(K %*% B, K_dual %*% B)
@@ -269,10 +309,6 @@ testthat::test_that("Test ANY %x% dual ; dual %x% ANY", {
   testthat::expect_equal(parent_of(B) %x% K, parent_of(B %x% K))
 
   # Additional tests - should be consistent with dual-dual arithmetic
-  equal_up_to_type <- function(x, y) {
-    type_match <- function(x) { x@dx <- as.matrix(x@dx); x }
-    testthat::expect_equal(type_match(x), type_match(y))
-  }
   K_dual <- dual(x = K, param_dim, -1)
   equal_up_to_type(B %x% K, B %x% K_dual)
   equal_up_to_type(K %x% B, K_dual %x% B)
