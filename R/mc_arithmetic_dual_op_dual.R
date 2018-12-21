@@ -8,7 +8,10 @@ setMethod("+",
           signature(e1 = "dual", e2 = "dual"),
           function(e1, e2) {
             x <- parent_of(e1) + parent_of(e2)
-            new("dual", x = x, dx = d_sum(e1, e2), param = param_of(e1))
+            dx <- d_sum(e1, e2)
+            e1@x <- x
+            e1@dx <- dx
+            e1
           }
 )
 
@@ -30,7 +33,10 @@ setMethod("*",
           signature(e1 = "dual", e2 = "dual"),
           function(e1, e2) {
             x <- parent_of(e1) * parent_of(e2)
-            new("dual", x = x, dx = d_scalar_prod(e1, e2), param = param_of(e1))
+            dx <- d_scalar_prod(e1, e2)
+            e1@x <- x
+            e1@dx <- dx
+            e1
           }
 )
 
