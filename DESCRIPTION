@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.5.9999
+Version: 0.1.6.0000
 Author: Chun Fung Kwok
 Maintainer: Chun Fung Kwok <kcf.jackson@gmail.com>
 Description: More about what it does (maybe more than one line)
@@ -17,7 +17,8 @@ Depends: methods, Matrix
 Imports: purrr,
     dplyr,
     magrittr,
-    assertthat
+    assertthat,
+    mvtnorm
 Collate:
     'ADtools.R'
     'class_dual_def.R'

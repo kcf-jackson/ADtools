@@ -80,7 +80,7 @@ dim_to_col_range <- function(dim0) {
 }
 
 col_range_to_dim <- function(dim0) {
-  dim0 %>% purrr::map_dbl(diff) %>% add(1)
+  dim0 %>% purrr::map_dbl(diff) %>% magrittr::add(1)
 }
 
 

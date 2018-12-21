@@ -73,7 +73,10 @@ setMethod("chol0",
   signature(x = "dual"),
   function(x) {
     L <- chol0(parent_of(x))
-    new("dual", x = L, dx = d_chol(L, x), param = param_of(x))
+    dL <- d_chol(L, x)
+    x@x <- L
+    x@dx <- dL
+    x
   }
 )
 

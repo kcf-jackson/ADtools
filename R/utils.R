@@ -30,22 +30,26 @@ map_row <- function(m0, f) {
 #' @description Strict usage: c(x, y) %<-% list(a, b, ...).
 #' LHS must start with 'c'; RHS must be a list;
 #' RHS must have at least as many elements as LHS.
+#' @param lhs An expression; variables to be assigned.
+#' @param value A list; values to assign.
 #' @note Multiple-level is avoided intentionally, i.e. nested destructuring
 #' is not allowed.
 #' @examples
+#' \dontrun{
 #' c(x, y) %<-% list(1, 2)
 #' c(x, y) %<-% list(1, 2, 3)
-`%<-%` <- function(lhs, rhs) {
+#' }
+`%<-%` <- function(lhs, value) {
   lhs_chr <- Map(deparse, substitute(lhs))  # Parse LHS into characters
   variables <- lhs_chr[-1]
 
   if (lhs_chr[[1]] != "c") stop("LHS must start with 'c'.")
-  if (!is.list(rhs)) stop("RHS must be a list.")
-  if (length(rhs) < length(variables))
+  if (!is.list(value)) stop("RHS must be a list.")
+  if (length(value) < length(variables))
     stop("RHS must have at least as many elements as LHS.")
 
   for (i in seq_along(variables)) {
-    assign(variables[[i]], rhs[[i]], envir = parent.frame())
+    assign(variables[[i]], value[[i]], envir = parent.frame())
   }
   invisible(NULL)
 }

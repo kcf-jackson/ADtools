@@ -4,16 +4,19 @@ is_scalar <- function(x) { length(x) == 1 }
 
 # Matrix +, -, *, /
 d_op <- function(a, b, funs) {
-  if (is_scalar(a@x) && is_scalar(b@x))
-    return(funs[[1]](a, b))
-
-  if (is_scalar(a@x) && !is_scalar(b@x))
-    return(funs[[2]](a, b))
-
-  if (!is_scalar(a@x) && is_scalar(b@x))
-    return(funs[[3]](a, b))
-
-  funs[[4]](a, b)
+  if (is_scalar(a@x)) {
+    if (is_scalar(b@x)) {
+      return(funs[[1]](a, b))
+    } else {
+      return(funs[[2]](a, b))
+    }
+  } else {
+    if (is_scalar(b@x)) {
+      return(funs[[3]](a, b))
+    } else {
+      return(funs[[4]](a, b))
+    }
+  }
 }
 
 d_sum <- function(a, b) {

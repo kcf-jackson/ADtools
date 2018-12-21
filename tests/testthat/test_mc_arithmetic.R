@@ -50,7 +50,7 @@ testthat::test_that("Test ANY + dual ; dual + ANY", {
   testthat::expect_equal(B + k, B + k_dual)
 
   K_dual <- dual(K, list(b = length(b), 1), -1)
-  testthat::expect_equal(K + b, K_dual + b)
+  equal_up_to_type(K + b, K_dual + b)
   equal_up_to_type(b + K, b + K_dual)
 
   K_dual <- dual(K, list(B = length(B), 1), -1)
@@ -100,7 +100,7 @@ testthat::test_that("Test ANY - dual ; dual - ANY", {
   testthat::expect_equal(B - k, B - k_dual)
 
   K_dual <- dual(K, list(b = length(b)), -1)
-  testthat::expect_equal(K - b, K_dual - b)
+  equal_up_to_type(K - b, K_dual - b)
   equal_up_to_type(b - K, b - K_dual)
 
   K_dual <- dual(K, list(B = length(B)), -1)

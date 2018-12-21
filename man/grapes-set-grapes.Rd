@@ -4,7 +4,12 @@
 \alias{\%<-\%}
 \title{Single-level destructuring}
 \usage{
-lhs \%<-\% rhs
+lhs \%<-\% value
+}
+\arguments{
+\item{lhs}{An expression; variables to be assigned.}
+
+\item{value}{A list; values to assign.}
 }
 \description{
 Strict usage: c(x, y) %<-% list(a, b, ...).
@@ -16,6 +21,8 @@ Multiple-level is avoided intentionally, i.e. nested destructuring
 is not allowed.
 }
 \examples{
+\dontrun{
 c(x, y) \%<-\% list(1, 2)
 c(x, y) \%<-\% list(1, 2, 3)
+}
 }
