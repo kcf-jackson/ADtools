@@ -3,6 +3,13 @@ NULL
 
 setClassUnion("dual_or_numeric", c("dual", "numeric"))
 
+# A note about the implementation
+# The 'parameter-recycling' mechanism is not implemented for random variable
+# simulation involving 'dual' number since it penalises performance and it
+# justifies the practice of supplying the wrong number of parameters.
+# The mechanism is implemented in `rgamma1` (which does not involve 'dual'
+# number) to match `rgamma` from the base 'stats' package.
+
 #===============================================================
 # Gaussian distribution
 #===============================================================
@@ -16,10 +23,16 @@ rnorm0 <- rnorm
 #' @param mean A dual number; the mean of the normal distribution.
 #' @param sd A dual number; the standard deviation of the normal distribution.
 setMethod("rnorm0",
-          signature(n = "numeric", mean = "dual", sd = "dual"),
-          function(n, mean, sd) {
-            mapreduce(seq(n), ~mean + sd * rnorm(1), rbind2)
-          }
+  signature(n = "numeric", mean = "dual", sd = "dual"),
+  function(n, mean, sd) {
+    len_mean <- length(mean)
+    assertthat::assert_that(len_mean == 1 || len_mean == n)
+
+    len_sd <- length(sd)
+    assertthat::assert_that(len_sd == 1 || len_sd == n)
+
+    mean + sd * rnorm(n)
+  }
 )
 
 #' Simulate multivariate normal random variates
@@ -37,15 +50,15 @@ rmvnorm0 <- function(n, mean, sigma) {
 #' @param mean A dual number; the mean of the normal distribution.
 #' @param sigma A dual number; the standard deviation of the normal distribution.
 setMethod("rmvnorm0",
-          signature(n = "numeric", mean = "dual", sigma = "dual"),
-          function(n, mean, sigma) {
-            mapreduce(
-              seq(n),
-              ~mean + chol0(sigma) %*%
-                t(mvtnorm::rmvnorm(1, numeric(length(mean)))),
-              cbind2
-            )
-          }
+  signature(n = "numeric", mean = "dual", sigma = "dual"),
+  function(n, mean, sigma) {
+    mapreduce(
+      seq(n),
+      ~mean + chol0(sigma) %*%
+        t(mvtnorm::rmvnorm(1, numeric(length(mean)))),
+      cbind2
+    )
+  }
 )
 
 
@@ -72,7 +85,18 @@ rgamma0 <- function(n, shape, scale, method = "base") {
 
 # Inverse-transform by root-finding
 rgamma1 <- function(n, shape, scale = 1) {
-  purrr::map_dbl(runif(n), gamma_inv_tf, shape = shape, scale = scale)
+  len_shape <- length(shape)
+  len_scale <- length(scale)
+  if ((len_shape == 1) && (len_scale == 1)) {
+    return(purrr::map_dbl(runif(n), gamma_inv_tf, shape = shape, scale = scale))
+  } else {
+    shape <- rep(shape, ceiling(n / len_shape))
+    scale <- rep(scale, ceiling(n / len_scale))
+    return(purrr::pmap_dbl(
+      list(u = runif(n), shape = shape[1:n], scale = scale[1:n]),
+      gamma_inv_tf
+    ))
+  }
 }
 gamma_inv_tf <- function(u, shape, scale) {
   interval <- c(0, shape + 2 * sqrt(shape / scale^2))
@@ -96,13 +120,31 @@ gamma_inv_tf <- function(u, shape, scale) {
 setMethod("rgamma0",
   signature(n = "numeric", shape = "dual", scale = "dual_or_numeric"),
   function(n, shape, scale, method = "base") {
-    rgamma_single <- function() {
+    len_shape <- length(shape)
+    assertthat::assert_that(len_shape == 1 || len_shape == n)
+
+    len_scale <- length(scale)
+    assertthat::assert_that(len_scale == 1 || len_scale == n)
+
+    rgamma_single <- function(shape, scale) {
       g <- rgamma0(1, parent_of(shape), scale = 1, method = method)
       d_g <- d_rgamma_num_dual(g, shape)
       g_dual <- new("dual", x = g, dx = deriv_of(d_g), param = shape@param)
       g_dual * scale
     }
-    mapreduce(seq(n), ~rgamma_single(), rbind2)
+    # handle parameters of different length
+    if (len_shape == 1 && len_scale == 1) {
+      return(mapreduce(seq(n), ~rgamma_single(shape, scale), rbind2))
+    }
+    if (len_shape == 1 && len_scale == n) {
+      return(mapreduce(seq(n), ~rgamma_single(shape, scale[.x]), rbind2))
+    }
+    if (len_shape == n && len_scale == 1) {
+      return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale), rbind2))
+    }
+    if (len_shape == n && len_scale == n) {
+      return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale[.x]), rbind2))
+    }
   }
 )
 
@@ -251,10 +293,10 @@ rchisq0 <- function(n, df, method = "base") {
 #' @param method base or inv_tf; base refers to the function in the
 #' `stats` package while inv_tf refers to inverse transform.
 setMethod("rchisq0",
-          signature(n = "numeric", df = "dual"),
-          function(n, df, method = "base") {
-            rgamma0(n, df / 2, scale = 2, method = method)
-          }
+  signature(n = "numeric", df = "dual"),
+  function(n, df, method = "base") {
+    rgamma0(n, df / 2, scale = 2, method = method)
+  }
 )
 
 
@@ -267,8 +309,10 @@ rexp0 <- stats::rexp
 #' @param n Positive integer; the number of samples.
 #' @param rate A dual number; the rate of the exponential distribution.
 setMethod("rexp0",
-          signature(n = "numeric", rate = "dual"),
-          function(n, rate) {
-            mapreduce(seq(n), ~rexp(1) / rate, rbind2)
-          }
+  signature(n = "numeric", rate = "dual"),
+  function(n, rate) {
+    len_rate <- length(rate)
+    assertthat::assert_that(len_rate == 1 || len_rate == n)
+    as.matrix(rexp(n)) / rate
+  }
 )
