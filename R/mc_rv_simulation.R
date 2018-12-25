@@ -133,16 +133,16 @@ setMethod("rgamma0",
       g_dual * scale
     }
     # handle parameters of different length
-    if (len_shape == 1 && len_scale == 1) {
+    if ((len_shape == 1) && (len_scale == 1)) {
       return(mapreduce(seq(n), ~rgamma_single(shape, scale), rbind2))
     }
-    if (len_shape == 1 && len_scale == n) {
+    if ((len_shape == 1) && (len_scale == n)) {
       return(mapreduce(seq(n), ~rgamma_single(shape, scale[.x]), rbind2))
     }
-    if (len_shape == n && len_scale == 1) {
+    if ((len_shape == n) && (len_scale == 1)) {
       return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale), rbind2))
     }
-    if (len_shape == n && len_scale == n) {
+    if ((len_shape == n) && (len_scale == n)) {
       return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale[.x]), rbind2))
     }
   }
@@ -153,11 +153,30 @@ setMethod("rgamma0",
 setMethod("rgamma0",
   signature(n = "numeric", shape = "numeric", scale = "dual"),
   function(n, shape, scale, method = "base") {
-    rgamma_single <- function() {
+    len_shape <- length(shape)
+    assertthat::assert_that(len_shape == 1 || len_shape == n)
+
+    len_scale <- length(scale)
+    assertthat::assert_that(len_scale == 1 || len_scale == n)
+
+    rgamma_single <- function(shape, scale) {
       g <- rgamma0(1, shape, scale = 1, method = method)
       g * scale
     }
-    mapreduce(seq(n), ~rgamma_single(), rbind2)
+
+    # handle parameters of different length
+    if ((len_shape == 1) && (len_scale == 1)) {
+      return(mapreduce(seq(n), ~rgamma_single(shape, scale), rbind2))
+    }
+    if ((len_shape == 1) && (len_scale == n)) {
+      return(mapreduce(seq(n), ~rgamma_single(shape, scale[.x]), rbind2))
+    }
+    if ((len_shape == n) && (len_scale == 1)) {
+      return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale), rbind2))
+    }
+    if ((len_shape == n) && (len_scale == n)) {
+      return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale[.x]), rbind2))
+    }
   }
 )
 
@@ -313,6 +332,6 @@ setMethod("rexp0",
   function(n, rate) {
     len_rate <- length(rate)
     assertthat::assert_that(len_rate == 1 || len_rate == n)
-    as.matrix(rexp(n)) / rate
+    as.matrix(stats::rexp(n)) / rate
   }
 )
