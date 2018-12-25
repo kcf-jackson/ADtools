@@ -55,7 +55,7 @@ d_subset <- function(a, i, j) {
   nr <- nrow(x)
   nc <- ncol(x)
   if (missing(i) && missing(j)) {
-    stop("At least one of index i and index j should be present.")
+    stop("At least one of index i and index j should be present.")  # nocov
   } else if (missing(i) && !missing(j)) {
     ind <- mapreduce(j, ~seq(nr) + nr * (.x - 1), c)
   } else if (!missing(i) && missing(j)) {

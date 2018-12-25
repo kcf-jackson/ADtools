@@ -44,7 +44,7 @@ test_that("Test univariate normal simulation", {
     # FD
     f <- function(param) {
       set.seed(123)
-      rnorm(n, mean = param[1], sd = param[2])
+      rnorm0(n, mean = param[1], sd = param[2])
     }
     FD_res <- finite_diff(f, c(mu, sigma))
     testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
@@ -113,6 +113,12 @@ test_that("Test multivariate normal simulation", {
     FD_sample <- f(cbind(mu, sigma))
     testthat::expect_lt(sum(abs(AD_sample - FD_sample)), 1e-8)
   }
+  # Check sample 2
+  set.seed(123)
+  s1 <- rmvnorm0(1, numeric(2), diag(2))
+  set.seed(123)
+  s2 <- rnorm(2)
+  eq_transform(s1, s2, identity)
 })
 
 test_that("Test exponential simulation", {
@@ -141,15 +147,20 @@ test_that("Test exponential simulation", {
   s <- runif(10, 1, 10)
   rate0 <- dual(s, param_dim, -1)
   rate0@dx[,1] <- 1
+
   set.seed(123)
   AD_res <- rexp0(10, rate0)
   set.seed(123)
   AD_res_2 <- mapreduce(1:10, ~rexp0(1, rate0[.x]), rbind2)
   eq_transform(AD_res, AD_res_2, parent_of, F)
   aeq_transform(AD_res, AD_res_2, deriv_of, F)
+
+  testthat::expect_error(rexp0(9, rate0))
 })
 
 test_that("Test gamma simulation with inverse-transform method", {
+  testthat::expect_error(rgamma0(10, shape = 3, scale = 5, method = "a"))
+
   set.seed(123)
   s1 <- rgamma0(10000, shape = 3, scale = 5, method = "base")
   s2 <- rgamma0(10000, shape = 3, scale = 5, method = "inv_tf")
@@ -307,6 +318,19 @@ test_that("Test gamma simulation", {
   AD_res_2 <- mapreduce(1:10, ~rgamma0(1, 5, scale_dual[.x]), rbind2)
   identical(AD_res, AD_res_2)
 
+  shape_vec <- runif(10, 1, 10)
+  set.seed(123)
+  AD_res <- rgamma0(10, shape_vec, scale_dual)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, shape_vec[.x], scale_dual[.x]), rbind2)
+  identical(AD_res, AD_res_2)
+
+  set.seed(123)
+  AD_res <- rgamma0(10, shape_vec, unit_scale_dual)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, shape_vec[.x], unit_scale_dual), rbind2)
+  identical(AD_res, AD_res_2)
+
   # dual / num
   set.seed(123)
   AD_res <- rgamma0(10, shape_dual, 4)
@@ -345,6 +369,11 @@ testthat::test_that("Test Chi-squared simulation", {
     FD_sample <- f(df)
     testthat::expect_lt(sum(abs(AD_sample - FD_sample)), 1e-8)
   }
+  # Check consistency between base R and inverse transform
+  s1 <- rchisq0(1e4, df, method = "inv_tf")
+  s2 <- rchisq0(1e4, df, method = "base")
+  testthat::expect_lt(abs(mean(s1) - mean(s2)), 0.1)
+  testthat::expect_lt(abs(sd(s1) - sd(s2)), 0.1)
 })
 
 testthat::test_that("Wishart simulation", {
@@ -361,7 +390,7 @@ testthat::test_that("Wishart simulation", {
   set.seed(123)
   AD_res <- rWishart0(v_dual, M, method = "inv_tf")@dx
   FD_res <- finite_diff(f_v, v)
-  expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
+  testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   f_M <- function(param) {
     set.seed(123)
@@ -374,7 +403,7 @@ testthat::test_that("Wishart simulation", {
   # decomposition; see test_matrix_calculus.R: `d_chol` for more detail.
   K_nn <- commutation_matrix0(nrow(M), ncol(M))
   FD_res <- FD_res %*% K_nn
-  expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
+  testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   f <- function(param) {
     set.seed(123)
@@ -389,5 +418,21 @@ testthat::test_that("Wishart simulation", {
   # decomposition; see test_matrix_calculus.R: `d_chol` for more detail.
   K_nn <- commutation_matrix0(nrow(M), ncol(M))
   FD_res[,-1] <- as.matrix(FD_res[,-1] %*% K_nn)
-  expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
+  testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
+
+  # Check consistency with base R implementation
+  testthat::expect_identical(
+    dim(rWishart0(5, diag(2), method = "inv_tf")),
+    dim(rWishart0(5, diag(2)))
+  )
+  set.seed(123)
+  inv_tf_wishart <- 1:2000 %>%
+    purrr::map(~as.numeric(rWishart0(5, diag(2), method = "inv_tf"))) %>%
+    do.call(rbind, .) %>%
+    apply(2, mean)
+  base_wishart <- 1:2000 %>%
+    purrr::map(~as.numeric(rWishart0(5, diag(2)))) %>%
+    do.call(rbind, .) %>%
+    apply(2, mean)
+  testthat::expect_lt(max(abs(inv_tf_wishart - base_wishart)), 0.2)
 })

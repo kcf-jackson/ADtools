@@ -16,7 +16,10 @@ setClassUnion("dual_or_numeric", c("dual", "numeric"))
 #' Simulate univariate normal random variates
 #' @inherit stats::rnorm
 #' @export
-rnorm0 <- rnorm
+rnorm0 <- function(n, mean = 0, sd = 1) {
+  rnorm(n, mean, sd)
+}
+
 
 #' Simulate univariate normal random variates
 #' @param n Positive integer; the number of samples.
@@ -180,14 +183,14 @@ setMethod("rgamma0",
   }
 )
 
-d_rgamma <- function(g, alpha) {
-  # takes an simulated value from gamma distribution and the corresponding
-  # parameter alpha, returns the derivative "d G(alpha, 1) / d alpha"
-  f <- function(t) { log(t) * dgamma(t, alpha, 1) }
-  num_1 <- integrate(f, 0, g)$value
-  num_2 <- digamma(alpha) * pgamma(g, alpha, 1)
-  - (num_1 - num_2) / dgamma(g, alpha, 1)
-}
+# d_rgamma <- function(g, alpha) {
+#   # takes an simulated value from gamma distribution and the corresponding
+#   # parameter alpha, returns the derivative "d G(alpha, 1) / d alpha"
+#   f <- function(t) { log(t) * dgamma(t, alpha, 1) }
+#   num_1 <- integrate(f, 0, g)$value
+#   num_2 <- digamma(alpha) * pgamma(g, alpha, 1)
+#   - (num_1 - num_2) / dgamma(g, alpha, 1)
+# }
 
 d_rgamma_num_dual <- function(g, alpha) {
   # g is a scalar, alpha is a dual number.
@@ -195,7 +198,7 @@ d_rgamma_num_dual <- function(g, alpha) {
   f <- function(t) { log(t) * dgamma(t, alpha0, 1) }
   num_1 <- integrate(f, 0, g)$value
   num_2 <- digamma(alpha0) * pgamma(g, alpha0, 1)
-  - (num_1 - num_2) / dgamma(g, alpha0, 1) * alpha
+  - (num_1 - num_2) / dgamma(g, alpha0, 1) * alpha  # correct for derivative
 }
 
 # Info: Inverse-Gamma
@@ -214,7 +217,7 @@ d_rgamma_num_dual <- function(g, alpha) {
 #' `stats` package while inv_tf refers to inverse transform.
 #' @export
 rWishart0 <- function(v, M, method = "base") {
-  if (method == "base") return(stats::rWishart(1, v, M))
+  if (method == "base") return(stats::rWishart(1, v, M)[,,1])
 
   chi_samples <- seq(nrow(M)) %>%
     purrr::map_dbl(~rchisq0(1, v - .x + 1, method = method))
@@ -322,7 +325,10 @@ setMethod("rchisq0",
 #' Simulate exponential random variates
 #' @inherit stats::rexp
 #' @export
-rexp0 <- stats::rexp
+rexp0 <- function(n, rate = 1) {
+  stats::rexp(n, rate)
+}
+
 
 #' Simulate exponential random variates
 #' @param n Positive integer; the number of samples.
