@@ -17,6 +17,20 @@ compare_FD_and_AD <- function(FD, AD, show = F) {
   max(rel_err)
 }
 
+eq_transform <- function(x, y, f, show = F) {
+  f <- purrr::compose(as.numeric, f)
+  if (show) print(cbind(f(x), f(y)))
+  testthat::expect_equal(f(x), f(y))
+}
+
+aeq_transform <- function(x, y, f, show = F) {
+  f <- purrr::compose(as.numeric, f)
+  diff0 <- sum(relative_diff(f(x), f(y)))
+  if (show) print(cbind(f(x), f(y)))
+  testthat::expect_lt(diff0, 1e-8)
+}
+
+# Tests
 test_that("Test univariate normal simulation", {
   mu <- 20
   sigma <- 3
@@ -40,6 +54,33 @@ test_that("Test univariate normal simulation", {
     FD_sample <- f(c(mu, sigma))
     testthat::expect_lt(sum(abs(AD_sample - FD_sample)), 1e-8)
   }
+  # Test cases where mean0 and sd0 have length > 1
+  set.seed(123)
+  param_dim <- list(A = 1, B = 2, C = 1)
+  mu <- rnorm(10, 0, 10)
+  sigma <- runif(10, 1, 10)
+
+  mean0 <- dual(mu, param_dim, -1)
+  mean0@dx[,1] <- 1
+  sd0 <- dual(sigma, param_dim, -1)
+  sd0@dx[,2] <- 1
+
+  set.seed(123)
+  AD_res <- rnorm0(10, mean0, sd0)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rnorm0(1, mean0[.x], sd0[.x]), rbind2)
+  eq_transform(AD_res, AD_res_2, parent_of)
+  aeq_transform(AD_res, AD_res_2, deriv_of)
+
+  # Test when mean0 and n have unequal length
+  mean0 <- dual(c(-10, 5, 10), param_dim, -1)
+  sd0 <- dual(c(5, 1, 3), param_dim, -1)
+  testthat::expect_error(rnorm0(2, mean0, sd0))
+
+  # Test when sd0 and n have unequal length
+  mean0 <- dual(c(-10, 10), param_dim, -1)
+  sd0 <- dual(c(5, 1, 3), param_dim, -1)
+  testthat::expect_error(rnorm0(2, mean0, sd0))
 })
 
 test_that("Test multivariate normal simulation", {
@@ -89,21 +130,72 @@ test_that("Test exponential simulation", {
     }
     FD_res <- finite_diff(f, lambda)
     testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
-
     # Check sample
     set.seed(123)
     AD_sample <- rexp0(n, rate0)@x
     FD_sample <- f(lambda)
     testthat::expect_lt(sum(abs(AD_sample - FD_sample)), 1e-8)
   }
+  # Test cases where rate has length > 1
+  param_dim <- list(A = 1, B = 2, C = 1)
+  s <- runif(10, 1, 10)
+  rate0 <- dual(s, param_dim, -1)
+  rate0@dx[,1] <- 1
+  set.seed(123)
+  AD_res <- rexp0(10, rate0)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rexp0(1, rate0[.x]), rbind2)
+  eq_transform(AD_res, AD_res_2, parent_of, F)
+  aeq_transform(AD_res, AD_res_2, deriv_of, F)
 })
 
-test_that("Test inverse transform gamma", {
+test_that("Test gamma simulation with inverse-transform method", {
   set.seed(123)
   s1 <- rgamma0(10000, shape = 3, scale = 5, method = "base")
   s2 <- rgamma0(10000, shape = 3, scale = 5, method = "inv_tf")
   expect_lt(relative_diff(mean(s1), mean(s2)), 0.1)
   expect_lt(relative_diff(sd(s1), sd(s2)), 0.1)
+
+  shape <- c(3, 1)
+  s1 <- rgamma0(10000, shape = shape, scale = 5, method = "base")
+  s2 <- rgamma0(10000, shape = shape, scale = 5, method = "inv_tf")
+  odd <- seq(1, 10000, 2)
+  expect_lt(relative_diff(mean(s1[odd]), mean(s2[odd])), 0.1)
+  expect_lt(relative_diff(sd(s1[odd]), sd(s2[odd])), 0.1)
+  even <- seq(2, 10000, 2)
+  expect_lt(relative_diff(mean(s1[even]), mean(s2[even])), 0.1)
+  expect_lt(relative_diff(sd(s1[even]), sd(s2[even])), 0.1)
+
+  scale <- c(2, 7)
+  s1 <- rgamma0(10000, shape = 3, scale = scale, method = "base")
+  s2 <- rgamma0(10000, shape = 3, scale = scale, method = "inv_tf")
+  odd <- seq(1, 10000, 2)
+  expect_lt(relative_diff(mean(s1[odd]), mean(s2[odd])), 0.1)
+  expect_lt(relative_diff(sd(s1[odd]), sd(s2[odd])), 0.1)
+  even <- seq(2, 10000, 2)
+  expect_lt(relative_diff(mean(s1[even]), mean(s2[even])), 0.1)
+  expect_lt(relative_diff(sd(s1[even]), sd(s2[even])), 0.1)
+
+  shape <- c(3, 8)
+  scale <- c(5, 9)
+  s1 <- rgamma0(10000, shape = shape, scale = scale, method = "base")
+  s2 <- rgamma0(10000, shape = shape, scale = scale, method = "inv_tf")
+  odd <- seq(1, 10000, 2)
+  expect_lt(relative_diff(mean(s1[odd]), mean(s2[odd])), 0.1)
+  expect_lt(relative_diff(sd(s1[odd]), sd(s2[odd])), 0.1)
+  even <- seq(2, 10000, 2)
+  expect_lt(relative_diff(mean(s1[even]), mean(s2[even])), 0.1)
+  expect_lt(relative_diff(sd(s1[even]), sd(s2[even])), 0.1)
+
+  shape <- c(3, 8, 7)
+  scale <- 5
+  s1 <- rgamma0(10000, shape = shape, scale = scale, method = "base")
+  s2 <- rgamma0(10000, shape = shape, scale = scale, method = "inv_tf")
+  for (i in 1:3) {
+    s_seq <- seq(i, 10000, 3)
+    expect_lt(relative_diff(mean(s1[s_seq]), mean(s2[s_seq])), 0.1)
+    expect_lt(relative_diff(sd(s1[s_seq]), sd(s2[s_seq])), 0.1)
+  }
 })
 
 test_that("Test gamma simulation", {
@@ -168,6 +260,67 @@ test_that("Test gamma simulation", {
       }
     }
   }
+  # Check unequal length gamma simulation
+  shape <- runif(10, 1, 10)
+  scale <- runif(10, 1, 10)
+  param <- list(shape = 1, scale = 1, C = 2)
+  shape_dual <- dual(shape, param, -1)
+  shape_dual@dx[,1] <- 1
+  scale_dual <- dual(scale, param, -1)
+  shape_dual@dx[,2] <- 1
+  unit_shape_dual <- dual(5, param, 1)
+  unit_scale_dual <- dual(3, param, 2)
+
+  # dual / dual
+  set.seed(123)
+  AD_res <- rgamma0(10, shape_dual, scale_dual)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, shape_dual[.x], scale_dual[.x]), rbind2)
+  eq_transform(AD_res, AD_res_2, parent_of)
+  aeq_transform(AD_res, AD_res_2, deriv_of)
+
+  set.seed(123)
+  AD_res <- rgamma0(10, unit_shape_dual, scale_dual)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, unit_shape_dual, scale_dual[.x]), rbind2)
+  eq_transform(AD_res, AD_res_2, parent_of)
+  aeq_transform(AD_res, AD_res_2, deriv_of)
+
+  set.seed(123)
+  AD_res <- rgamma0(10, shape_dual, unit_scale_dual)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, shape_dual[.x], unit_scale_dual), rbind2)
+  eq_transform(AD_res, AD_res_2, parent_of)
+  aeq_transform(AD_res, AD_res_2, deriv_of)
+
+  set.seed(123)
+  AD_res <- rgamma0(10, unit_shape_dual, unit_scale_dual)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, unit_shape_dual, unit_scale_dual), rbind2)
+  eq_transform(AD_res, AD_res_2, parent_of)
+  aeq_transform(AD_res, AD_res_2, deriv_of)
+
+  # num / dual
+  set.seed(123)
+  AD_res <- rgamma0(10, 5, scale_dual)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, 5, scale_dual[.x]), rbind2)
+  identical(AD_res, AD_res_2)
+
+  # dual / num
+  set.seed(123)
+  AD_res <- rgamma0(10, shape_dual, 4)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, shape_dual[.x], 4), rbind2)
+  eq_transform(AD_res, AD_res_2, parent_of)
+  aeq_transform(AD_res, AD_res_2, deriv_of)
+
+  # num / num
+  set.seed(123)
+  AD_res <- rgamma0(10, 4, 5)
+  set.seed(123)
+  AD_res_2 <- mapreduce(1:10, ~rgamma0(1, 4, 5), c)
+  eq_transform(AD_res, AD_res_2, identity)
 })
 
 testthat::test_that("Test Chi-squared simulation", {

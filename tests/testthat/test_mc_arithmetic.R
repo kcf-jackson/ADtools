@@ -251,6 +251,12 @@ testthat::test_that("Test dual ^ ANY", {
   testthat::expect_error(b_dual ^ K)
   testthat::expect_error(B_dual ^ K)
 
+  # Test taking to the power 0
+  testthat::expect_true(all(parent_of(b_dual ^ 0) == 1))
+  testthat::expect_true(all(parent_of(B_dual ^ 0) == 1))
+  testthat::expect_true(all(deriv_of(b_dual ^ 0) == 0))
+  testthat::expect_true(all(deriv_of(B_dual ^ 0) == 0))
+
   # Check consistence with sqrt
   eq <- function(x, y, transform) {
     testthat::expect_equal(transform(x), transform(y))

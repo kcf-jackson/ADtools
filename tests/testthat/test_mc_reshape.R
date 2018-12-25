@@ -37,4 +37,8 @@ testthat::test_that("Test diag", {
   res <- diag(res)
   check_eq(parent_of(res), diag(diag(A)))
   check_dim(deriv_of(res), dim(deriv_of(A_dual)))
+
+  modified_dual <- A_dual
+  modified_dual@x <- data.frame(1:3)
+  testthat::expect_error(diag(modified_dual))
 })
