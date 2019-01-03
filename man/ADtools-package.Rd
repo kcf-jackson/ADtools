@@ -4,9 +4,16 @@
 \name{ADtools-package}
 \alias{ADtools}
 \alias{ADtools-package}
-\title{ADtools: What the Package Does (Title Case)}
+\title{ADtools: Auto-Differentiation toolbox}
 \description{
-More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Implements the forward-mode auto-differentiation for multivariate
+    functions using the matrix-calculus notation from Magnus and Neudecker (1988).
+    Two key features of the package are: (i) the package incorporates various 
+    optimisaton strategies to improve performance; this includes applying 
+    memoisation to cut down object construction time, using sparse matrix 
+    representation to save derivative calculation, and creating specialised 
+    matrix operations with Rcpp to reduce computation time; (ii) the package 
+    supports differentiating random variable with respect to their parameters; 
+    this is developed targetting simulation-based (in particular MCMC) applications.
 }
 \keyword{internal}
