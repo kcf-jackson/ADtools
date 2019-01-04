@@ -241,11 +241,11 @@ testthat::test_that("Test dual ^ ANY", {
   .f <- function(x) { x^k }
 
   AD_res <- deriv_of(b_dual ^ k)
-  FD_res <- finite_diff(.f, b)
+  FD_res <- finite_diff_test(.f, b)
   testthat::expect_lt(abs_rel_err(AD_res, FD_res), 1e-6)
 
   AD_res <- deriv_of(B_dual ^ k)
-  FD_res <- finite_diff(.f, B)
+  FD_res <- finite_diff_test(.f, B)
   testthat::expect_lt(abs_rel_err(AD_res, FD_res), 1e-6)
 
   testthat::expect_error(b_dual ^ K)

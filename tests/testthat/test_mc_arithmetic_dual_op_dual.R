@@ -30,29 +30,29 @@ testthat::test_that("Test dual + dual", {
   f4 <- function(x) { k + x }
 
   # Matrix + Matrix
-  FD_res <- finite_diff(f1, A, h)
+  FD_res <- finite_diff_test(f1, A, h)
   AD_res <- get_deriv(A_dual + B_dual, "A")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, B, h)
+  FD_res <- finite_diff_test(f2, B, h)
   AD_res <- get_deriv(A_dual + B_dual, "B")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Matrix + Scalar / Scalar + Matrix
-  FD_res <- finite_diff(f1, k, h)
+  FD_res <- finite_diff_test(f1, k, h)
   AD_res <- get_deriv(k_dual + B_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, z, h)
+  FD_res <- finite_diff_test(f2, z, h)
   AD_res <- get_deriv(A_dual + z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Scalar + Scalar
-  FD_res <- finite_diff(f3, k, h)
+  FD_res <- finite_diff_test(f3, k, h)
   AD_res <- get_deriv(k_dual + z_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f4, z, h)
+  FD_res <- finite_diff_test(f4, z, h)
   AD_res <- get_deriv(k_dual + z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 })
@@ -65,29 +65,29 @@ testthat::test_that("Test dual - dual", {
   f4 <- function(x) { k - x }
 
   # Matrix - Matrix
-  FD_res <- finite_diff(f1, A, h)
+  FD_res <- finite_diff_test(f1, A, h)
   AD_res <- get_deriv(A_dual - B_dual, "A")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, B, h)
+  FD_res <- finite_diff_test(f2, B, h)
   AD_res <- get_deriv(A_dual - B_dual, "B")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Matrix - Scalar / Scalar - Matrix
-  FD_res <- finite_diff(f1, k, h)
+  FD_res <- finite_diff_test(f1, k, h)
   AD_res <- get_deriv(k_dual - B_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, z, h)
+  FD_res <- finite_diff_test(f2, z, h)
   AD_res <- get_deriv(A_dual - z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Scalar - Scalar
-  FD_res <- finite_diff(f3, k, h)
+  FD_res <- finite_diff_test(f3, k, h)
   AD_res <- get_deriv(k_dual - z_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f4, z, h)
+  FD_res <- finite_diff_test(f4, z, h)
   AD_res <- get_deriv(k_dual - z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 })
@@ -100,29 +100,29 @@ testthat::test_that("Test dual * dual", {
   f4 <- function(x) { k * x }
 
   # Matrix * Matrix
-  FD_res <- finite_diff(f1, A, h)
+  FD_res <- finite_diff_test(f1, A, h)
   AD_res <- get_deriv(A_dual * B_dual, "A")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, B, h)
+  FD_res <- finite_diff_test(f2, B, h)
   AD_res <- get_deriv(A_dual * B_dual, "B")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Matrix * Scalar / Scalar * Matrix
-  FD_res <- finite_diff(f1, k, h)
+  FD_res <- finite_diff_test(f1, k, h)
   AD_res <- get_deriv(k_dual * B_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, z, h)
+  FD_res <- finite_diff_test(f2, z, h)
   AD_res <- get_deriv(A_dual * z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Scalar * Scalar
-  FD_res <- finite_diff(f3, k, h)
+  FD_res <- finite_diff_test(f3, k, h)
   AD_res <- get_deriv(k_dual * z_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f4, z, h)
+  FD_res <- finite_diff_test(f4, z, h)
   AD_res <- get_deriv(k_dual * z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 })
@@ -135,29 +135,29 @@ testthat::test_that("Test dual / dual", {
   f4 <- function(x) { k / x }
 
   # Matrix / Matrix
-  FD_res <- finite_diff(f1, A, h)
+  FD_res <- finite_diff_test(f1, A, h)
   AD_res <- get_deriv(A_dual / B_dual, "A")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, B, h)
+  FD_res <- finite_diff_test(f2, B, h)
   AD_res <- get_deriv(A_dual / B_dual, "B")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Matrix / Scalar / Scalar / Matrix
-  FD_res <- finite_diff(f1, k, h)
+  FD_res <- finite_diff_test(f1, k, h)
   AD_res <- get_deriv(k_dual / B_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f2, z, h)
+  FD_res <- finite_diff_test(f2, z, h)
   AD_res <- get_deriv(A_dual / z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   # Scalar / Scalar
-  FD_res <- finite_diff(f3, k, h)
+  FD_res <- finite_diff_test(f3, k, h)
   AD_res <- get_deriv(k_dual / z_dual, "k")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
-  FD_res <- finite_diff(f4, z, h)
+  FD_res <- finite_diff_test(f4, z, h)
   AD_res <- get_deriv(k_dual / z_dual, "z")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 })
@@ -165,12 +165,12 @@ testthat::test_that("Test dual / dual", {
 
 testthat::test_that("Test dual %*% dual", {
   f <- function(x) { x %*% B }
-  FD_res <- finite_diff(f, A, h)
+  FD_res <- finite_diff_test(f, A, h)
   AD_res <- get_deriv(A_dual %*% B_dual, "A")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   f2 <- function(x) { A %*% x }
-  FD_res <- finite_diff(f2, B, h)
+  FD_res <- finite_diff_test(f2, B, h)
   AD_res <- get_deriv(A_dual %*% B_dual, "B")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 })
@@ -178,12 +178,12 @@ testthat::test_that("Test dual %*% dual", {
 
 testthat::test_that("Test dual %x% dual", {
   f <- function(x) { x %x% B }
-  FD_res <- finite_diff(f, A, h)
+  FD_res <- finite_diff_test(f, A, h)
   AD_res <- get_deriv(A_dual %x% B_dual, "A")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   f2 <- function(x) { A %x% x }
-  FD_res <- finite_diff(f2, B, h)
+  FD_res <- finite_diff_test(f2, B, h)
   AD_res <- get_deriv(A_dual %x% B_dual, "B")
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 })

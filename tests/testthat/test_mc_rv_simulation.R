@@ -40,7 +40,7 @@ test_that("Test univariate normal simulation", {
       set.seed(123)
       rnorm0(n, mean = param[1], sd = param[2])
     }
-    FD_res <- finite_diff(f, c(mu, sigma))
+    FD_res <- finite_diff_test(f, c(mu, sigma))
     testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
     # Check sample
     set.seed(123)
@@ -97,7 +97,7 @@ test_that("Test multivariate normal simulation", {
     # see test_matrix_calculus.R: `d_chol` for more detail why an
     # extra commutation matrix is needed.
     K_nn <- commutation_matrix0(nrow(sigma), ncol(sigma))
-    FD_res <- finite_diff(f, cbind(mu, sigma))
+    FD_res <- finite_diff_test(f, cbind(mu, sigma))
     FD_res[, -seq_along(mu)] <- as.matrix(FD_res[, -seq_along(mu)] %*% K_nn)
     testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
@@ -128,7 +128,7 @@ test_that("Test exponential simulation", {
       set.seed(123)
       rexp0(n, rate = param)
     }
-    FD_res <- finite_diff(f, lambda)
+    FD_res <- finite_diff_test(f, lambda)
     testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
     # Check sample
     set.seed(123)
@@ -222,7 +222,7 @@ test_that("Test gamma simulation", {
           set.seed(123)
           rgamma0(n, param[1], param[2], "inv_tf")
         }
-        FD_res <- finite_diff(f, c(shape, scale), h = 1e-7)
+        FD_res <- finite_diff_test(f, c(shape, scale), h = 1e-7)
         testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
         # ==== Check derivative dual / num ====
@@ -236,7 +236,7 @@ test_that("Test gamma simulation", {
           set.seed(123)
           rgamma0(n, shape, scale, "inv_tf")
         }
-        FD_res <- finite_diff(f, shape, h = 1e-6)
+        FD_res <- finite_diff_test(f, shape, h = 1e-6)
         testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
         # ==== Check derivative num / dual ====
@@ -250,7 +250,7 @@ test_that("Test gamma simulation", {
           set.seed(123)
           rgamma0(n, shape, scale, "inv_tf")
         }
-        FD_res <- finite_diff(f, scale, h = 1e-7)
+        FD_res <- finite_diff_test(f, scale, h = 1e-7)
         testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
         # ==== Check sample ====
@@ -354,7 +354,7 @@ testthat::test_that("Test Chi-squared simulation", {
       set.seed(123)
       rchisq0(n, param, method = "inv_tf")
     }
-    FD_res <- finite_diff(f, df)
+    FD_res <- finite_diff_test(f, df)
     testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
     # Check sample
@@ -383,7 +383,7 @@ testthat::test_that("Wishart simulation", {
   }
   set.seed(123)
   AD_res <- rWishart0(v_dual, M, method = "inv_tf")@dx
-  FD_res <- finite_diff(f_v, v)
+  FD_res <- finite_diff_test(f_v, v)
   testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), 1e-6)
 
   f_M <- function(param) {
@@ -392,7 +392,7 @@ testthat::test_that("Wishart simulation", {
   }
   set.seed(123)
   AD_res <- get_deriv(rWishart0(v, M_dual, method = "inv_tf"), "other")
-  FD_res <- finite_diff(f_M, M)
+  FD_res <- finite_diff_test(f_M, M)
   # An extra commutation matrix is needed because rWishart0 uses Cholesky
   # decomposition; see test_matrix_calculus.R: `d_chol` for more detail.
   K_nn <- commutation_matrix0(nrow(M), ncol(M))
@@ -407,7 +407,7 @@ testthat::test_that("Wishart simulation", {
   }
   set.seed(123)
   AD_res <- rWishart0(v_dual, M_dual, method = "inv_tf")@dx
-  FD_res <- finite_diff(f, c(v, M))
+  FD_res <- finite_diff_test(f, c(v, M))
   # An extra commutation matrix is needed because rWishart0 uses Cholesky
   # decomposition; see test_matrix_calculus.R: `d_chol` for more detail.
   K_nn <- commutation_matrix0(nrow(M), ncol(M))

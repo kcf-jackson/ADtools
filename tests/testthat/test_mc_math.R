@@ -9,7 +9,7 @@ eq_transform <- function(x, y, f, show = F) {
 testthat::test_that("Test element-wise derivative", {
   sin0 <- element_wise_derivative(sin, cos)
   A <- dual(1, list(A = 1, B = 1), 1)
-  eq_transform(sin0(A)@dx[1], finite_diff(sin, 1), identity)
+  eq_transform(sin0(A)@dx[1], finite_diff_test(sin, 1), identity)
 })
 
 testthat::test_that("Test sqrt of a dual object", {

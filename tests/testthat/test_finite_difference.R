@@ -8,7 +8,7 @@ testthat::test_that("Test finite difference main function", {
     y <- rnorm(2)
     expect_lt(
       max(relative_diff(
-        finite_difference(f, list(X = X, y = y)),
+        finite_diff(f, list(X = X, y = y)),
         cbind(t(y %x% diag(2)), X)
       )),
       1e-6

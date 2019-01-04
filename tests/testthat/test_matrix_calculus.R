@@ -20,12 +20,12 @@ test_binary_operation <- function(fun, h = 1e-8, epsilon = 1e-6) {
 	B_dual <- dual(B, param, 2)
 
 	f1 = function(x) { fun(x, B) }
-	FD_res <- finite_diff(f1, A, h)
+	FD_res <- finite_diff_test(f1, A, h)
 	AD_res <- get_deriv(fun(A_dual, B_dual), "A")
 	testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), epsilon)
 
 	f2 = function(x) { fun(A, x) }
-	FD_res <- finite_diff(f2, B, h)
+	FD_res <- finite_diff_test(f2, B, h)
 	AD_res <- get_deriv(fun(A_dual, B_dual), "B")
 	testthat::expect_lt(compare_FD_and_AD(FD_res, AD_res), epsilon)
 }
@@ -41,7 +41,7 @@ testthat::test_that("Test crossprod (two arguments) against finite difference", 
 
 
 test_unary_operation <- function(f, A, h = 1e-8, epsilon = 1e-6) {
-  FD_res <- finite_diff(f, A, h)
+  FD_res <- finite_diff_test(f, A, h)
 
   X <- dual(A, length(A), 1)
   AD_res <- deriv_of(f(X))
@@ -88,7 +88,7 @@ testthat::test_that("Test d_chol against finite difference", {
   # discards entries 2, 3, 6. Hence, there is an "extra" commutation matrix at the end
   # even though chol0 is merely t o chol.
   K_nn <- commutation_matrix0(nrow(A), ncol(A))
-  FD_res <- K_nn %*% finite_diff(chol, A, h) %*% K_nn
+  FD_res <- K_nn %*% finite_diff_test(chol, A, h) %*% K_nn
 
   X <- dual(A, length(A), 1)
   AD_res <- deriv_of(f(X))

@@ -5,16 +5,16 @@
 #' @param h The finite differencing parameter; the size of perturbation.
 #' @examples
 #' f <- function(y, X, beta) { y - X %*% beta }
-#' finite_difference(f,
+#' finite_diff(f,
 #'   vary = list(beta = c(5,6)),
 #'   fix = list(X = matrix(1:4, 2, 2), y = c(2,3))
 #' )
 #'
 #' g <- function(X, Y) { X %*% Y }
-#' finite_difference(g, vary = list(X = randn(2, 2), Y = randn(2, 2)))
+#' finite_diff(g, vary = list(X = randn(2, 2), Y = randn(2, 2)))
 #'
 #' @export
-finite_difference <- function(f, vary, fix = NULL, h = 1e-8) {  # add fix
+finite_diff <- function(f, vary, fix = NULL, h = 1e-8) {  # add fix
   dim_len <- if_null_then(dim, length)
   dim_ls <- purrr::map(vary, dim_len)
 
