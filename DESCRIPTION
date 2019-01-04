@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: Auto-Differentiation toolbox
-Version: 0.1.6.0000
+Version: 0.2.6.0000
 Author: Chun Fung Kwok
 Maintainer: Chun Fung Kwok <kcf.jackson@gmail.com>
 Description: Implements the forward-mode auto-differentiation for multivariate

@@ -13,7 +13,7 @@ Implements the forward-mode auto-differentiation for multivariate
     memoisation to cut down object construction time, using sparse matrix 
     representation to save derivative calculation, and creating specialised 
     matrix operations with Rcpp to reduce computation time; (ii) the package 
-    supports differentiating random variable with respect to their parameters; 
-    this is developed targetting simulation-based (in particular MCMC) applications.
+    supports differentiating random variable with respect to their parameters,
+    which is developed targetting simulation-based (in particular MCMC) applications.
 }
 \keyword{internal}
