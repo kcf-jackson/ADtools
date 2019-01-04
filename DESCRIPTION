@@ -28,6 +28,8 @@ Imports: purrr,
     mvtnorm
 Collate:
     'ADtools.R'
+    'class_dual_construction.R'
+    'class_dual_conversion.R'
     'class_dual_def.R'
     'd_matrix_op_matrix.R'
     'd_scalar_op_matrix.R'
