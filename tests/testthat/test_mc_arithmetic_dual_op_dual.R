@@ -1,12 +1,6 @@
 testthat::context("Test dual-dual arithmetic")
 
 # Helper functions
-relative_diff <- function(x, y) {
-  x <- as.numeric(x)
-  y <- as.numeric(y)
-  abs(x - y) / max(abs(x), abs(y))
-}
-
 compare_FD_and_AD <- function(FD, AD, show = F) {
   rel_err <- relative_diff(FD, AD)
   if (show) {

@@ -1,12 +1,6 @@
 context("Test random variable simulation")
 
 # Helper functions
-relative_diff <- function(x, y) {
-  x <- as.numeric(x)
-  y <- as.numeric(y)
-  abs(x - y) / max(abs(x), abs(y))
-}
-
 compare_FD_and_AD <- function(FD, AD, show = F) {
   AD <- AD[seq(nrow(FD)), seq(ncol(FD))]
   rel_err <- relative_diff(FD, AD)
