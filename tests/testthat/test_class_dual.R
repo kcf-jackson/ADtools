@@ -19,5 +19,6 @@ testthat::test_that("Test Constructor and Extractor", {
   testthat::expect_equal(dim(c@dx), c(10, 5))
   testthat::expect_true(ADtools:::check_dual(c))
 
+  testthat::expect_equal(ncol(get_deriv(c)), 5)
   testthat::expect_error(new("dual", x = randn(2,2), dx = "Error!"))
 })
