@@ -4,7 +4,7 @@
 \alias{finite_diff}
 \title{Finite differencing}
 \usage{
-finite_diff(f, vary, fix = NULL, h = 1e-08)
+finite_diff(f, vary, fix = NULL, h = 1e-08, seed)
 }
 \arguments{
 \item{f}{A function of which the derivative is seeked.}
@@ -14,6 +14,8 @@ finite_diff(f, vary, fix = NULL, h = 1e-08)
 \item{fix}{A named list of variables; the variables to be fixed.}
 
 \item{h}{The finite differencing parameter; the size of perturbation.}
+
+\item{seed}{Seed; for pathwise derivative only.}
 }
 \description{
 Finite differencing

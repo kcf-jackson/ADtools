@@ -3,6 +3,7 @@
 #' @param vary A named list of variables; the variables to be varied.
 #' @param fix A named list of variables; the variables to be fixed.
 #' @param h The finite differencing parameter; the size of perturbation.
+#' @param seed Seed; for pathwise derivative only.
 #' @examples
 #' f <- function(y, X, beta) { y - X %*% beta }
 #' finite_diff(f,
@@ -14,12 +15,14 @@
 #' finite_diff(g, vary = list(X = randn(2, 2), Y = randn(2, 2)))
 #'
 #' @export
-finite_diff <- function(f, vary, fix = NULL, h = 1e-8) {  # add fix
+finite_diff <- function(f, vary, fix = NULL, h = 1e-8, seed) {  # add fix
   dim_len <- if_null_then(dim, length)
   dim_ls <- purrr::map(vary, dim_len)
+  has_seed <- !missing(seed)
 
   x <- list_to_vec(vary)
   f_vec <- function(vec0) {
+    if (has_seed) set.seed(seed)
     do.call(f, append(vec_to_list(vec0, dim_ls), fix))    # add append
   }
 
@@ -56,11 +59,16 @@ list_to_vec <- function(list0) {
 }
 
 vec_to_list <- function(vec0, ls_dim) {
+  structure0 <- function(x, dim) {
+    # R deprecates recycling of length 1 array, so extra handling is needed.
+    if (isTRUE(dim == 1)) return(x)
+    structure(x, dim = dim)
+  }
   # extract elements according to ls_dim
   vec0_index <- cumsum(purrr::map_dbl(ls_dim, prod))
   ls_vec <- map_diff(c(0, vec0_index), ~vec0[seq(.x + 1, .y)])
   # reshape elements according to ls_dim
-  res <- purrr::map2(ls_vec, ls_dim, ~structure(.x, dim = .y))
+  res <- purrr::map2(ls_vec, ls_dim, ~structure0(.x, dim = .y))
   setNames(res, names(ls_dim))
 }
 
