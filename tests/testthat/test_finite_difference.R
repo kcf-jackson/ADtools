@@ -22,7 +22,7 @@ testthat::test_that("Test finite difference with randomness", {
   expect_res <- rnorm(5)
   expect_lt(
     max(relative_diff(
-      finite_diff(f, list(k = i), seed = 123), expect_res
+      finite_diff(f, list(k = 5), seed = 123), expect_res
     )),
     1e-6
   )
