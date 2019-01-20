@@ -188,6 +188,7 @@ get_param_dim <- function(x) {
     as.list()
 }
 
+
 #' Matrix multiplication of 'dual'-class objects
 #' @param x A "dual" object.
 #' @param y "ANY" object.

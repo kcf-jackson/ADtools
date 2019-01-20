@@ -1,13 +1,15 @@
 #' Diagonal matrix
+#' @param x A matrix, or a vector.
+#' @export
+diag.dual <- function(x) {
+  x@dx = d_diagonal(x)
+  x@x = diag(parent_of(x))
+  x
+}
+
+#' Diagonal matrix
 #' @param x A "dual" object.
-setMethod("diag",
-          signature(x = "dual"),
-          function(x) {
-            x@dx = d_diagonal(x)
-            x@x = diag(parent_of(x))
-            x
-          }
-)
+setMethod("diag", signature(x = "dual"), diag.dual)
 
 
 #' Vectorisation

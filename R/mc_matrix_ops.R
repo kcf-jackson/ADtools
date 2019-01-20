@@ -2,14 +2,38 @@
 NULL
 
 #' Inverse of 'dual'-class objects
+#' @method solve dual
+#' @name solve.dual
 #' @param a A "dual" object.
+#' @param b A "dual" object.
+#' @param ... Other arguments passed to 'base::solve'. See '?solve' for detail.
+#' @export
+solve.dual <- function(a, b, ...) {
+  if (missing(b)) {
+    fun <- call_S4("solve", a = "dual", b = "missing")
+  } else {
+    fun <- call_S4("solve", a = "dual", b = "dual")
+  }
+  fun(a, b, ...)
+}
+
+#' @rdname solve.dual
 setMethod("solve",
-  signature(a = "dual"),
-  function(a) {
-    inv_a <- solve(parent_of(a))
+  signature(a = "dual", b = "missing"),
+  function(a, b, ...) {
+    inv_a <- solve(parent_of(a), ...)
     new("dual", x = inv_a, dx = d_solve(a, inv_a), param = param_of(a))
   }
 )
+
+#' @rdname solve.dual
+setMethod("solve",
+  signature(a = "dual", b = "dual"),
+  function(a, b, ...) {
+    solve(a, ...) %*% b
+  }
+)
+
 
 #' Transpose of 'dual'-class objects
 #' @param x A "dual" object.
@@ -82,21 +106,30 @@ setMethod("chol0",
 
 
 #' Determinant of a matrix
-#' This is a wrapper of `base::det`.
-#' @param x A numeric matrix.
-#' @param ... Other parameters to be passed to `base::det`.
+#' @name matrix_determinant
+#' @inherit base::det
 #' @export
-det0 <- function(x, ...) { det(x, ...) }
+det <- function(x, ...) {
+  UseMethod("det", x)
+}
+
+#' @rdname matrix_determinant
+#' @export
+det.default <- base::det
 
 #' Determinant of a 'dual'-class object
 #' @param x A "dual" object.
-setMethod("det0",
-  signature(x = "dual"),
-  function(x) {
-    px <- parent_of(x)
-    det_x <- det(px)
-    x@x <- det_x
-    x@dx <- det_x * t(as.numeric(t(solve(px))))
-    x
-  }
-)
+#' @param ... Other parameters to be passed to `base::det`.
+#' @export
+det.dual <- function(x, ...) {
+  px <- parent_of(x)
+  det_x <- det(px, ...)
+  x@x <- det_x
+  x@dx <- det_x * t(as.numeric(t(solve(px))))
+  x
+}
+
+#' Determinant of a 'dual'-class object
+#' @param x A "dual" object.
+#' @param ... Other parameters to be passed to `base::det`.
+setMethod("det", signature(x = "dual"), det.dual)

@@ -18,13 +18,21 @@ setMethod("as.vector",
           }
 )
 
+
+#'  Coerce the first component of the dual object into a matrix.
+#' @method as.matrix dual
+#' @param x A "dual" object.
+#' @param ... Use `nrow`, `ncol` to specify the number of rows and columns.
+#' @export
+as.matrix.dual <- function(x, ...) {
+  x@x <- matrix(parent_of(x), ...)
+  x
+}
+
 #'  Coerce the first component of the dual object into a matrix.
 #' @param x A "dual" object.
 #' @param ... Use `nrow`, `ncol` to specify the number of rows and columns.
 setMethod("as.matrix",
           signature(x = "dual"),
-          function(x, ...) {
-            x@x <- matrix(parent_of(x), ...)
-            x
-          }
+          as.matrix.dual
 )
