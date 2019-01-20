@@ -98,5 +98,5 @@ testthat::test_that("Test d_chol against finite difference", {
 
 testthat::test_that("Test determinant against finite difference", {
   set.seed(123)
-  test_unary_operation(f = det0, A = randn(3, 3) * 10, h = 1e-7)
+  test_unary_operation(f = det, A = randn(3, 3) * 10, h = 1e-7)
 })
