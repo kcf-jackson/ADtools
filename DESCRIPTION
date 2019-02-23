@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: Auto-Differentiation toolbox
-Version: 0.2.6.0000
+Version: 0.2.7.9999
 Author: Chun Fung Kwok
 Maintainer: Chun Fung Kwok <kwokcf@unimelb.edu.au>
 Description: Implements the forward-mode auto-differentiation for multivariate
@@ -16,7 +16,7 @@ Description: Implements the forward-mode auto-differentiation for multivariate
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests:
     testthat,
     covr
@@ -24,11 +24,13 @@ Depends:
     R (>= 3.5.0), 
     methods, 
     Matrix
-Imports: purrr,
+Imports: 
+    purrr,
     dplyr,
     magrittr,
     assertthat,
-    mvtnorm
+    mvtnorm,
+    pryr
 Collate:
     'ADtools.R'
     'class_dual_construction.R'
@@ -47,6 +49,8 @@ Collate:
     'mc_math.R'
     'mc_matrix_ops.R'
     'mc_reshape.R'
+    'mc_rv_sim_normal.R'
+    'mc_rv_sim_student_t.R'
     'mc_rv_simulation.R'
     'mc_subsetting.R'
     'mc_sum.R'
