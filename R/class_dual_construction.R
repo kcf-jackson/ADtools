@@ -35,7 +35,9 @@ col_range_to_dim <- function(dim0) {
 get_deriv <- function(x, wrt) {
   if (missing(wrt)) wrt <- names(param_of(x))
   get_range <- function(list0) {
-    map_then_call(list0, ~seq(.x[1], .x[2]), c)
+    list0 %>%
+      purrr::map(~seq(.x[1], .x[2])) %>%
+      do.call(c, .)
   }
   make_colnames <- function(list0) {
     purrr::map2(
@@ -45,14 +47,18 @@ get_deriv <- function(x, wrt) {
     ) %>%
       do.call(c, .)
   }
+  set_rownames <- function(x) {
+    rownames(x) <- paste("d_output", seq(nrow(x)), sep = "_")
+    x
+  }
 
   var_of_interest <- param_of(x)[wrt]
   rng <- get_range(var_of_interest)
   d_var <- make_colnames(var_of_interest)
 
-  as.matrix(deriv_of(x))[, rng, drop = F] %>%
+  as.matrix(x@dx)[, rng, drop = F] %>%
     magrittr::set_colnames(d_var) %>%
-    add_rownames()
+    set_rownames()
 }
 
 
