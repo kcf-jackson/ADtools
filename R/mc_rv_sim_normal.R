@@ -11,7 +11,6 @@ rnorm0 <- function(n, mean = 0, sd = 1) {
   rnorm(n, mean, sd)
 }
 
-
 #' Simulate univariate normal random variates
 #' @param n Positive integer; the number of samples.
 #' @param mean A dual number; the mean of the normal distribution.

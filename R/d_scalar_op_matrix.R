@@ -1,10 +1,10 @@
 # Frames
 # Scalar by scalar: +, -, *, /
 d_scalar_op_scalar <- function(a, b, d_op) {
-  pa <- parent_of(a)
-  pb <- parent_of(b)
-  da <- deriv_of(a)
-  db <- deriv_of(b)
+  pa <- a@x
+  pb <- b@x
+  da <- a@dx
+  db <- b@dx
 
   # Make sure we are indeed dealing with scalars
   assertthat::assert_that(length(pa) == 1)
@@ -15,10 +15,10 @@ d_scalar_op_scalar <- function(a, b, d_op) {
 
 # Scalar by Matrix: +, -, *, /
 d_scalar_op_matrix <- function(a, b, d_op) {
-  pa <- parent_of(a)
-  pb <- parent_of(b)
-  da <- deriv_of(a)
-  db <- deriv_of(b)
+  pa <- a@x
+  pb <- b@x
+  da <- a@dx
+  db <- b@dx
   assertthat::assert_that(length(pa) == 1)
 
   da <- matrix(rep(da, nrow(db)), nrow = nrow(db), byrow = T)
@@ -27,10 +27,10 @@ d_scalar_op_matrix <- function(a, b, d_op) {
 
 # Matrix by Scalar: +, -, *, /
 d_matrix_op_scalar <- function(a, b, d_op) {
-  pa <- parent_of(a)
-  pb <- parent_of(b)
-  da <- deriv_of(a)
-  db <- deriv_of(b)
+  pa <- a@x
+  pb <- b@x
+  da <- a@dx
+  db <- b@dx
   assertthat::assert_that(length(pb) == 1)
 
   db <- matrix(rep(db, nrow(da)), nrow = nrow(da), byrow = T)

@@ -1,7 +1,7 @@
 element_wise_derivative <- function(f, df) {
   function(x) {
-    px <- parent_of(x)
-    dx <- deriv_of(x)
+    px <- x@x
+    dx <- x@dx
 
     x@x <- f(px)
     for (i in 1:nrow(dx)) {
@@ -44,9 +44,7 @@ setMethod(
 setMethod(
   "tan",
   signature(x = "dual"),
-  element_wise_derivative(tan, lambda(cos(x)^{
-    -2
-  }))
+  element_wise_derivative(tan, lambda(cos(x)^{-2}))
 )
 
 #' Element-wise exponential of a dual object

@@ -4,23 +4,43 @@ NULL
 #' Combine 'dual'-class objects by Columns
 #' @param x A "dual" object.
 #' @param y A "dual" object.
-setMethod("cbind2",
-          signature(x = "dual", y = "dual"),
-          function(x, y) {
-            x@x <- cbind(parent_of(x), parent_of(y))
-            x@dx <- rbind(deriv_of(x), deriv_of(y))
-            x
-          }
+setMethod(
+  "cbind2",
+  signature(x = "dual", y = "dual"),
+  function(x, y) {
+    x@x <- cbind(x@x, y@x)
+    x@dx <- rbind(x@dx, y@dx)
+    x
+  }
 )
 
 #' Combine 'dual'-class objects by Rows.
 #' @param x A "dual" object.
 #' @param y A "dual" object.
-setMethod("rbind2",
-          signature(x = "dual", y = "dual"),
-          function(x, y) {
-            x@x <- rbind(parent_of(x), parent_of(y))
-            x@dx <- rbind(deriv_of(x), deriv_of(y))
-            x
-          }
+setMethod(
+  "rbind2",
+  signature(x = "dual", y = "dual"),
+  function(x, y) {
+    res_x <- rbind(x@x, y@x)
+    res_dx <- rbind(x@dx, y@dx)
+    r1 <- nrow(x@x)
+    r2 <- nrow(y@x)
+    nc <- ncol(x@x)
+    g <- seq(nc)
+
+    x_ind <- seq_along(x@x)
+    res_ind <- x_ind + rearrange(rep((g - 1) * r2, r1), nc)
+    res_dx[res_ind, ] <- x@dx[x_ind, ]
+
+    y_ind <- seq_along(y@x)
+    res_ind <- y_ind + rearrange(rep(g * r1, r2), nc)
+    res_dx[res_ind, ] <- y@dx[y_ind, ]
+    x@x <- res_x
+    x@dx <- res_dx
+    x
+  }
 )
+
+rearrange <- function(vec0, group_size) {
+  as.numeric(t(matrix(vec0, nrow = group_size)))
+}

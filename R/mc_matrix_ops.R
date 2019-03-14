@@ -40,7 +40,9 @@ setMethod("solve",
 setMethod("t",
   signature(x = "dual"),
   function(x) {
-    new("dual", x = t(parent_of(x)), dx = d_transpose(x), param = param_of(x))
+    x@dx <- d_transpose(x)
+    x@x <- t(x@x)
+    x
   }
 )
 
@@ -50,10 +52,9 @@ setMethod("t",
 setMethod("tcrossprod",
   signature(x = "dual", y = "missing"),
   function(x, y) {
-    new("dual",
-        x = tcrossprod(parent_of(x)),
-        dx = d_XXT(x),
-        param = param_of(x))
+    x@dx <- d_XXT(x)
+    x@x <- tcrossprod(x@x)
+    x
   }
 )
 
@@ -96,7 +97,7 @@ chol0 <- function(x) { t(chol(x)) }
 setMethod("chol0",
   signature(x = "dual"),
   function(x) {
-    L <- chol0(parent_of(x))
+    L <- chol0(x@x)
     dL <- d_chol(L, x)
     x@x <- L
     x@dx <- dL
@@ -122,7 +123,7 @@ det.default <- base::det
 #' @param ... Other parameters to be passed to `base::det`.
 #' @export
 det.dual <- function(x, ...) {
-  px <- parent_of(x)
+  px <- x@x
   det_x <- det(px, ...)
   x@x <- det_x
   x@dx <- det_x * t(as.numeric(t(solve(px))))

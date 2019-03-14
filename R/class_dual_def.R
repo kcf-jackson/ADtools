@@ -1,14 +1,14 @@
-is_matrix <- function(x) {
-  if (class(x) == "matrix") return(TRUE)
+is_sparse_matrix <- function(x) {
   attr_cls <- attr(class(x), "package")
   !is.null(attr_cls) && (attr_cls == "Matrix")
 }
-
+is_matrix <- function(x) {
+  (class(x) == "matrix") || is_sparse_matrix(x)
+}
 check_dual <- function(object) {
   x <- object@x
   dx <- object@dx
   x_check <- is.array(x) || is.numeric(x) || is_matrix(x)
-  # x_check <- is_matrix(x) || (length(x) == 1)
   dim_check <- nrow(dx) == length(x)   # match dimension
   x_check && is_matrix(dx) && dim_check
 }
@@ -24,11 +24,7 @@ check_dual <- function(object) {
 #' constructor helper `dual` provided.
 setClass(
   "dual",
-  representation(
-    x = "ANY",
-    dx = "ANY",
-    param = "list"
-  ),
+  representation(x = "ANY", dx = "ANY", param = "list"),
   validity = check_dual
 )
 
