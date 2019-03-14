@@ -4,12 +4,14 @@
 \alias{as.matrix.dual}
 \title{Coerce the first component of the dual object into a matrix.}
 \usage{
-\method{as.matrix}{dual}(x, ...)
+\method{as.matrix}{dual}(x, nrow, ncol)
 }
 \arguments{
 \item{x}{A "dual" object.}
 
-\item{...}{Use `nrow`, `ncol` to specify the number of rows and columns.}
+\item{nrow}{a positive integer; the desired number of rows.}
+
+\item{ncol}{a positive integer; the desired number of rows.}
 }
 \description{
 Coerce the first component of the dual object into a matrix.

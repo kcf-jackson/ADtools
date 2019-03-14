@@ -5,7 +5,7 @@
 \alias{as.matrix,dual-method}
 \title{Coerce the first component of the dual object into a matrix.}
 \usage{
-\S4method{as.matrix}{dual}(x, ...)
+\S4method{as.matrix}{dual}(x, nrow, ncol)
 }
 \arguments{
 \item{x}{A "dual" object.}

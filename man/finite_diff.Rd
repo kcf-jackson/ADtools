@@ -23,8 +23,8 @@ Finite differencing
 \examples{
 f <- function(y, X, beta) { y - X \%*\% beta }
 finite_diff(f,
-  vary = list(beta = c(5,6)),
-  fix = list(X = matrix(1:4, 2, 2), y = c(2,3))
+  vary = list(beta = c(5, 6)),
+  fix = list(X = matrix(1:4, 2, 2), y = c(2, 3))
 )
 
 g <- function(X, Y) { X \%*\% Y }
