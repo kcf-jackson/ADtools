@@ -21,6 +21,11 @@ map_row <- function(m0, f) {
 }
 
 
+call_S4 <- function(f_name, ...) {
+  getMethod(f_name, list(...))@.Data
+}
+
+
 # map_col <- function(m0) {
 #   purrr::map(1:ncol(m0), ~f(m0[, .x]))
 # }

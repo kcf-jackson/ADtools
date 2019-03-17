@@ -14,6 +14,30 @@ setMethod(
   }
 )
 
+#' Combine 'dual'-class objects by Columns
+#' @param x A "dual" object.
+#' @param y ANY object.
+setMethod(
+  "cbind2",
+  signature(x = "dual", y = "ANY"),
+  function(x, y) {
+    y <- dual(y, get_param_dim(x), -1)
+    cbind2(x, y)
+  }
+)
+
+#' Combine 'dual'-class objects by Columns
+#' @param x ANY object.
+#' @param y A "dual" object.
+setMethod(
+  "cbind2",
+  signature(x = "ANY", y = "dual"),
+  function(x, y) {
+    x <- dual(x, get_param_dim(y), -1)
+    cbind2(x, y)
+  }
+)
+
 #' Combine 'dual'-class objects by Rows.
 #' @param x A "dual" object.
 #' @param y A "dual" object.
@@ -44,3 +68,28 @@ setMethod(
 rearrange <- function(vec0, group_size) {
   as.numeric(t(matrix(vec0, nrow = group_size)))
 }
+
+
+#' Combine 'dual'-class objects by Rows
+#' @param x A "dual" object.
+#' @param y ANY object.
+setMethod(
+  "rbind2",
+  signature(x = "dual", y = "ANY"),
+  function(x, y) {
+    y <- dual(y, get_param_dim(x), -1)
+    rbind2(x, y)
+  }
+)
+
+#' Combine 'dual'-class objects by Rows
+#' @param x ANY object.
+#' @param y A "dual" object.
+setMethod(
+  "rbind2",
+  signature(x = "ANY", y = "dual"),
+  function(x, y) {
+    x <- dual(x, get_param_dim(y), -1)
+    rbind2(x, y)
+  }
+)

@@ -12,7 +12,7 @@ solve.dual <- function(a, b, ...) {
   if (missing(b)) {
     fun <- call_S4("solve", a = "dual", b = "missing")
   } else {
-    fun <- call_S4("solve", a = "dual", b = "dual")
+    fun <- solve_dual
   }
   fun(a, b, ...)
 }
@@ -21,18 +21,25 @@ solve.dual <- function(a, b, ...) {
 setMethod("solve",
   signature(a = "dual", b = "missing"),
   function(a, b, ...) {
-    inv_a <- solve(parent_of(a), ...)
-    new("dual", x = inv_a, dx = d_solve(a, inv_a), param = param_of(a))
+    inv_a <- solve(a@x, ...)
+    a@dx <- d_solve(a, inv_a)
+    a@x <- inv_a
+    a
   }
 )
 
+solve_dual <- function(a, b, ...) {
+  solve(a, ...) %*% b
+}
+
 #' @rdname solve.dual
-setMethod("solve",
-  signature(a = "dual", b = "dual"),
-  function(a, b, ...) {
-    solve(a, ...) %*% b
-  }
-)
+setMethod("solve", signature(a = "dual", b = "dual"), solve_dual)
+
+#' @rdname solve.dual
+setMethod("solve", signature(a = "ANY", b = "dual"), solve_dual)
+
+#' @rdname solve.dual
+setMethod("solve", signature(a = "dual", b = "ANY"), solve_dual)
 
 
 #' Transpose of 'dual'-class objects
@@ -58,14 +65,21 @@ setMethod("tcrossprod",
   }
 )
 
+
+tcrossprod_dual <- function(x, y) { x %*% t(y) }
+
+#' Crossproduct of 'dual'-class objects
+#' @param x A "dual" object.
+#' @param y Numeric matrix.
+setMethod("tcrossprod", signature(x = "dual", y = "ANY"), tcrossprod_dual)
+
 #' Crossproduct of 'dual'-class objects
 #' @param x A "dual" object.
 #' @param y A "dual" object.
-setMethod("tcrossprod",
-  signature(x = "dual", y = "dual"),
-  function(x, y) { x %*% t(y) }
-)
+setMethod("tcrossprod", signature(x = "dual", y = "dual"), tcrossprod_dual)
 
+
+crossprod_dual <- function(x, y) { t(x) %*% y }
 
 #' Crossproduct of 'dual'-class objects
 #' @param x A "dual" object.
@@ -78,10 +92,12 @@ setMethod("crossprod",
 #' Crossproduct of 'dual'-class objects
 #' @param x A "dual" object.
 #' @param y A "dual" object.
-setMethod("crossprod",
-  signature(x = "dual", y = "dual"),
-  function(x, y) { t(x) %*% y }
-)
+setMethod("crossprod", signature(x = "dual", y = "ANY"), crossprod_dual)
+
+#' Crossproduct of 'dual'-class objects
+#' @param x A "dual" object.
+#' @param y A "dual" object.
+setMethod("crossprod", signature(x = "dual", y = "dual"), crossprod_dual)
 
 
 #' Cholesky decomposition

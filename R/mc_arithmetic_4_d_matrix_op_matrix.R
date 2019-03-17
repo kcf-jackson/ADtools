@@ -33,14 +33,3 @@ d_matrix_divide_matrix <- function(a, b) {
   }
   d_res
 }
-
-d_matrix_prod <- function(a, b) {
-  A <- a@x
-  B <- b@x
-  dA <- a@dx
-  dB <- b@dx
-  I_A <- Diagonal0(nrow(A))
-  I_B <- Diagonal0(ncol(B))
-  (I_B %x% A) %*% dB + (t(B) %x% I_A) %*% dA
-  # I_x_B_times_C(A, dB) + A_x_I_times_C(t(B), dA)
-}

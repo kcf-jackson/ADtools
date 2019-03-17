@@ -22,7 +22,7 @@ d_subset <- function(a, i, j) {
   } else {
     ind <- map2reduce(i, j, ~ .x + nr * (.y - 1), c)
   }
-  dx[ind, , drop = FALSE]
+  dx[sort(ind), , drop = FALSE]
 }
 
 #' Extract parts of an object

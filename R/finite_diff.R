@@ -28,12 +28,17 @@ finite_diff <- function(f, vary, fix = NULL, h = 1e-8, seed) {
 
 vec_finite_diff <- function(f, x, h = 1e-8) {
   ufx <- as.numeric(unlist(f(x)))  # avoid duplicate evaluation
-  finite_deriv <- . %>% { (as.numeric(unlist(f(.))) - ufx) / h }
+  finite_deriv <- function(x) {
+    (as.numeric(unlist(f(x))) - ufx) / h
+  }
   perturbate <- function(v, h) {
     purrr::map(seq_along(v), function(i) { v[i] <- v[i] + h; v })
   }
   res <- map_then_call(perturbate(x, h), finite_deriv, cbind)
-  if (is.null(rownames(res))) res <- add_rownames(res)
+  
+  if (is.null(rownames(res))) {
+    res <- add_rownames(res)
+  }
   res
 }
 
