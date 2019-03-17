@@ -5,6 +5,8 @@
 \alias{solve.dual}
 \alias{solve,dual,missing-method}
 \alias{solve,dual,dual-method}
+\alias{solve,ANY,dual-method}
+\alias{solve,dual,ANY-method}
 \title{Inverse of 'dual'-class objects}
 \usage{
 \method{solve}{dual}(a, b, ...)
@@ -12,6 +14,10 @@
 \S4method{solve}{dual,missing}(a, b, ...)
 
 \S4method{solve}{dual,dual}(a, b, ...)
+
+\S4method{solve}{ANY,dual}(a, b, ...)
+
+\S4method{solve}{dual,ANY}(a, b, ...)
 }
 \arguments{
 \item{a}{A "dual" object.}

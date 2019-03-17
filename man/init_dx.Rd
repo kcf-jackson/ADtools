@@ -19,10 +19,10 @@ Initialise the dual component, i.e. the storage matrices for derivatives
 }
 \examples{
 \dontrun{
-init_dx(4, c(2,5,1), -1)
-init_dx(4, c(2,5,1), 1)
-init_dx(4, c(2,5,1), 2)
-init_dx(4, c(2,5,1), 3)
+init_dx(4, c(2, 5, 1), -1)
+init_dx(4, c(2, 5, 1), 1)
+init_dx(4, c(2, 5, 1), 2)
+init_dx(4, c(2, 5, 1), 3)
 }
 }
 \keyword{interal}
