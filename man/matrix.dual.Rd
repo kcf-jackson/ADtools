@@ -12,6 +12,21 @@
 \S4method{matrix}{dual}(data = NA, nrow = 1, ncol = 1, byrow = F,
   dimnames = NULL)
 }
+\arguments{
+\item{data}{A "dual" object.}
+
+\item{nrow}{a positive integer; the desired number of rows.}
+
+\item{ncol}{a positive integer; the desired number of rows.}
+
+\item{byrow}{T or F; whether to fill the matrix by rows.}
+
+\item{dimnames}{A dimnames attribute for the matrix: NULL or
+a list of length 2 giving the row and column names respectively.
+An empty list is treated as NULL, and a list of length one as
+row names. The list can be named, and the list names will be
+used as names for the dimensions.}
+}
 \description{
 Create a matrix from a given set of values
 

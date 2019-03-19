@@ -13,6 +13,9 @@ rmvnorm0(n, mean, sigma)
 
 \item{sigma}{covariance matrix of the normal distribution.}
 }
+\value{
+A numeric matrix, where every column is a sample.
+}
 \description{
 Simulate multivariate normal random variates
 }

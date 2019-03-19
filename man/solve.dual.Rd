@@ -29,3 +29,7 @@
 \description{
 Inverse of 'dual'-class objects
 }
+\note{
+At least one of `a` and `b` must be a dual object, the other one may be
+any appropriate numeric matrix.
+}

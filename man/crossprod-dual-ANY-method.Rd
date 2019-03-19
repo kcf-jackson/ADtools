@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{A "dual" object.}
 
-\item{y}{A "dual" object.}
+\item{y}{Numeric matrix.}
 }
 \description{
 Crossproduct of 'dual'-class objects
