@@ -5,37 +5,61 @@ NULL
 # Gaussian distribution
 #===============================================================
 #' Simulate univariate normal random variates
-#' @inherit stats::rnorm
+#' @name rnorm0
+#' @param n Positive integer; the number of samples.
+#' @param mean A dual number or a numeric vector; the mean of the normal distribution.
+#' @param sd A dual number or a numeric vector; the standard deviation of the normal distribution.
 #' @export
 rnorm0 <- function(n, mean = 0, sd = 1) {
   rnorm(n, mean, sd)
 }
 
-#' Simulate univariate normal random variates
-#' @param n Positive integer; the number of samples.
-#' @param mean A dual number; the mean of the normal distribution.
-#' @param sd A dual number; the standard deviation of the normal distribution.
+rnorm0_dual <- function(n, mean, sd) {
+  len_mean <- length(mean)
+  assertthat::assert_that(len_mean == 1 || len_mean == n)
+  len_sd <- length(sd)
+  assertthat::assert_that(len_sd == 1 || len_sd == n)
+  mean + sd * rnorm(n)
+}
+
+#' @rdname rnorm0
 setMethod("rnorm0",
   signature(n = "numeric", mean = "dual", sd = "dual"),
-  function(n, mean, sd) {
-    len_mean <- length(mean)
-    assertthat::assert_that(len_mean == 1 || len_mean == n)
-
-    len_sd <- length(sd)
-    assertthat::assert_that(len_sd == 1 || len_sd == n)
-
-    mean + sd * rnorm(n)
-  }
+  rnorm0_dual
 )
+
+#' @rdname rnorm0
+setMethod("rnorm0",
+  signature(n = "numeric", mean = "ANY", sd = "dual"),
+  rnorm0_dual
+)
+
+#' @rdname rnorm0
+setMethod("rnorm0",
+  signature(n = "numeric", mean = "dual", sd = "ANY"),
+  rnorm0_dual
+)
+
 
 #' Simulate multivariate normal random variates
 #' @param n Positive integer; the number of samples.
 #' @param mean mean vector of the normal distribution.
 #' @param sigma covariance matrix of the normal distribution.
 # #' @param ... Other parameters to be passed to `mvtnorm::rmvnorm`
+#' @return A numeric matrix, where every column is a sample.
 #' @export
 rmvnorm0 <- function(n, mean, sigma) {
-  mvtnorm::rmvnorm(n, mean, sigma)
+  mean + chol0(sigma) %*%
+    t(mvtnorm::rmvnorm(n, numeric(length(mean))))
+}
+
+rmvnorm0_dual <- function(n, mean, sigma) {
+  mapreduce(
+    seq(n),
+    ~ mean + chol0(sigma) %*%
+      t(mvtnorm::rmvnorm(1, numeric(length(mean)))),
+    cbind2
+  )
 }
 
 #' Simulate multivariate normal random variates
@@ -44,12 +68,23 @@ rmvnorm0 <- function(n, mean, sigma) {
 #' @param sigma A dual number; the standard deviation of the normal distribution.
 setMethod("rmvnorm0",
   signature(n = "numeric", mean = "dual", sigma = "dual"),
-  function(n, mean, sigma) {
-    mapreduce(
-      seq(n),
-      ~mean + chol0(sigma) %*%
-        t(mvtnorm::rmvnorm(1, numeric(length(mean)))),
-      cbind2
-    )
-  }
+  rmvnorm0_dual
+)
+
+#' Simulate multivariate normal random variates
+#' @param n Positive integer; the number of samples.
+#' @param mean A dual number; the mean of the normal distribution.
+#' @param sigma A dual number; the standard deviation of the normal distribution.
+setMethod("rmvnorm0",
+  signature(n = "numeric", mean = "dual", sigma = "ANY"),
+  rmvnorm0_dual
+)
+
+#' Simulate multivariate normal random variates
+#' @param n Positive integer; the number of samples.
+#' @param mean A dual number; the mean of the normal distribution.
+#' @param sigma A dual number; the standard deviation of the normal distribution.
+setMethod("rmvnorm0",
+  signature(n = "numeric", mean = "ANY", sigma = "dual"),
+  rmvnorm0_dual
 )

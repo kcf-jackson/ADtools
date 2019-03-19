@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: Auto-Differentiation toolbox
-Version: 0.2.7.9999
+Version: 0.3.8.9999
 Author: Chun Fung Kwok
 Maintainer: Chun Fung Kwok <kwokcf@unimelb.edu.au>
 Description: Implements the forward-mode auto-differentiation for multivariate
@@ -33,26 +33,26 @@ Imports:
     pryr
 Collate:
     'ADtools.R'
+    'auto_diff.R'
     'class_dual_construction.R'
-    'class_dual_conversion.R'
     'class_dual_def.R'
-    'd_matrix_op_matrix.R'
-    'd_scalar_op_matrix.R'
     'finite_diff.R'
     'special_matrix.R'
     'interface.R'
-    'matrix_calculus.R'
-    'mc_arithmetic.R'
-    'mc_arithmetic_dual_op_dual.R'
-    'mc_binding.R'
+    'mc_arithmetic_1.R'
+    'mc_arithmetic_2_dual_op_dual.R'
+    'mc_arithmetic_3_d_arithmetic.R'
+    'mc_arithmetic_4_d_matrix_op_matrix.R'
+    'mc_arithmetic_4_d_scalar_op_matrix.R'
     'mc_generic.R'
-    'mc_math.R'
+    'mc_math_elementary.R'
+    'mc_math_sum.R'
     'mc_matrix_ops.R'
-    'mc_reshape.R'
+    'mc_matrix_ops_AD.R'
     'mc_rv_sim_normal.R'
     'mc_rv_sim_student_t.R'
     'mc_rv_simulation.R'
-    'mc_subsetting.R'
-    'mc_sum.R'
-    'set_generic.R'
+    'mc_structure_binding.R'
+    'mc_structure_reshape.R'
+    'mc_structure_subsetting.R'
     'utils.R'

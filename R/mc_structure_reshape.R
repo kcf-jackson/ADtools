@@ -84,21 +84,23 @@ setMethod(
 
 
 #' Coerce the first component of the dual object into a matrix.
+#' @name as.matrix.dual
 #' @method as.matrix dual
 #' @param x A "dual" object.
+#' @param ... additional arguments to be passed to or from methods.
 #' @export
-as.matrix.dual <- function(x) {
+as.matrix.dual <- function(x, ...) {
   x@x <- as.matrix(x@x)
   x
 }
 
-#' Coerce the first component of the dual object into a matrix.
-#' @param x A "dual" object.
+#' @rdname as.matrix.dual
 setMethod("as.matrix", signature(x = "dual"), as.matrix.dual)
 
 
 #' Create a matrix from a given set of values
 #' @method matrix dual
+#' @inheritParams matrix
 #' @name matrix.dual
 #' @export
 matrix.dual <- function(data, nrow, ncol = 1, byrow = F, dimnames = NULL) {
@@ -106,8 +108,10 @@ matrix.dual <- function(data, nrow, ncol = 1, byrow = F, dimnames = NULL) {
     nrow <- round(length(data@x) / ncol)
   }
   ncol <- round(length(data@x) / nrow)
-  data@x <- matrix(data@x, nrow = nrow, ncol = ncol,
-                   byrow = byrow, dimnames = dimnames)
+  data@x <- matrix(data@x,
+    nrow = nrow, ncol = ncol,
+    byrow = byrow, dimnames = dimnames
+  )
   if (byrow) {
     ind <- as.numeric(matrix(seq_along(data@x), nrow = nrow, ncol = ncol, byrow = T))
     data@dx <- data@dx[ind, ]

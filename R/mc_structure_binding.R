@@ -47,9 +47,9 @@ setMethod(
   function(x, y) {
     res_x <- rbind(x@x, y@x)
     res_dx <- rbind(x@dx, y@dx)
-    r1 <- nrow(x@x)
-    r2 <- nrow(y@x)
-    nc <- ncol(x@x)
+    r1 <- if_null_then(nrow(x@x), length(x@x))
+    r2 <- if_null_then(nrow(y@x), length(y@x))
+    nc <- if_null_then(ncol(x@x), length(x@x))
     g <- seq(nc)
 
     x_ind <- seq_along(x@x)
@@ -64,6 +64,11 @@ setMethod(
     x
   }
 )
+
+if_null_then <- function(x, y) {
+  if (is.null(x)) return(y)
+  return(x)
+}
 
 rearrange <- function(vec0, group_size) {
   as.numeric(t(matrix(vec0, nrow = group_size)))
