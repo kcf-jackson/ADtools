@@ -9,7 +9,7 @@ fs <- list(
   lambda(x, x[i, j]), 
   head, tail
 )
-inputs <- generate_input(
+inputs <- generate_inputs(
   g = lambda( list(x = randn(ind[[1]], ind[[2]])) ),
   config_ls = purrr::map2(10:20, 10:20, list)
 )

@@ -6,12 +6,12 @@ testthat::test_that("Test finite difference main function", {
   for (i in 1:10) {
     X <- randn(2, 2)
     y <- rnorm(2)
-    expect_lt(
-      max(relative_diff(
-        finite_diff(f, list(X = X, y = y)),
-        cbind(t(y %x% diag(2)), X)
-      )),
-      1e-6
+    compare(
+      finite_diff(f, list(X = X, y = y)),
+      cbind(t(y %x% diag(2)), X),
+      display = F, 
+      err_fun = rel_err,
+      epsilon = 1e-6
     )
   }
 })
@@ -20,10 +20,11 @@ testthat::test_that("Test finite difference with randomness", {
   f <- function(k) { rnorm(5) * k }
   set.seed(123)
   expect_res <- rnorm(5)
-  expect_lt(
-    max(relative_diff(
-      finite_diff(f, list(k = 5), seed = 123), expect_res
-    )),
-    1e-6
+  compare(
+    finite_diff(f, list(k = 5), seed = 123), 
+    expect_res,
+    display = F, 
+    err_fun = rel_err,
+    epsilon = 1e-6
   )
 })
