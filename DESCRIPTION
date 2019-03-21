@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: Auto-Differentiation toolbox
-Version: 0.3.8.9999
+Version: 0.4.0
 Author: Chun Fung Kwok
 Maintainer: Chun Fung Kwok <kwokcf@unimelb.edu.au>
 Description: Implements the forward-mode auto-differentiation for multivariate
@@ -12,7 +12,7 @@ Description: Implements the forward-mode auto-differentiation for multivariate
     representation to save derivative calculation, and creating specialised 
     matrix operations with Rcpp to reduce computation time; (ii) the package 
     supports differentiating random variable with respect to their parameters,
-    which is developed targetting simulation-based (in particular MCMC) applications.
+    targetting MCMC (and in general simulation-based) applications.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
