@@ -1,8 +1,6 @@
 #' @include class_dual_def.R
 NULL
 
-setClassUnion("dual_or_numeric", c("dual", "numeric"))
-
 # A note about the implementation
 # The 'parameter-recycling' mechanism is not implemented for random variable
 # simulation involving 'dual' number since it penalises performance and it
@@ -24,35 +22,54 @@ setClassUnion("dual_or_numeric", c("dual", "numeric"))
 #' in different parameter regions, which creates a discontinuity in the
 #' pathwise derivative.
 #' @export
-rgamma0 <- function(n, shape, scale, method = "base") {
+rgamma0 <- function(n, shape, scale, method = "inv_tf") {
   if (method == "base")   return(rgamma(n, shape, scale = scale))
   if (method == "inv_tf") return(rgamma1(n, shape, scale = scale))
   stop("method must be one of 'base' and 'inv_tf'.")
 }
 
-
 # Inverse-transform by root-finding
+rgamma_invt <- inverse_transform(pgamma)
 rgamma1 <- function(n, shape, scale = 1) {
   len_shape <- length(shape)
   len_scale <- length(scale)
-  if ((len_shape == 1) && (len_scale == 1)) {
-    return(purrr::map_dbl(runif(n), gamma_inv_tf, shape = shape, scale = scale))
-  } else {
-    shape <- rep(shape, ceiling(n / len_shape))
-    scale <- rep(scale, ceiling(n / len_scale))
-    return(purrr::pmap_dbl(
-      list(u = runif(n), shape = shape[1:n], scale = scale[1:n]),
-      gamma_inv_tf
-    ))
-  }
+  assertthat::assert_that(len_shape == 1 || len_shape == n)
+  assertthat::assert_that(len_scale == 1 || len_scale == n)
+
+  param <- cbind(1:n, shape, scale)
+  purrr::map2_dbl(param[, 2], param[, 3], ~rgamma_invt(1, shape = .x, scale = .y))
 }
-gamma_inv_tf <- function(u, shape, scale) {
-  interval <- c(0, shape + 2 * sqrt(shape / scale^2))
-  .f <- function(x) { pgamma(x, shape = shape, scale = scale) - u }
-  uniroot(
-    .f, interval, tol = .Machine$double.eps^0.75, maxiter = 10000,
-    extendInt = "upX"
-  )$root
+
+
+setClassUnion("dual_or_numeric", c("dual", "numeric"))
+
+rgamma0_dual <- function(n, shape, scale, method = "inv_tf") {
+  len_shape <- length(shape)
+  assertthat::assert_that(len_shape == 1 || len_shape == n)
+
+  len_scale <- length(scale)
+  assertthat::assert_that(len_scale == 1 || len_scale == n)
+
+  rgamma_single <- function(shape, scale) {
+    g_dual <- shape
+    g <- rgamma0(1, shape@x, scale = 1, method = method)
+    g_dual@x <- g
+    g_dual@dx <- d_rgamma(g, shape@x) * shape@dx
+    g_dual * scale
+  }
+  # handle parameters of different length
+  if ((len_shape == 1) && (len_scale == 1)) {
+    return(mapreduce(seq(n), ~rgamma_single(shape, scale), rbind2))
+  }
+  if ((len_shape == 1) && (len_scale == n)) {
+    return(mapreduce(seq(n), ~rgamma_single(shape, scale[.x]), rbind2))
+  }
+  if ((len_shape == n) && (len_scale == 1)) {
+    return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale), rbind2))
+  }
+  if ((len_shape == n) && (len_scale == n)) {
+    return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale[.x]), rbind2))
+  }
 }
 
 
@@ -62,45 +79,37 @@ gamma_inv_tf <- function(u, shape, scale) {
 #' @param scale A dual number or a scalar; the scale of the gamma distribution.
 #' @param method base or inv_tf; base refers to `stats::rgamma` while
 #' inv_tf refers to inverse transform.
-#' @note At least on of `shape` and `scale` should be a dual number.
-#' Otherwise, `stats::rgamma` is called instead.
-#' @rdname gamma_rv
+#' @note At least one of `shape` and `scale` should be a dual number.
+#' @name gamma_rv
 setMethod("rgamma0",
-  signature(n = "numeric", shape = "dual", scale = "dual_or_numeric"),
-  function(n, shape, scale, method = "base") {
-    len_shape <- length(shape)
-    assertthat::assert_that(len_shape == 1 || len_shape == n)
-
-    len_scale <- length(scale)
-    assertthat::assert_that(len_scale == 1 || len_scale == n)
-
-    rgamma_single <- function(shape, scale) {
-      g <- rgamma0(1, parent_of(shape), scale = 1, method = method)
-      d_g <- d_rgamma_num_dual(g, shape)
-      g_dual <- new("dual", x = g, dx = deriv_of(d_g), param = shape@param)
-      g_dual * scale
-    }
-    # handle parameters of different length
-    if ((len_shape == 1) && (len_scale == 1)) {
-      return(mapreduce(seq(n), ~rgamma_single(shape, scale), rbind2))
-    }
-    if ((len_shape == 1) && (len_scale == n)) {
-      return(mapreduce(seq(n), ~rgamma_single(shape, scale[.x]), rbind2))
-    }
-    if ((len_shape == n) && (len_scale == 1)) {
-      return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale), rbind2))
-    }
-    if ((len_shape == n) && (len_scale == n)) {
-      return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale[.x]), rbind2))
-    }
-  }
+  signature(n = "numeric", shape = "dual", scale = "dual"),
+  rgamma0_dual
 )
 
-#' Simulate gamma random variates
+#' @rdname gamma_rv
+setMethod("rgamma0",
+  signature(n = "numeric", shape = "dual", scale = "numeric"),
+  rgamma0_dual
+)
+
+d_rgamma <- function(g, alpha0) {
+  f <- function(t) { log(t) * dgamma(t, alpha0, 1) }
+  num_1 <- integrate(f, 0, g)$value
+  num_2 <- digamma(alpha0) * pgamma(g, alpha0, 1)
+  - (num_1 - num_2) / dgamma(g, alpha0, 1)
+}
+# Potential second implementation
+# d_rgamma2 <- function(g, alpha0) {
+#   h <- 1e-8
+#   numerator <- -(pgamma(x, shape = alpha0 + h) - pgamma(x, shape = alpha0)) / h
+#   denominator <- dgamma(x, shape = alpha0)
+#   numerator / denominator
+# }
+
 #' @rdname gamma_rv
 setMethod("rgamma0",
   signature(n = "numeric", shape = "numeric", scale = "dual"),
-  function(n, shape, scale, method = "base") {
+  function(n, shape, scale, method = "inv_tf") {
     len_shape <- length(shape)
     assertthat::assert_that(len_shape == 1 || len_shape == n)
 
@@ -128,23 +137,6 @@ setMethod("rgamma0",
   }
 )
 
-# d_rgamma <- function(g, alpha) {
-#   # takes an simulated value from gamma distribution and the corresponding
-#   # parameter alpha, returns the derivative "d G(alpha, 1) / d alpha"
-#   f <- function(t) { log(t) * dgamma(t, alpha, 1) }
-#   num_1 <- integrate(f, 0, g)$value
-#   num_2 <- digamma(alpha) * pgamma(g, alpha, 1)
-#   - (num_1 - num_2) / dgamma(g, alpha, 1)
-# }
-
-d_rgamma_num_dual <- function(g, alpha) {
-  # g is a scalar, alpha is a dual number.
-  alpha0 <- parent_of(alpha)
-  f <- function(t) { log(t) * dgamma(t, alpha0, 1) }
-  num_1 <- integrate(f, 0, g)$value
-  num_2 <- digamma(alpha0) * pgamma(g, alpha0, 1)
-  - (num_1 - num_2) / dgamma(g, alpha0, 1) * alpha  # correct for derivative
-}
 
 # Info: Inverse-Gamma
 # X ~ Gamma(alpha, beta) <=> X^{-1} ~ IGamma(alpha, beta)
@@ -161,7 +153,7 @@ d_rgamma_num_dual <- function(g, alpha) {
 #' @param method base or inv_tf; base refers to the function in the
 #' `stats` package while inv_tf refers to inverse transform.
 #' @export
-rWishart0 <- function(v, M, method = "base") {
+rWishart0 <- function(v, M, method = "inv_tf") {
   if (method == "base") return(stats::rWishart(1, v, M)[,,1])
 
   chi_samples <- seq(nrow(M)) %>%
@@ -180,12 +172,12 @@ rWishart0 <- function(v, M, method = "base") {
 #' @rdname wishart_rv
 setMethod("rWishart0",
   signature(v = "dual", M = "dual"),
-  function(v, M, method = "base") {
+  function(v, M, method = "inv_tf") {
     n <- nrow(parent_of(M))
     # Implement: diag(A) <- sqrt(rchisq(n, df = v - seq(n) + 1))
-    chisq_samples <- seq(n) %>%
-      purrr::map(~rchisq0(1, v - .x + 1, method = method)) %>%
-      purrr::reduce(rbind2)
+    chisq_samples <- mapreduce(
+      seq(n), ~rchisq0(1, v - .x + 1, method = method), rbind2
+    )
     A <- diag(as.vector(sqrt(chisq_samples)))
     # Changing lower triangular part of the matrix; this doesn't change dA
     A_x <- parent_of(A)
@@ -200,7 +192,7 @@ setMethod("rWishart0",
 #' @rdname wishart_rv
 setMethod("rWishart0",
   signature(v = "ANY", M = "dual"),
-  function(v, M, method = "base") {
+  function(v, M, method = "inv_tf") {
     n <- nrow(parent_of(M))
     # Implement: diag(A) <- sqrt(rchisq(n, df = v - seq(n) + 1))
     chisq_samples <- seq(n) %>%
@@ -215,12 +207,12 @@ setMethod("rWishart0",
 #' @rdname wishart_rv
 setMethod("rWishart0",
   signature(v = "dual", M = "ANY"),
-  function(v, M, method = "base") {
+  function(v, M, method = "inv_tf") {
     n <- nrow(M)
     # Implement: diag(A) <- sqrt(rchisq(n, df = v - seq(n) + 1))
-    chisq_samples <- seq(n) %>%
-      purrr::map(~rchisq0(1, v - .x + 1, method = method)) %>%
-      purrr::reduce(rbind2)
+    chisq_samples <- mapreduce(
+      seq(n), ~rchisq0(1, v - .x + 1, method = method), rbind2
+    )
     A <- diag(as.vector(sqrt(chisq_samples)))
     # Changing lower triangular part of the matrix; this doesn't change dA
     A_x <- parent_of(A)
@@ -249,7 +241,7 @@ setMethod("rWishart0",
 #' @param method base or inv_tf; base refers to `stats::rchisq` while
 #' inv_tf refers to inverse transform.
 #' @export
-rchisq0 <- function(n, df, method = "base") {
+rchisq0 <- function(n, df, method = "inv_tf") {
   if (method == "base") return(stats::rchisq(n, df))
   rgamma0(n, df / 2, scale = 2, method = method)
 }
@@ -261,7 +253,7 @@ rchisq0 <- function(n, df, method = "base") {
 #' `stats` package while inv_tf refers to inverse transform.
 setMethod("rchisq0",
   signature(n = "numeric", df = "dual"),
-  function(n, df, method = "base") {
+  function(n, df, method = "inv_tf") {
     rgamma0(n, df / 2, scale = 2, method = method)
   }
 )
