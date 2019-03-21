@@ -9,13 +9,15 @@ inverse_transform <- function(cdf) {
   single_sim <- function(u, param) {
     interval <- c(0, 10)
     .f <- function(x) do.call(cdf, append(list(x), param)) - u
-    res <- uniroot(.f, interval, tol = .Machine$double.eps^0.75,
-                   maxiter = 10000, extendInt = "upX")
+    res <- uniroot(.f, interval,
+      tol = .Machine$double.eps^0.75,
+      maxiter = 10000, extendInt = "upX"
+    )
     res$root
   }
   function(n, ...) {
     param <- list(...)
-    purrr::map_dbl(runif(n), ~single_sim(.x, param))
+    purrr::map_dbl(runif(n), ~ single_sim(.x, param))
   }
 }
 
@@ -30,39 +32,39 @@ rt0 <- function(n, df) {
   if (length(df) == 1) {
     return(rt_invt(n = n, df = df))
   } else if (length(df) == n) {
-    return(purrr::map_dbl(1:n, ~rt_invt(n = 1, df = df[.x])))
+    return(purrr::map_dbl(df, ~ rt_invt(n = 1, df = .x)))
   }
 }
 
 #' Simulate random variates from the student-t distribution
 #' @param n A scalar; the random sample.
 #' @param df A dual number; the degree of freedom.
-setMethod("rt0",
-   signature(n = "numeric", df = "dual"),
-   function(n, df) {
-     assertthat::assert_that(length(df) == 1 || length(df) == n)
+setMethod(
+  "rt0",
+  signature(n = "numeric", df = "dual"),
+  function(n, df) {
+    assertthat::assert_that(length(df) == 1 || length(df) == n)
 
-     simulate_single <- function(df) {
-       px <- rt0(1, df = df@x)
-       dx <- d_student_t(px, df@x) * df@dx
-       df@x <- px
-       df@dx <- dx
-       df
-     }
+    simulate_single <- function(df) {
+      px <- rt0(1, df = df@x)
+      dx <- d_student_t(px, df@x) * df@dx
+      df@x <- px
+      df@dx <- dx
+      df
+    }
 
-     if (length(df) == 1) {
-       res <- mapreduce(1:n, ~simulate_single(df), rbind2)
-     } else if (length(df) == n) {
-       res <- mapreduce(1:n, ~simulate_single(df[.x]), rbind2)
-     }
-     res
-   }
+    if (length(df) == 1) {
+      res <- mapreduce(1:n, ~ simulate_single(df), rbind2)
+    } else if (length(df) == n) {
+      res <- mapreduce(1:n, ~ simulate_single(df[.x]), rbind2)
+    }
+    res
+  }
 )
 
 d_student_t <- function(x, df) {
-  # x is a scalar, dgf0 is a dual number
   h <- 1e-8
-  numerator <- - (pt(x, df = df + h) - pt(x, df = df)) / h
+  numerator <- -(pt(x, df = df + h) - pt(x, df = df)) / h
   denominator <- dt(x, df = df)
   numerator / denominator
 }
