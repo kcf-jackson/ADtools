@@ -15,8 +15,8 @@ NULL
 #' @param n Positive integer; the number of samples.
 #' @param shape Positive number; the shape of the gamma distribution.
 #' @param scale Positive number; the scale of the gamma distribution.
-#' @param method base or inv_tf; base refers to `stats::rgamma` while
-#' inv_tf refers to inverse transform.
+#' @param method 'base' or 'inv_tf'; 'base' refers to `stats::rgamma` while
+#' 'inv_tf' refers to inverse transform.
 #' @note Inverse transform is slower, but it is provided to remedy that
 #' base R uses two algorithms to simulate gamma random variables
 #' in different parameter regions, which creates a discontinuity in the
@@ -40,8 +40,6 @@ rgamma1 <- function(n, shape, scale = 1) {
   purrr::map2_dbl(param[, 2], param[, 3], ~rgamma_invt(1, shape = .x, scale = .y))
 }
 
-
-setClassUnion("dual_or_numeric", c("dual", "numeric"))
 
 rgamma0_dual <- function(n, shape, scale, method = "inv_tf") {
   len_shape <- length(shape)
@@ -77,16 +75,16 @@ rgamma0_dual <- function(n, shape, scale, method = "inv_tf") {
 #' @param n Positive integer; the number of samples.
 #' @param shape A dual number or a scalar; the shape of the gamma distribution.
 #' @param scale A dual number or a scalar; the scale of the gamma distribution.
-#' @param method base or inv_tf; base refers to `stats::rgamma` while
-#' inv_tf refers to inverse transform.
+#' @param method 'base' or 'inv_tf'; 'base' refers to `stats::rgamma` while
+#' 'inv_tf' refers to inverse transform.
 #' @note At least one of `shape` and `scale` should be a dual number.
-#' @name gamma_rv
+#' @rdname gamma-rv
 setMethod("rgamma0",
   signature(n = "numeric", shape = "dual", scale = "dual"),
   rgamma0_dual
 )
 
-#' @rdname gamma_rv
+#' @rdname gamma-rv
 setMethod("rgamma0",
   signature(n = "numeric", shape = "dual", scale = "numeric"),
   rgamma0_dual
@@ -106,7 +104,7 @@ d_rgamma <- function(g, alpha0) {
 #   numerator / denominator
 # }
 
-#' @rdname gamma_rv
+#' @rdname gamma-rv
 setMethod("rgamma0",
   signature(n = "numeric", shape = "numeric", scale = "dual"),
   function(n, shape, scale, method = "inv_tf") {
