@@ -5,7 +5,7 @@
 \alias{rchisq0,numeric,dual-method}
 \title{Simulate Chi-square random variates}
 \usage{
-\S4method{rchisq0}{numeric,dual}(n, df, method = "base")
+\S4method{rchisq0}{numeric,dual}(n, df, method = "inv_tf")
 }
 \arguments{
 \item{n}{Positive integer; number of observations.}

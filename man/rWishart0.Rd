@@ -4,7 +4,7 @@
 \alias{rWishart0}
 \title{Simulate Wishart random variates}
 \usage{
-rWishart0(v, M, method = "base")
+rWishart0(v, M, method = "inv_tf")
 }
 \arguments{
 \item{v}{A scalar; degrees of freedom.}

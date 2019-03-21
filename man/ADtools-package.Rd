@@ -14,6 +14,6 @@ Implements the forward-mode auto-differentiation for multivariate
     representation to save derivative calculation, and creating specialised 
     matrix operations with Rcpp to reduce computation time; (ii) the package 
     supports differentiating random variable with respect to their parameters,
-    which is developed targetting simulation-based (in particular MCMC) applications.
+    targetting MCMC (and in general simulation-based) applications.
 }
 \keyword{internal}

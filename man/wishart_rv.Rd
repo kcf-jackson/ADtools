@@ -7,11 +7,11 @@
 \alias{rWishart0,dual,ANY-method}
 \title{Simulating from Wishart distribution using Bartlett decomposition}
 \usage{
-\S4method{rWishart0}{dual,dual}(v, M, method = "base")
+\S4method{rWishart0}{dual,dual}(v, M, method = "inv_tf")
 
-\S4method{rWishart0}{ANY,dual}(v, M, method = "base")
+\S4method{rWishart0}{ANY,dual}(v, M, method = "inv_tf")
 
-\S4method{rWishart0}{dual,ANY}(v, M, method = "base")
+\S4method{rWishart0}{dual,ANY}(v, M, method = "inv_tf")
 }
 \arguments{
 \item{v}{A dual number or a scalar; degrees of freedom.}

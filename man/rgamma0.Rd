@@ -4,7 +4,7 @@
 \alias{rgamma0}
 \title{Simulate gamma random variates}
 \usage{
-rgamma0(n, shape, scale, method = "base")
+rgamma0(n, shape, scale, method = "inv_tf")
 }
 \arguments{
 \item{n}{Positive integer; the number of samples.}
@@ -13,8 +13,8 @@ rgamma0(n, shape, scale, method = "base")
 
 \item{scale}{Positive number; the scale of the gamma distribution.}
 
-\item{method}{base or inv_tf; base refers to `stats::rgamma` while
-inv_tf refers to inverse transform.}
+\item{method}{'base' or 'inv_tf'; 'base' refers to `stats::rgamma` while
+'inv_tf' refers to inverse transform.}
 }
 \description{
 Simulate gamma random variates

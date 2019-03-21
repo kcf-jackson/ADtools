@@ -4,7 +4,7 @@
 \alias{rchisq0}
 \title{Simulate Chi-square random variates}
 \usage{
-rchisq0(n, df, method = "base")
+rchisq0(n, df, method = "inv_tf")
 }
 \arguments{
 \item{n}{Positive integer; number of observations.}
