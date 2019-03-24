@@ -91,18 +91,11 @@ setMethod("rgamma0",
 )
 
 d_rgamma <- function(g, alpha0) {
-  f <- function(t) { log(t) * dgamma(t, alpha0, 1) }
-  num_1 <- integrate(f, 0, g)$value
-  num_2 <- digamma(alpha0) * pgamma(g, alpha0, 1)
-  - (num_1 - num_2) / dgamma(g, alpha0, 1)
+  h <- 1e-8
+  numerator <- -(pgamma(g, shape = alpha0 + h) - pgamma(g, shape = alpha0)) / h
+  denominator <- dgamma(g, shape = alpha0)
+  numerator / denominator
 }
-# Potential second implementation
-# d_rgamma2 <- function(g, alpha0) {
-#   h <- 1e-8
-#   numerator <- -(pgamma(x, shape = alpha0 + h) - pgamma(x, shape = alpha0)) / h
-#   denominator <- dgamma(x, shape = alpha0)
-#   numerator / denominator
-# }
 
 #' @rdname gamma-rv
 setMethod("rgamma0",
