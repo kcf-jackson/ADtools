@@ -23,7 +23,7 @@ finite_diff <- function(f, vary, fix = NULL, h = 1e-8, seed) {
     do.call(f, append(relist(vec0, vary), fix))
   }
   vec_finite_diff(f_vec, x, h) %>%
-    magrittr::set_colnames(flatten_name(vary))
+    name_matrix(vary)
 }
 
 vec_finite_diff <- function(f, x, h = 1e-8) {
@@ -34,23 +34,15 @@ vec_finite_diff <- function(f, x, h = 1e-8) {
   perturbate <- function(v, h) {
     purrr::map(seq_along(v), function(i) { v[i] <- v[i] + h; v })
   }
-  res <- map_then_call(perturbate(x, h), finite_deriv, cbind)
-  
-  if (is.null(rownames(res))) {
-    res <- add_rownames(res)
+  perturbate(x, h) %>%
+    purrr::map(finite_deriv) %>%
+    do.call(cbind, .)
+}
+
+name_matrix <- function(x, input) {
+  colnames(x) <- paste("d", names(unlist(input)), sep = "_")
+  if (is.null(rownames(x))) {
+    rownames(x) <- paste("d_output", seq(nrow(x)), sep = "_")
   }
-  res
-}
-
-flatten_name <- function(list0) {
-  paste("d", names(unlist(list0)), sep = "_")
-}
-
-add_rownames <- function(x) {
-  rownames(x) <- paste("d_output", seq(nrow(x)), sep = "_")
   x
-}
-
-map_then_call <- function(x, f, g) {
-  x %>% purrr::map(f) %>% do.call(g, .)
 }
