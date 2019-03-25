@@ -2,13 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{randn}
 \alias{randn}
-\title{Generate a matrix randomly}
+\title{Generate a matrix randomly from a normal distribution}
 \usage{
-randn(...)
+randn(..., mean = 0, sd = 1)
 }
 \arguments{
 \item{...}{Any number of dimensions.}
+
+\item{mean}{vector of means.}
+
+\item{sd}{vector of standard deviations.}
 }
 \description{
-Generate a matrix randomly
+Generate a matrix randomly from a normal distribution
 }
