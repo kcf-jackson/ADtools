@@ -1,8 +1,20 @@
-#' Generate a matrix randomly
+#' Generate a matrix randomly from a normal distribution
 #' @param ... Any number of dimensions.
+#' @param mean vector of means.
+#' @param sd vector of standard deviations.
 #' @export
-randn <- function(...) {
-  structure(rnorm(prod(...)), dim = c(...))
+randn <- function(..., mean = 0, sd = 1) {
+  structure(rnorm(prod(...), mean = mean, sd = sd), dim = c(...))
+}
+
+
+#' Generate a matrix randomly from a uniform distribution
+#' @param ... Any number of dimensions.
+#' @param min lower limit of the distribution. Must be finite.
+#' @param max upper limit of the distribution. Must be finite.
+#' @export
+randu <- function(..., min = 0, max = 1) {
+  structure(runif(prod(...), min = min, max = max), dim = c(...))
 }
 
 
