@@ -25,17 +25,17 @@ test_that("Test Chi-squared simulation", {
     }
     fs <- list(f)
     inputs <- list(
-      list(df = 1 + sample(30, i)),
-      list(df = 1 + sample(30, 1))
+      list(df = sample(10, i)),
+      list(df = sample(10, 1))
     )
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
     test_fs(fs, inputs, ctrl)
   })
 })
 
 
 test_that("Test Wishart simulation", {
-  purrr::map(2:10, function(i) {
+  purrr::map(2:5, function(i) {
     # dual-dual case
     f <- function(v, M) {
       set.seed(123)
@@ -50,11 +50,11 @@ test_that("Test Wishart simulation", {
     # dual-numeric case
     f2 <- function(M) {
       set.seed(123)
-      rWishart0(v = i + 5, M = M)
+      rWishart0(v = i, M = M)
     }
     fs <- list(f2)
     inputs <- list(list(M = crossprod(randn(i, i))))
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
+    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
     test_fs(fs, inputs, ctrl)
 
 
@@ -65,8 +65,8 @@ test_that("Test Wishart simulation", {
       rWishart0(v = v, M = m0)
     }
     fs <- list(f3)
-    inputs <- list(list(v = i + 5))
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
+    inputs <- list(list(v = i))
+    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
     test_fs(fs, inputs, ctrl)
   })
 })
