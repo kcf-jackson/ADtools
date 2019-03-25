@@ -43,13 +43,16 @@ compare_ls <- function(ls_1, ls_2, ctrl) {
 # Compare two numeric arrays
 compare <- function(x, y, display = T, err_fun = abs_err, epsilon) {
   err <- err_fun(x, y)
+  prob <- 0.99
   if (display) {
     x_vec <- as.numeric(x)
     y_vec <- as.numeric(y)
     print(cbind(x_vec, y_vec, err)[err > epsilon, ])
     cat("Maximum error: ", max(err), "\n")
+    cat(100 * prob, "%-quantile error: ", quantile(err, probs = prob),
+        "\n", sep = "")
   }
-  testthat::expect_true(max(err) < epsilon)
+  testthat::expect_true(quantile(err, probs = prob) < epsilon)
 }
 
 
@@ -63,7 +66,6 @@ abs_err <- function(x, y) {
 rel_err <- function(x, y) {
   x <- as.numeric(x)
   y <- as.numeric(y)
-  scale <- max(abs(x), abs(y))
-  if (scale == 0) return(0)
-  abs(x - y) / scale
+  scale <- pmax(abs(x), abs(y), 1e-8)  # avoid problem like: rel_err(0, 1e-18) = 1
+  ifelse(scale == 0, 0, abs(x - y) / scale)
 }
