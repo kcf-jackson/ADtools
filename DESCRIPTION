@@ -19,7 +19,9 @@ LazyData: true
 RoxygenNote: 6.1.1
 Suggests:
     testthat,
-    covr
+    covr,
+    knitr,
+    rmarkdown
 Depends: 
     R (>= 3.5.0), 
     methods, 
@@ -56,3 +58,4 @@ Collate:
     'mc_structure_reshape.R'
     'mc_structure_subsetting.R'
     'utils.R'
+VignetteBuilder: knitr
