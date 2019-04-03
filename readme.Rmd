@@ -1,0 +1,230 @@
+## R package 'ADtools'
+
+Implements the forward-mode auto-differentiation for multivariate functions using the matrix-calculus notation from Magnus and Neudecker (1988). Two key features of the package are: (i) the package incorporates various optimisaton strategies to improve performance; this includes applying memoisation to cut down object construction time, using sparse matrix representation to save derivative calculation, and creating specialised matrix operations with Rcpp to reduce computation time; (ii) the package supports differentiating random variable with respect to their parameters, targetting MCMC (and in general simulation-based) applications.
+    
+<!-- [![Travis-CI Build Status](https://travis-ci.org/<USERNAME>/<REPO>.svg?branch=master)](https://travis-ci.org/<USERNAME>/<REPO>) -->
+
+### Installation
+
+```{r, eval = F}
+devtools::install_github("kcf-jackson/ADtools")
+```
+
+
+---
+
+### Notation
+
+Given a function $f: X \mapsto Y = f(X)$, where $X \in R^{m \times n}, Y \in R^{h \times k}$, the Jacobina matrix of $f$ w.r.t. $X$ is given by
+$$\dfrac{\partial f(X)}{\partial X}:=\dfrac{\partial\,\text{vec}\, f(X)}{\partial\, (\text{vec}X)^T} = \dfrac{\partial\,\text{vec}\,Y}{\partial\,(\text{vec}X)^T}\in R^{mn \times hk}.$$
+
+---
+
+### Example 1. Matrix multiplication
+
+#### Function definition
+Consider $f(X, y) = X y$ where $X$ is a matrix, and $y$ is a vector. 
+
+```{r, message=FALSE, warning=FALSE}
+library(ADtools)
+f <- function(X, y) X %*% y
+X <- randn(2, 2)
+y <- matrix(c(1, 1))
+print(list(X = X, y = y, f = f(X, y)))
+```
+
+#### Auto-differentiation
+Since $X$ has dimension (`r dim(X)`) and $y$ has dimension (`r dim(y)`), the input space has dimension $2 \times 2 + 2 \times 1 = 6$, and the output has dimension $2$, i.e. $f$ maps $R^6$ to $R^2$ and the Jacobian of $f$ should be $2 \timesb6$.
+
+```{r}
+# Full Jacobian matrix
+f_AD <- auto_diff(f, list(X = X, y = y))
+get_deriv(f_AD)   # returns a Jacobian matrix
+```
+
+`auto_diff` also supports computing a partial Jacobian matrix. For instance, suppose we are only interested in the derivative w.r.t. `y`, then we can run
+
+```{r}
+f_AD <- auto_diff(f, vary = list(y = y), fix = list(X = X))
+get_deriv(f_AD)   # returns a partial Jacobian matrix
+```
+
+#### Finite-differencing
+
+It is good practice to always check the result with finite-differencing. This can be done by calling `finite_diff` which has the same interface as `auto_diff`. 
+```{r}
+f_FD <- finite_diff(f, list(X = X, y = y))
+f_FD
+```
+
+---
+
+### Example 2. Estimating a linear regression model
+
+#### Simulate data from $\quad y_i = X_i \beta + \epsilon_i, \quad \epsilon_i \sim N(0, 1)$
+```{r}
+set.seed(123)
+n <- 1000
+p <- 3
+X <- randn(n, p)
+beta <- randn(p, 1)
+y <- X %*% beta + rnorm(n)
+```
+
+#### Inference with gradient descent
+```{r}
+gradient_descent <- function(f, vary, fix, learning_rate = 0.01, tol = 1e-6, show = F) {
+  repeat {
+    df <- auto_diff(f, vary, fix)
+    if (show) print(df@x)
+    delta <- learning_rate * as.numeric(df@dx)
+    vary <- relist(unlist(vary) - delta, vary)
+    if (max(abs(delta)) < tol) break
+  }
+  vary
+}
+```
+
+```{r}
+lm_loss <- function(y, X, beta) sum((y - X %*% beta)^2)
+
+# Estimate
+gradient_descent(
+  f = lm_loss, vary = list(beta = rnorm(p, 1)), fix = list(y = y, X = X),  learning_rate = 1e-4
+) 
+# Truth
+t(beta)
+```
+
+
+<!-- ### Example  2b. Fitting a 2-layer Neural Network  -->
+<!-- #### Simulate data  -->
+<!-- ```{r} -->
+<!-- logit <- function(x) exp(x) / (1 + exp(x)) -->
+
+<!-- X <- randn(1000, 10) -->
+<!-- W1 <- randn(10, 50) -->
+<!-- W2 <- randn(50, 1) -->
+<!-- f1 <- f2 <- logit -->
+
+<!-- y <- f2(f1(X %*% W1) %*% W2) -->
+<!-- ``` -->
+
+
+<!-- #### Inference with gradient descent -->
+<!-- ```{r} -->
+<!-- loss_fun <- function(y, X, W1, W2, f1, f2) { -->
+<!--   Z <- f1(X %*% W1) -->
+<!--   yhat <- f2(Z %*% W2) -->
+<!--   sum(y - yhat)^2 -->
+<!-- } -->
+
+<!-- gradient_descent( -->
+<!--   loss_fun, -->
+<!--   vary = list(W1 = W1, W2 = W2), -->
+<!--   fix = list(y = y, X = X, f1 = logit, f2 = logit), -->
+<!--   learning_rate = 1e-4,  -->
+<!--   show = T -->
+<!-- ) -->
+<!-- ``` -->
+
+---
+
+### Example  3. Sensitivity analysis of MCMC algorithms
+
+#### Simulate data from $\quad y_i = X_i \beta + \epsilon_i, \quad \epsilon_i \sim N(0, 1)$
+```{r}
+set.seed(123)
+n <- 30  # small data
+p <- 10
+X <- randn(n, p)
+beta <- randn(p, 1)
+y <- X %*% beta + rnorm(n)
+```
+
+
+#### Estimating a Bayesian linear regression model
+
+$$y \sim N(X\beta, \sigma^2), \quad \beta \sim N(\mathbf{b_0}, \mathbf{B_0}), \quad \sigma^2 \sim IG\left(\dfrac{\alpha_0}{2}, \dfrac{\delta_0}{2}\right)$$
+
+#### Inference using Gibbs sampler
+```{r, eval = F}
+gibbs_gaussian <- function(X, y, b_0, B_0, alpha_0, delta_0, init_sigma, num_steps = 1e4) {
+  if (missing(init_sigma))
+    init_sigma <- 1 / sqrt(rgamma0(1, alpha_0 / 2, scale = 2 / delta_0))
+
+  # Initialisation
+  n <- length(y)
+  alpha_1 <- alpha_0 + n
+  sigma_g <- init_sigma
+  inv_B_0 <- solve(B_0)
+  inv_B_0_times_b_0 <- inv_B_0 %*% b_0
+  XTX <- crossprod(X)
+  XTy <- crossprod(X, y)
+  beta_res <- vector("list", num_steps)
+  sigma_res <- vector("list", num_steps)
+
+  pb <- txtProgressBar(1, num_steps, style = 3)
+  for (i in 1:num_steps) {
+    # Update beta
+    B_g <- solve(sigma_g^(-2) * XTX + inv_B_0)
+    b_g <- B_g %*% (sigma_g^(-2) * XTy + inv_B_0_times_b_0)
+    beta_g <- rmvnorm0(1, b_g, B_g)
+
+    # Update sigma
+    delta_g <- delta_0 + sum((y - X %*% beta_g)^2)
+    sigma_g <- 1 / sqrt(rgamma0(1, alpha_1 / 2, scale = 2 / delta_g))
+
+    # Keep track
+    beta_res[[i]] <- beta_g
+    sigma_res[[i]] <- sigma_g
+    setTxtProgressBar(pb, i)
+  }
+
+  list(sigma = sigma_res, beta = beta_res)
+}
+```
+
+#### Auto-differentiation
+```{r, eval = F}
+gibbs_deriv <- auto_diff(
+  gibbs_gaussian,
+  vary = list(b_0 = numeric(p), B_0 = diag(p), alpha_0 = 4, delta_0 = 4),
+  fix = list(X = X, y = y, num_steps = 5000)
+)
+```
+
+#### Computing the sensitivity of the posterior mean of $b_0$ w.r.t. all the prior hyperparameters
+```{r, echo = F}
+load("readme_gibbs_deriv")
+```
+
+```{r, message=F, warning=F}
+library(magrittr)
+library(knitr)
+library(kableExtra)
+
+matrix_ls_to_array <- function(x) {
+  structure(unlist(x), dim = c(dim(x[[1]]), length(x)), dimnames = dimnames(x[[1]]))
+}
+
+tidy_mcmc <- function(mcmc_res, var0) {
+  mcmc_res[[var0]] %>% 
+    purrr::map(get_deriv) %>% 
+    matrix_ls_to_array()
+}
+
+tidy_table <- function(x) {
+  x %>% kable() %>% kable_styling() %>% scroll_box(width = "100%")
+}
+```
+
+```{r}
+posterior_Jacobian <- apply(tidy_mcmc(gibbs_deriv, "beta"), c(1,2), mean) 
+tidy_table(posterior_Jacobian)
+```
+
+
+
+
+
