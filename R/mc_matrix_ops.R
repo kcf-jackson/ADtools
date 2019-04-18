@@ -30,6 +30,11 @@ setMethod("solve",
   }
 )
 
+d_solve <- function(a, inv_a) {
+  da <- a@dx
+  -(t(inv_a) %x% inv_a) %*% da
+}
+
 solve_dual <- function(a, b, ...) {
   solve(a, ...) %*% b
 }
@@ -46,14 +51,25 @@ setMethod("solve", signature(a = "dual", b = "ANY"), solve_dual)
 
 #' Transpose of 'dual'-class objects
 #' @param x A "dual" object.
-setMethod("t",
-  signature(x = "dual"),
-  function(x) {
-    x@dx <- d_transpose(x)
-    x@x <- t(x@x)
-    x
-  }
-)
+#' @method t dual
+#' @export
+t.dual <- function(x) {
+  x@dx <- d_transpose(x)
+  x@x <- t(x@x)
+  x
+}
+
+d_transpose <- function(a) {
+  X <- a@x
+  dX <- a@dx
+  K_nq <- commutation_matrix0(nrow(X), ncol(X))
+  K_nq %*% dX
+}
+
+#' Transpose of 'dual'-class objects
+#' @param x A "dual" object.
+setMethod("t", signature(x = "dual"), t.dual)
+
 
 #' Crossproduct of 'dual'-class objects
 #' @param x A "dual" object.
@@ -67,6 +83,16 @@ setMethod("tcrossprod",
   }
 )
 
+d_XXT <- function(a) {
+  X <- a@x
+  dX <- a@dx
+
+  n <- nrow(X)
+  I_n <- Diagonal0(n)
+  I_nn <- Diagonal0(n^2)
+  K_nn <- commutation_matrix0(n, n)
+  ((I_nn + K_nn) %*% (X %x% I_n)) %*% dX
+}
 
 tcrossprod_dual <- function(x, y) { x %*% t(y) }
 
@@ -144,6 +170,20 @@ setMethod("chol0",
     x
   }
 )
+
+d_chol <- function(L, a) {
+  # LL^T = A
+  dA <- a@dx
+
+  n <- nrow(L)
+  I_n <- Diagonal0(n)
+  I_nn <- Diagonal0(n^2)
+  K_nn <- commutation_matrix0(n, n)
+  E_n <- elimination_matrix0(n)
+  D_n <- Matrix::t(E_n)
+
+  (D_n %*% solve(E_n %*% (I_nn + K_nn) %*% (L %x% I_n) %*% D_n, E_n)) %*% dA
+}
 
 
 #' Determinant of a matrix

@@ -30,10 +30,8 @@ auto_diff <- function(f, vary, fix = NULL) {
 #' }
 #' @export
 dual_list <- function(ls_params) {
-  list0_len <- purrr::map_dbl(ls_params, length)
-  purrr::map(
-    seq_along(ls_params),
-    ~dual(ls_params[[.x]], list0_len, .x)
-  ) %>%
+  dim0 <- purrr::map_dbl(ls_params, length)
+  seq_along(ls_params) %>%
+    purrr::map(~dual(ls_params[[.x]], dim0, .x)) %>%
     setNames(names(ls_params))
 }

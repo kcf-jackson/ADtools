@@ -1,7 +1,7 @@
 testthat::context("Test dual number arithmetic")
 
 set.seed(123)
-
+`%++%` <- append
 
 #=======================================================================
 # dual matrix AND dual matrix

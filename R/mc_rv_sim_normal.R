@@ -1,9 +1,9 @@
 #' @include class_dual_def.R
 NULL
 
-#===============================================================
+# ===============================================================
 # Gaussian distribution
-#===============================================================
+# ===============================================================
 #' Simulate univariate normal random variates
 #' @name rnorm0
 #' @param n Positive integer; the number of samples.
@@ -23,19 +23,22 @@ rnorm0_dual <- function(n, mean, sd) {
 }
 
 #' @rdname rnorm0
-setMethod("rnorm0",
+setMethod(
+  "rnorm0",
   signature(n = "numeric", mean = "dual", sd = "dual"),
   rnorm0_dual
 )
 
 #' @rdname rnorm0
-setMethod("rnorm0",
+setMethod(
+  "rnorm0",
   signature(n = "numeric", mean = "ANY", sd = "dual"),
   rnorm0_dual
 )
 
 #' @rdname rnorm0
-setMethod("rnorm0",
+setMethod(
+  "rnorm0",
   signature(n = "numeric", mean = "dual", sd = "ANY"),
   rnorm0_dual
 )
@@ -45,7 +48,6 @@ setMethod("rnorm0",
 #' @param n Positive integer; the number of samples.
 #' @param mean mean vector of the normal distribution.
 #' @param sigma covariance matrix of the normal distribution.
-# #' @param ... Other parameters to be passed to `mvtnorm::rmvnorm`
 #' @return A numeric matrix, where every column is a sample.
 #' @export
 rmvnorm0 <- function(n, mean, sigma) {
@@ -53,6 +55,11 @@ rmvnorm0 <- function(n, mean, sigma) {
     t(mvtnorm::rmvnorm(n, numeric(length(mean))))
 }
 
+#' Simulate multivariate normal random variates
+#' @rdname rmvnorm0_dual
+#' @param n Positive integer; the number of samples.
+#' @param mean A numeric vector or a dual number; the mean of the normal distribution.
+#' @param sigma A numeric matrix or a dual number; the standard deviation of the normal distribution.
 rmvnorm0_dual <- function(n, mean, sigma) {
   mapreduce(
     seq(n),
@@ -62,29 +69,23 @@ rmvnorm0_dual <- function(n, mean, sigma) {
   )
 }
 
-#' Simulate multivariate normal random variates
-#' @param n Positive integer; the number of samples.
-#' @param mean A dual number; the mean of the normal distribution.
-#' @param sigma A dual number; the standard deviation of the normal distribution.
-setMethod("rmvnorm0",
+#' @rdname rmvnorm0_dual
+setMethod(
+  "rmvnorm0",
   signature(n = "numeric", mean = "dual", sigma = "dual"),
   rmvnorm0_dual
 )
 
-#' Simulate multivariate normal random variates
-#' @param n Positive integer; the number of samples.
-#' @param mean A dual number; the mean of the normal distribution.
-#' @param sigma A dual number; the standard deviation of the normal distribution.
-setMethod("rmvnorm0",
+#' @rdname rmvnorm0_dual
+setMethod(
+  "rmvnorm0",
   signature(n = "numeric", mean = "dual", sigma = "ANY"),
   rmvnorm0_dual
 )
 
-#' Simulate multivariate normal random variates
-#' @param n Positive integer; the number of samples.
-#' @param mean A dual number; the mean of the normal distribution.
-#' @param sigma A dual number; the standard deviation of the normal distribution.
-setMethod("rmvnorm0",
+#' @rdname rmvnorm0_dual
+setMethod(
+  "rmvnorm0",
   signature(n = "numeric", mean = "ANY", sigma = "dual"),
   rmvnorm0_dual
 )

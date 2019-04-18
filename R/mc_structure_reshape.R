@@ -1,5 +1,22 @@
 #' Diagonal matrix
-#' @param x A matrix, or a vector.
+#' @inheritParams base::diag
+#' @param x A matrix, a vector or a dual number. In the last case, all other parameters
+#' are ignored as \code{diag.dual} only takes the first argument.
+#' @export
+diag <- function(x, ...) {
+  UseMethod("diag", x, ...)
+}
+
+# diag <- function(x, nrow, ncol, names = TRUE) {
+#   if (class(x) == "dual") {
+#     return(diag.dual(x))
+#   }
+#   base::diag(x, nrow, ncol, names)
+# }
+
+#' Diagonal matrix
+#' @param x A "dual" object.
+#' @rdname diag_dual
 #' @export
 diag.dual <- function(x) {
   x@dx <- d_diagonal(x)
@@ -23,8 +40,7 @@ d_diagonal <- function(x) {
   stop("The input is not a matrix or a vector.")
 }
 
-#' Diagonal matrix
-#' @param x A "dual" object.
+#' @rdname diag_dual
 setMethod("diag", signature(x = "dual"), diag.dual)
 
 
@@ -57,6 +73,10 @@ vech <- function(x) {
   }
   as.matrix(x[lower.tri(x, diag = T)])
 }
+# References
+# 1. matrixcalc::vech
+# 2. https://en.wikipedia.org/wiki/Vectorization_(mathematics)#Half-vectorization
+
 
 #' Half-vectorisation
 #' @param x A "dual" object.
@@ -87,21 +107,19 @@ setMethod(
 #' @name as.matrix.dual
 #' @method as.matrix dual
 #' @param x A "dual" object.
-#' @param ... additional arguments to be passed to or from methods.
+#' @param ... Unused.
 #' @export
 as.matrix.dual <- function(x, ...) {
   x@x <- as.matrix(x@x)
   x
 }
-
-#' @rdname as.matrix.dual
 setMethod("as.matrix", signature(x = "dual"), as.matrix.dual)
 
 
-#' Create a matrix from a given set of values
+#' Coerce the first component of the dual object into a matrix.
 #' @method matrix dual
 #' @inheritParams matrix
-#' @name matrix.dual
+#' @rdname matrix.dual
 #' @export
 matrix.dual <- function(data, nrow, ncol = 1, byrow = F, dimnames = NULL) {
   if (missing(nrow)) {
@@ -119,9 +137,9 @@ matrix.dual <- function(data, nrow, ncol = 1, byrow = F, dimnames = NULL) {
   data
 }
 
-#' Coerce the first component of the dual object into a matrix.
 #' @rdname matrix.dual
 setMethod("matrix", signature(data = "dual"), matrix.dual)
+
 
 #' Matrices
 #' @param data A "dual" object.

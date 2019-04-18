@@ -38,6 +38,7 @@ setMethod(
   }
 )
 
+
 #' Combine 'dual'-class objects by Rows.
 #' @param x A "dual" object.
 #' @param y A "dual" object.
@@ -59,21 +60,16 @@ setMethod(
     y_ind <- seq_along(y@x)
     res_ind <- y_ind + rearrange(rep(g * r1, r2), nc)
     res_dx[res_ind, ] <- y@dx[y_ind, ]
+
     x@x <- res_x
     x@dx <- res_dx
     x
   }
 )
 
-if_null_then <- function(x, y) {
-  if (is.null(x)) return(y)
-  return(x)
-}
-
 rearrange <- function(vec0, group_size) {
   as.numeric(t(matrix(vec0, nrow = group_size)))
 }
-
 
 #' Combine 'dual'-class objects by Rows
 #' @param x A "dual" object.

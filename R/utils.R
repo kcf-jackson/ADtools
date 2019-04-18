@@ -28,16 +28,12 @@ map2reduce <- function(x, y, f, g, ...) {
 }
 
 
-map_row <- function(m0, f) {
-  purrr::map(1:nrow(m0), ~f(m0[.x, ]))
-}
-
-
 call_S4 <- function(f_name, ...) {
   getMethod(f_name, list(...))@.Data
 }
 
 
-# map_col <- function(m0) {
-#   purrr::map(1:ncol(m0), ~f(m0[, .x]))
-# }
+if_null_then <- function(x, y) {
+  if (is.null(x)) return(y)
+  return(x)
+}

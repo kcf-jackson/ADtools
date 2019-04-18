@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: Auto-Differentiation toolbox
-Version: 0.4.0.9999
+Version: 0.4.1.9999
 Author: Chun Fung Kwok <kwokcf@unimelb.edu.au>, Dan Zhu <dan.zhu@monash.edu> and Liana Jacobi <ljacobi@unimelb.edu.au>.
 Maintainer: Chun Fung Kwok <kwokcf@unimelb.edu.au>
 Description: Implements the forward-mode auto-differentiation for multivariate
@@ -50,7 +50,6 @@ Collate:
     'mc_math_elementary.R'
     'mc_math_sum.R'
     'mc_matrix_ops.R'
-    'mc_matrix_ops_AD.R'
     'mc_rv_sim_normal.R'
     'mc_rv_sim_student_t.R'
     'mc_rv_simulation.R'
