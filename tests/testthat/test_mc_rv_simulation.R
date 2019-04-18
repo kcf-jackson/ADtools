@@ -35,29 +35,33 @@ test_that("Test Chi-squared simulation", {
 
 
 test_that("Test Wishart simulation", {
-  purrr::map(2:5, function(i) {
+  # (The maximum error of) Matrix samples are more sensitive than the
+  # Scalar samples as they have an order more of entries (n^2 vs n).
+  purrr::map(2:10, function(i) {
     # dual-dual case
     f <- function(v, M) {
       set.seed(123)
       rWishart0(v = v, M = M)
     }
     fs <- list(f)
-    inputs <- list(list(v = i, M = crossprod(randn(i, i))))
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+    inputs <- list(list(v = i, M = diag(i) + crossprod(randn(i, i)) / i^2))
+    ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-5)
     test_fs(fs, inputs, ctrl)
+  })
 
-
+  purrr::map(2:10, function(i) {
     # dual-numeric case
     f2 <- function(M) {
       set.seed(123)
       rWishart0(v = i, M = M)
     }
     fs <- list(f2)
-    inputs <- list(list(M = crossprod(randn(i, i))))
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+    inputs <- list(list(M = diag(i) + crossprod(randn(i, i)) / i^2))
+    ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-5)
     test_fs(fs, inputs, ctrl)
+  })
 
-
+  purrr::map(2:10, function(i) {
     # dual-numeric case
     m0 <- crossprod(randn(i, i))
     f3 <- function(v) {
@@ -66,7 +70,7 @@ test_that("Test Wishart simulation", {
     }
     fs <- list(f3)
     inputs <- list(list(v = i))
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+    ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-5)
     test_fs(fs, inputs, ctrl)
   })
 })

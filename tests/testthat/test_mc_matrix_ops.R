@@ -1,39 +1,84 @@
 testthat::context("Test solve, t, tcrossprod, crossprod, chol0, det")
 
-set.seed(123)
-# One-argument case (dual)
+set.seed(1234)
+# One-argument case (dual) ================================================
+# solve -------------------------------------------------------------------
 solve_f <- function(x) solve(x)  # change the argument name to match the other functions
-fs <- list(solve_f, t, tcrossprod, crossprod, det)
-inputs <- generate_inputs(2:5, lambda(list(x = 1 + randn(i, i))))
-ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+fs <- list(solve_f, t)
+inputs <- generate_inputs(2:15, lambda(list(x = 10 * diag(i) + randn(i, i))))
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-7)
 test_fs(fs, inputs, ctrl)
 
 
+# tcrossprod, crossprod ---------------------------------------------------
+fs <- list(tcrossprod, crossprod)
+inputs <- generate_inputs(2:15, lambda(list(x = randn(i, i))))
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
+test_fs(fs, inputs, ctrl)
+
+
+# det ---------------------------------------------------------------------
+fs <- list(det)
+eigen_to_matrix <- function(eig0) {
+  n <- length(eig0)
+  Q <- qr.Q(qr(randu(n, n)))
+  t(Q) %*% diag(eig0) %*% Q
+}
+inputs <- generate_inputs(2:25, lambda(list(
+  x = eigen_to_matrix(runif(i, min = 0.1, max = 1))
+)))
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-7)
+test_fs(fs, inputs, ctrl)
+
+
+# chol0 -------------------------------------------------------------------
 fs <- list(chol0)  # requires positive semi-definite input
-inputs <- generate_inputs(2:5, lambda(list(x = 10 + crossprod(randn(i, i)))))
-ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+inputs <- generate_inputs(2:25, lambda(list(x = diag(i) + crossprod(randn(i, i)))))
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
 test_fs(fs, inputs, ctrl)
 
 
-# Two-argument case (dual, dual) for tcrossprod, crossprod, solve
-fs <- list(tcrossprod, crossprod, lambda(solve(x, y)))
+# Two-argument case (dual, dual) for tcrossprod, crossprod, solve =========
+# tcrossprod, crossprod ---------------------------------------------------
+fs <- list(tcrossprod, crossprod)
 inputs <- generate_inputs(
-  2:5, lambda(list(x = 10 + randn(i, i), y = randn(i, i)))
+  2:15, lambda(list(x = randn(i, i), y = randn(i, i)))
 )
-ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
 test_fs(fs, inputs, ctrl)
 
 
-# Two-argument case (dual, matrix) for tcrossprod, crossprod, solve
-purrr::map(2:5, function(i) {
+# solve -------------------------------------------------------------------
+fs <- list(lambda(solve(x, y)))
+inputs <- generate_inputs(
+  2:15, lambda(list(x = 10 * diag(i) + randn(i, i), y = randn(i, i)))
+)
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-7)
+test_fs(fs, inputs, ctrl)
+
+
+# Two-argument case (dual, matrix) for tcrossprod, crossprod, solve =====
+# tcrossprod, crossprod ---------------------------------------------------
+purrr::map(2:15, function(i) {
   m0 <- randn(i, i)
   fs <- list(
-    lambda(x, solve(a = x, b = m0)),
-    lambda(x, solve(a = 10 + m0, b = x)),
     lambda(x, tcrossprod(x, y = m0)),
     lambda(x, crossprod(x, y = m0))
   )
   inputs <- list( list(x = randn(i, i)) )
-  ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)
+  ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
+  test_fs(fs, inputs, ctrl)
+})
+
+
+# solve -------------------------------------------------------------------
+purrr::map(2:15, function(i) {
+  m0 <- randn(i, i)
+  fs <- list(
+    lambda(x, solve(a = x, b = m0)),
+    lambda(x, solve(a = 10 * diag(i) + m0, b = x))
+  )
+  inputs <- list( list(x = 10 * diag(i) + randn(i, i)) )
+  ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
   test_fs(fs, inputs, ctrl)
 })

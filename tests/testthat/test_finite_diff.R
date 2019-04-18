@@ -9,7 +9,7 @@ testthat::test_that("Test finite difference main function", {
     compare(
       finite_diff(f, list(X = X, y = y)),
       cbind(t(y %x% diag(2)), X),
-      display = F, 
+      display = F,
       err_fun = rel_err,
       epsilon = 1e-6
     )
@@ -21,9 +21,9 @@ testthat::test_that("Test finite difference with randomness", {
   set.seed(123)
   expect_res <- rnorm(5)
   compare(
-    finite_diff(f, list(k = 5), seed = 123), 
+    finite_diff(f, list(k = 5), seed = 123),
     expect_res,
-    display = F, 
+    display = F,
     err_fun = rel_err,
     epsilon = 1e-6
   )

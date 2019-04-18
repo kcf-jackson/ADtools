@@ -1,7 +1,7 @@
 testthat::context("Test dual number arithmetic")
 
 set.seed(123)
-`%++%` <- append
+
 
 #=======================================================================
 # dual matrix AND dual matrix
@@ -22,7 +22,7 @@ inputs <- generate_inputs(
   2:12,
   lambda(list(e1 = 1 + randn(i, i), e2 = 1 + randn(i, i)))
 )
-ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
 test_fs(fs, inputs, ctrl)
 
 
@@ -58,7 +58,7 @@ purrr::map(2:15, function(i) {
 
 # Matrix multiplication
 fs <- list(f)
-ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
 purrr::map(2:15, function(i) {
   m0 <- randn(i, i)
   gs <- purrr::map(fs, function(f) lambda(e2, f(m0, e2)))
@@ -110,9 +110,9 @@ purrr::map(2:15, function(i) {
 
 
 #=======================================================================
-# Power
-ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5) # lower precision for high exponents
-purrr::map(2:15, function(i) {
+# Power (careful with low precision for high exponents)
+ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
+purrr::map(2:10, function(i) {
   # dual matrix - dual scalar
   # base must have only positive entries
   gs <- list(`^`)

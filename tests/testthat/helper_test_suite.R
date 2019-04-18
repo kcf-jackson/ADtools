@@ -10,11 +10,11 @@ generate_inputs <- function(config_ls, generator) {
 
 # Test a list of functions with a list of examples
 test_fs <- function(fs, inputs, ctrl) {
-  purrr::map(fs, function(f) {
+  invisible(purrr::map(fs, function(f) {
     purrr::map(inputs, function(input) {
       test_AD_with(f, input, ctrl)
     })
-  })
+  }))
 }
 
 
@@ -35,24 +35,22 @@ test_AD_with <- function(f, input, ctrl) {
 compare_ls <- function(ls_1, ls_2, ctrl) {
   purrr::map2(
     ls_1, ls_2,
-    ~compare(.x, .y, ctrl$display, ctrl$err_fun, ctrl$epsilon)
+    ~do.call(compare, append(list(x = .x, y = .y), ctrl))
   )
 }
 
 
 # Compare two numeric arrays
-compare <- function(x, y, display = T, err_fun = abs_err, epsilon) {
+compare <- function(x, y, display = T, err_fun = abs_err, epsilon,
+                    summary_fun = max, note = "Maximum Error") {
   err <- err_fun(x, y)
-  prob <- 0.99
   if (display) {
     x_vec <- as.numeric(x)
     y_vec <- as.numeric(y)
     print(cbind(x_vec, y_vec, err)[err > epsilon, ])
-    cat("Maximum error: ", max(err), "\n")
-    cat(100 * prob, "%-quantile error: ", quantile(err, probs = prob),
-        "\n", sep = "")
+    cat(note, ": ", max(err), "\n")
   }
-  testthat::expect_true(quantile(err, probs = prob) < epsilon)
+  testthat::expect_true(summary_fun(err) < epsilon)
 }
 
 

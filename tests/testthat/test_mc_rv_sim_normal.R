@@ -2,7 +2,7 @@ context("Test random variable simulation")
 
 
 test_that("Test univariate normal simulation", {
-  purrr::map(2:10, function(i) {
+  purrr::map(2:15, function(i) {
     # dual-dual case
     f <- function(mean, sd) {
       set.seed(123)
@@ -49,7 +49,7 @@ test_that("Test univariate normal simulation", {
       list(sd = runif(i)),
       list(sd = runif(1))
     )
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
+    ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
     test_fs(fs, inputs, ctrl)
   })
 })
@@ -71,7 +71,7 @@ test_that("Test multivariate normal simulation", {
     }
     fs <- list(f)
     inputs <- list(list(mean = runif(i), sigma = diag(i)))
-    ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
+    ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
     test_fs(fs, inputs, ctrl)
   })
 })
