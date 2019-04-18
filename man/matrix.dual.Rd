@@ -4,7 +4,7 @@
 \name{matrix.dual}
 \alias{matrix.dual}
 \alias{matrix,dual-method}
-\title{Create a matrix from a given set of values}
+\title{Coerce the first component of the dual object into a matrix.}
 \usage{
 \method{matrix}{dual}(data, nrow, ncol = 1, byrow = F,
   dimnames = NULL)
@@ -28,7 +28,5 @@ row names. The list can be named, and the list names will be
 used as names for the dimensions.}
 }
 \description{
-Create a matrix from a given set of values
-
 Coerce the first component of the dual object into a matrix.
 }

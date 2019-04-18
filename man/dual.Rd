@@ -9,10 +9,15 @@ dual(x, param_dim, ind)
 \arguments{
 \item{x}{The object to be converted to a dual number.}
 
-\item{param_dim}{The dimension of the dual component to be attached.}
+\item{param_dim}{A named list. The dimension of the dual component to be attached.}
 
-\item{ind}{Integer; the index of the parameter identical to x.}
+\item{ind}{Integer; the index in `param_dim` corresponding to `x`. Use `-1` if it is not applicable.}
 }
 \description{
 Dual number constructor
+}
+\examples{
+# Suppose X is a 2 x 2 matrix, Y is a 3 x 1 vector, Z is a 2 x 3 matrix, and
+# we wish to attach dual components {dX, dY, dZ} to X.
+dual(randn(2, 2), list(X = 4, Y = 3, Z = 6), ind = 1)
 }

@@ -25,4 +25,4 @@ init_dx(4, c(2, 5, 1), 2)
 init_dx(4, c(2, 5, 1), 3)
 }
 }
-\keyword{interal}
+\keyword{internal}

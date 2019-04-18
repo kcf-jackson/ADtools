@@ -13,6 +13,8 @@ This class attaches a dual component to a number / an array.
 \item{\code{x}}{scalar, vector or matrix; also accepts any matrix classes from the "Matrix" package.}
 
 \item{\code{dx}}{matrix; also accepts any matrix classes from the "Matrix" package.}
+
+\item{\code{param}}{a named list, containing the column indices each variable occupies.}
 }}
 
 \note{
