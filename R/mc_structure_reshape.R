@@ -32,10 +32,14 @@ d_diagonal <- function(x) {
     return(dx[diag_ind, , drop = F])
   }
   if (is.vector(m0)) {
-    new_dx <- zero_matrix0(length(m0)^2, ncol(dx))
-    diag_ind <- seq(1, length(m0)^2, length(m0) + 1)
-    new_dx[diag_ind, ] <- dx
-    return(new_dx)
+    if (is_scalar(m0)) {
+      return(zero_matrix0(m0^2, ncol(dx)))
+    } else {
+      new_dx <- zero_matrix0(length(m0)^2, ncol(dx))
+      diag_ind <- seq(1, length(m0)^2, length(m0) + 1)
+      new_dx[diag_ind, ] <- dx
+      return(new_dx)    
+    }
   }
   stop("The input is not a matrix or a vector.")
 }
