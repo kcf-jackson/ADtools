@@ -3,21 +3,21 @@ NULL
 
 #' Inverse of 'dual'-class objects
 #' @method solve dual
-#' @name solve.dual
-#' @param a A "dual" object.
-#' @param b A "dual" object.
+#' @rdname solve.dual
+#' @param a A numeric matrix or a "dual" object.
+#' @param b A numeric vector or matrix or a "dual" object.
 #' @param ... Other arguments passed to 'base::solve'. See '?solve' for detail.
 #' @note At least one of `a` and `b` must be a dual object, the other one may be
 #' any appropriate numeric matrix.
-#' @export
-solve.dual <- function(a, b, ...) {
-  if (missing(b)) {
-    fun <- call_S4("solve", a = "dual", b = "missing")
-  } else {
-    fun <- solve_dual
-  }
-  fun(a, b, ...)
-}
+# @export
+# solve.dual <- function(a, b, ...) {
+#   if (missing(b)) {
+#     fun <- call_S4("solve", a = "dual", b = "missing")
+#   } else {
+#     fun <- solve_dual
+#   }
+#   fun(a, b, ...)
+# }
 
 #' @rdname solve.dual
 setMethod("solve",

@@ -1,16 +1,16 @@
 element_wise_derivative <- function(f, df) {
-  function(x) {
+  function(x) {                          # nocov
     px <- x@x
     dx <- x@dx
 
     x@x <- f(px)
     for (i in 1:nrow(dx)) {
       dx[i, ] <- df(px[i]) * dx[i, ]
-    }
+    }                                    # nocov
     x@dx <- dx
 
     return(x)
-  }
+  }                                      # nocov
 }
 
 lambda <- pryr::f

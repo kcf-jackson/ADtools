@@ -1,5 +1,23 @@
 context("Test random variable simulation")
 
+test_that("Inverse transform is consistent with the base package implementation", {
+  n <- 1000
+  sample_1 <- rgamma0(n, 1, 1, method = "base")
+  sample_2 <- rgamma0(n, 1, 1, method = "inv_tf")
+  testthat::expect_lt(abs(mean(sample_1) - mean(sample_2)), 1 / sqrt(n) * 10)
+  testthat::expect_error(rgamma0(n, 1, 1, method = "cause_trouble"))
+
+  sample_1 <- rchisq0(n, 10, method = "base")
+  sample_2 <- rchisq0(n, 10, method = "inv_tf")
+  testthat::expect_lt(abs(mean(sample_1) - mean(sample_2)), 1 / sqrt(n) * 10)
+
+  mean_list <- function(x) purrr::reduce(x, `+`) / length(x)
+  sample_1 <- purrr::map(1:n, ~rWishart0(10, diag(3), method = "base"))
+  sample_2 <- purrr::map(1:n, ~rWishart0(10, diag(3), method = "inv_tf"))
+  testthat::expect_lt(max(abs(mean_list(sample_1) - mean_list(sample_2))), 1 / sqrt(n) * 10)
+})
+
+
 test_that("Test Exponential simulation", {
   purrr::map(2:10, function(i) {
     f <- function(rate) {
@@ -109,11 +127,15 @@ test_that("Test Gamma simulation", {
       set.seed(123)
       rgamma0(n = i, shape = 1, scale = scale)
     }
+    f4 <- function(scale) {
+      set.seed(123)
+      rgamma0(n = i, shape = 1:i, scale = scale)
+    }
     inputs <- list(
       list(scale = runif(i)),
       list(scale = runif(1))
     )
     ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
-    test_fs(list(f3), inputs, ctrl)
+    test_fs(list(f3, f4), inputs, ctrl)
   })
 })

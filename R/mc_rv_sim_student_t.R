@@ -6,22 +6,24 @@ NULL
 #' @param cdf A function; the distribution function of a random variable.
 inverse_transform <- function(cdf) {
   # Root-finding requires continuous cdf
-  single_sim <- function(u, param) {
-    interval <- c(0, 10)
-    .f <- function(x) do.call(cdf, append(list(x), param)) - u
-    res <- uniroot(.f, interval,
-      tol = .Machine$double.eps^0.75,
-      maxiter = 10000, extendInt = "upX"
-    )
-    res$root
-  }
-  function(n, ...) {
+  function(n, ...) {                                         # nocov
     param <- list(...)
-    purrr::map_dbl(runif(n), ~ single_sim(.x, param))
-  }
+    purrr::map_dbl(runif(n), ~ single_sim(.x, param, cdf))
+  }                                                          # nocov
+}
+
+single_sim <- function(u, param, cdf) {
+  interval <- c(0, 10)
+  .f <- function(x) do.call(cdf, append(list(x), param)) - u
+  res <- uniroot(.f, interval,
+    tol = .Machine$double.eps^0.75,
+    maxiter = 10000, extendInt = "upX"
+  )
+  res$root
 }
 
 rt_invt <- inverse_transform(pt)
+
 
 #' Simulate random variates from the student-t distribution
 #' @param n positive integer; number of observations.

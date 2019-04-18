@@ -126,7 +126,14 @@ purrr::map(2:10, function(i) {
   test_fs(gs, inputs, ctrl)
 
   # dual matrix - numeric scalar
-  gs <- list(lambda(e1, e1 ^ i))
+  gs <- list(lambda(e1, e1 ^ i), lambda(e1, e1 ^ 0))
   inputs <- list( list(e1 = randu(i, i, min = 0.1)) )
   test_fs(gs, inputs, ctrl)
+
+  # Error case
+  testthat::expect_error((-3)^dual(3, c(1, 2, 3), 1))                      # must have positive scalar base
+  testthat::expect_error(3^dual(1:3, c(1, 2, 3), 1))                    # must have scalar exponent
+  testthat::expect_error(dual(-3, c(1, 2, 3), 1)^(1:3))                    # must have scalar exponent
+  testthat::expect_error(dual(-3, c(1, 2, 3), 1)^dual(3, c(1, 2, 3), 1))   # must have positive scalar base
+  testthat::expect_error(dual(3, c(1, 2, 3), 1)^dual(1:3, c(1, 2, 3), 1))  # must have scalar exponent
 })

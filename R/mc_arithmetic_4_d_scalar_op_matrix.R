@@ -44,17 +44,17 @@ multiply_fun <- function(dx, dy, x, y) { dx * y + dy * x }
 divide_fun <- function(dx, dy, x, y) { (y * dx - x * dy) / y^2 }
 
 # Factory
-d_scalar_plus_scalar <- purrr::partial(d_scalar_op_scalar, d_op = plus_fun)
-d_scalar_minus_scalar <- purrr::partial(d_scalar_op_scalar, d_op = minus_fun)
-d_scalar_multiply_scalar <- purrr::partial(d_scalar_op_scalar, d_op = multiply_fun)
-d_scalar_divide_scalar <- purrr::partial(d_scalar_op_scalar, d_op = divide_fun)
+d_scalar_plus_scalar <- function(a, b) d_scalar_op_scalar(a, b, d_op = plus_fun)
+d_scalar_minus_scalar <- function(a, b) d_scalar_op_scalar(a, b, d_op = minus_fun)
+d_scalar_multiply_scalar <- function(a, b) d_scalar_op_scalar(a, b, d_op = multiply_fun)
+d_scalar_divide_scalar <- function(a, b) d_scalar_op_scalar(a, b, d_op = divide_fun)
 
-d_scalar_plus_matrix <- purrr::partial(d_scalar_op_matrix, d_op = plus_fun)
-d_scalar_minus_matrix <- purrr::partial(d_scalar_op_matrix, d_op = minus_fun)
-d_scalar_multiply_matrix <- purrr::partial(d_scalar_op_matrix, d_op = multiply_fun)
-d_scalar_divide_matrix <- purrr::partial(d_scalar_op_matrix, d_op = divide_fun)
+d_scalar_plus_matrix <- function(a, b) d_scalar_op_matrix(a, b, d_op = plus_fun)
+d_scalar_minus_matrix <- function(a, b) d_scalar_op_matrix(a, b, d_op = minus_fun)
+d_scalar_multiply_matrix <- function(a, b) d_scalar_op_matrix(a, b, d_op = multiply_fun)
+d_scalar_divide_matrix <- function(a, b) d_scalar_op_matrix(a, b, d_op = divide_fun)
 
-d_matrix_plus_scalar <- purrr::partial(d_matrix_op_scalar, d_op = plus_fun)
-d_matrix_minus_scalar <- purrr::partial(d_matrix_op_scalar, d_op = minus_fun)
-d_matrix_multiply_scalar <- purrr::partial(d_matrix_op_scalar, d_op = multiply_fun)
-d_matrix_divide_scalar <- purrr::partial(d_matrix_op_scalar, d_op = divide_fun)
+d_matrix_plus_scalar <- function(a, b) d_matrix_op_scalar(a, b, d_op = plus_fun)
+d_matrix_minus_scalar <- function(a, b) d_matrix_op_scalar(a, b, d_op = minus_fun)
+d_matrix_multiply_scalar <- function(a, b) d_matrix_op_scalar(a, b, d_op = multiply_fun)
+d_matrix_divide_scalar <- function(a, b) d_matrix_op_scalar(a, b, d_op = divide_fun)

@@ -28,9 +28,9 @@ map2reduce <- function(x, y, f, g, ...) {
 }
 
 
-call_S4 <- function(f_name, ...) {
-  getMethod(f_name, list(...))@.Data
-}
+# call_S4 <- function(f_name, ...) {
+#   getMethod(f_name, list(...))@.Data
+# }
 
 
 if_null_then <- function(x, y) {
