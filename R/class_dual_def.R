@@ -1,7 +1,7 @@
 check_dual <- function(object) {
   x <- object@x
   dx <- object@dx
-  x_check <- is.array(x) || is.numeric(x) || is_matrix(x)
+  x_check <- is.numeric(x) || is_matrix(x)
   dim_check <- nrow(dx) == length(x)   # match dimension
   x_check && is_matrix(dx) && dim_check
 }
@@ -15,7 +15,7 @@ is_sparse_matrix <- function(x) {
 
 #' S4 class "dual"
 #'
-#' @description This class attaches a dual component to a number / an array.
+#' @description This class attaches a dual component to a number / matrix.
 #' @slot x scalar, vector or matrix; also accepts any matrix classes from the "Matrix" package.
 #' @slot dx matrix; also accepts any matrix classes from the "Matrix" package.
 #' @slot param a named list, containing the column indices each variable occupies.
