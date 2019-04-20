@@ -1,11 +1,11 @@
-#' Diagonal matrix
-#' @inheritParams base::diag
-#' @param x A matrix, a vector or a dual number. In the last case, all other parameters
-#' are ignored as \code{diag.dual} only takes the first argument.
-#' @export
-diag <- function(x, ...) {
-  UseMethod("diag", x, ...)
-}
+# #' Diagonal matrix
+# #' @inheritParams base::diag
+# #' @param x A matrix, a vector or a dual number. In the last case, all other parameters
+# #' are ignored as \code{diag.dual} only takes the first argument.
+# #' @export
+# diag <- function(x, ...) {
+#   UseMethod("diag", x, ...)
+# }
 
 # diag <- function(x, nrow, ncol, names = TRUE) {
 #   if (class(x) == "dual") {
@@ -17,31 +17,52 @@ diag <- function(x, ...) {
 #' Diagonal matrix
 #' @param x A "dual" object.
 #' @rdname diag_dual
+#' @note A single column matrix is treated as a vector. If one wants to call
+#' \code{diag} on a single column matrix \code{x}, one can call
+#' \code{x[1, 1]} instead.
 #' @export
 diag.dual <- function(x) {
   x@dx <- d_diagonal(x)
-  x@x <- diag(x@x)
-  x
+  m0 <- x@x
+  if (is.matrix(m0)) {
+    if (ncol(m0) == 1) {
+      m0 <- as.vector(m0)  # then proceeds as the vector case
+    } else {
+      x@x <- diag(m0)
+      return(x)
+    }
+  }
+  if (is.vector(m0)) {
+    if (is_scalar(m0)) {
+      x@x <- Diagonal0(n = m0)
+      return(x)
+    } else {
+      x@x <- Diagonal0(x = m0)
+      return(x)
+    }
+  }
+  stop("The input must be a (dual) matrix / vector.")
 }
 
 d_diagonal <- function(x) {
   m0 <- x@x
   dx <- x@dx
-  if (is.matrix(m0)) {
+  if (is.matrix(m0) && (ncol(m0) > 1)) {
+    # extract from dx the corresponding diagonal entries
     diag_ind <- seq(1, length(m0), nrow(m0) + 1)
     return(dx[diag_ind, , drop = F])
   }
-  if (is.vector(m0)) {
-    if (is_scalar(m0)) {
-      return(zero_matrix0(m0^2, ncol(dx)))
-    } else {
-      new_dx <- zero_matrix0(length(m0)^2, ncol(dx))
-      diag_ind <- seq(1, length(m0)^2, length(m0) + 1)
-      new_dx[diag_ind, ] <- dx
-      return(new_dx)    
-    }
+
+  m0 <- as.vector(m0)
+  if (is_scalar(m0)) {
+    return(zero_matrix0(m0^2, ncol(dx)))
   }
-  stop("The input is not a matrix or a vector.")
+
+  # handle both a single-column matrix and a vector
+  new_dx <- zero_matrix0(length(m0)^2, ncol(dx))
+  diag_ind <- seq(1, length(m0)^2, length(m0) + 1)
+  new_dx[diag_ind, ] <- dx
+  return(new_dx)
 }
 
 #' @rdname diag_dual

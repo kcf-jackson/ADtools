@@ -20,3 +20,23 @@ testthat::test_that("diag, vec, vech, as.vector, as.matrix, matrix", {
   testthat::expect_error(diag(dual(array(1:10), c(10, 3), 1)))
   testthat::expect_error(vech(randn(5, 6)))
 })
+
+
+testthat::test_that("Check diag has correct behaviour for different classes of input", {
+  k <- 2
+  scalar0 <- 4
+  vector0 <- 1:5
+  matrix0 <- matrix(1:9, 3, 3)
+  scalar_dual <- dual(scalar0, c(length(scalar0), k), 1)
+  vector_dual <- dual(vector0, c(length(vector0), k), 1)
+  matrix_dual <- dual(matrix0, c(length(matrix0), k), 1)
+  equal_in_value <- function(x, y) {
+    testthat::expect_equal(sum(abs(x - y)), 0)
+  }
+  equal_in_value(diag(scalar_dual)@x, diag(scalar0))
+  equal_in_value(diag(vector_dual)@x, diag(vector0))
+  equal_in_value(diag(matrix_dual)@x, diag(matrix0))
+
+  testthat::expect_true(check_dual(diag(vector_dual)))
+  testthat::expect_true(check_dual(diag(matrix_dual)))
+})

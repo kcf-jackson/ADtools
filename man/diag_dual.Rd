@@ -16,3 +16,8 @@ diag.dual(x)
 \description{
 Diagonal matrix
 }
+\note{
+A single column matrix is treated as a vector. If one wants to call
+\code{diag} on a single column matrix \code{x}, one can call
+\code{x[1, 1]} instead.
+}

@@ -5,7 +5,7 @@
 \alias{dual-class}
 \title{S4 class "dual"}
 \description{
-This class attaches a dual component to a number / an array.
+This class attaches a dual component to a number / matrix.
 }
 \section{Slots}{
 
