@@ -132,7 +132,7 @@ purrr::map(2:10, function(i) {
 
   # Error case
   testthat::expect_error((-3)^dual(3, c(1, 2, 3), 1))                      # must have positive scalar base
-  testthat::expect_error(3^dual(1:3, c(1, 2, 3), 1))                    # must have scalar exponent
+  testthat::expect_error(3^dual(1:3, c(1, 2, 3), 1))                       # must have scalar exponent
   testthat::expect_error(dual(-3, c(1, 2, 3), 1)^(1:3))                    # must have scalar exponent
   testthat::expect_error(dual(-3, c(1, 2, 3), 1)^dual(3, c(1, 2, 3), 1))   # must have positive scalar base
   testthat::expect_error(dual(3, c(1, 2, 3), 1)^dual(1:3, c(1, 2, 3), 1))  # must have scalar exponent

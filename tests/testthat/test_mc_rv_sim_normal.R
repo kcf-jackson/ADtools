@@ -51,6 +51,26 @@ test_that("Test univariate normal simulation", {
     )
     ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
     test_fs(fs, inputs, ctrl)
+
+    # Test output dimension is correct
+    m <- 10
+    k <- 2
+    scalar <- 1
+    vector <- 1:10
+    scalar_dual <- dual(m, c(1, k), 1)       # dual-dim: k + 1
+    vector_dual <- dual(seq(m), c(m, k), 1)  # dual-dim: k + m
+    check_output_dim <- function(x, d) {
+      testthat::expect_equal(dim(x@x), c(m, 1))
+      testthat::expect_equal(dim(x@dx), c(m, d))
+    }
+    check_output_dim(rnorm0(m, mean = scalar_dual, sd = scalar), 1 + k)
+    check_output_dim(rnorm0(m, mean = scalar_dual, sd = vector), 1 + k)
+    check_output_dim(rnorm0(m, mean = vector_dual, sd = scalar), m + k)
+    check_output_dim(rnorm0(m, mean = vector_dual, sd = vector), m + k)
+    check_output_dim(rnorm0(m, sd = scalar_dual, mean = scalar), 1 + k)
+    check_output_dim(rnorm0(m, sd = scalar_dual, mean = vector), 1 + k)
+    check_output_dim(rnorm0(m, sd = vector_dual, mean = scalar), m + k)
+    check_output_dim(rnorm0(m, sd = vector_dual, mean = vector), m + k)
   })
 })
 

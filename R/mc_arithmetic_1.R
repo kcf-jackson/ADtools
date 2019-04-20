@@ -15,7 +15,7 @@ setMethod(
   function(e1, e2) {
     e1@x <- e1@x + e2
     if (is_matrix(e2) && (length(e2) != nrow(e1@dx))) {
-      e1@dx <- mapreduce(seq(length(e2)), ~e1@dx, rbind)
+      e1@dx <- mapreduce(numeric(length(e2)), ~e1@dx, rbind)
     }
     e1
   }

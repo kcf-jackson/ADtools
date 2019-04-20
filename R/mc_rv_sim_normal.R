@@ -19,7 +19,7 @@ rnorm0_dual <- function(n, mean, sd) {
   assertthat::assert_that(len_mean == 1 || len_mean == n)
   len_sd <- length(sd)
   assertthat::assert_that(len_sd == 1 || len_sd == n)
-  mean + sd * rnorm(n)
+  mean + as.matrix(sd * rnorm(n))
 }
 
 #' @rdname rnorm0
