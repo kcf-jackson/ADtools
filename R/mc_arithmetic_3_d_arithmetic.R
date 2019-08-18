@@ -1,9 +1,3 @@
-# Helper functions
-is_scalar <- function(x) {
-  length(x) == 1
-}
-
-
 # Matrix +, -, *, /
 d_op_dispatch <- function(a, b, funs) {
   if (is_scalar(a@x)) {

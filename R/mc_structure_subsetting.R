@@ -8,7 +8,7 @@ NULL
 #' @param j integer; the column index.
 #' @param drop T or F; if T, returns a vector when one dimension of the matrix is 1.
 #' @rdname index-subset
-subset.dual <- function(x, i, j, drop = F) {
+Extract.dual <- function(x, i, j, drop = F) {
   x@dx <- d_subset(x, i, j)
   x@x <- x@x[i, j, drop = drop]
   x
@@ -32,13 +32,13 @@ d_subset <- function(a, i, j) {
 }
 
 #' @rdname index-subset
-setMethod("[", signature(x = "dual", i = "numeric", j = "missing"), subset.dual)
+setMethod("[", signature(x = "dual", i = "numeric", j = "missing"), Extract.dual)
 
 #' @rdname index-subset
-setMethod("[", signature(x = "dual", i = "missing", j = "numeric"), subset.dual)
+setMethod("[", signature(x = "dual", i = "missing", j = "numeric"), Extract.dual)
 
 #' @rdname index-subset
-setMethod("[", signature(x = "dual", i = "numeric", j = "numeric"), subset.dual)
+setMethod("[", signature(x = "dual", i = "numeric", j = "numeric"), Extract.dual)
 
 
 #' Return the First or Last Part of an Object

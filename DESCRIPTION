@@ -31,8 +31,7 @@ Imports:
     dplyr,
     magrittr,
     assertthat,
-    mvtnorm,
-    pryr
+    mvtnorm
 Collate:
     'ADtools.R'
     'auto_diff.R'

@@ -2,11 +2,9 @@
 R package 'ADtools'
 -------------------
 
+[![Travis-CI Build Status](https://travis-ci.org/kcf-jackson/ADtools.svg?branch=master)](https://travis-ci.org/kcf-jackson/ADtools) [![Coverage status](https://codecov.io/gh/kcf-jackson/ADtools/branch/master/graph/badge.svg)](https://codecov.io/github/kcf-jackson/ADtools?branch=master)
+
 Implements the forward-mode auto-differentiation for multivariate functions using the matrix-calculus notation from Magnus and Neudecker (1988). Two key features of the package are: (i) the package incorporates various optimisaton strategies to improve performance; this includes applying memoisation to cut down object construction time, using sparse matrix representation to save derivative calculation, and creating specialised matrix operations with Rcpp to reduce computation time; (ii) the package supports differentiating random variable with respect to their parameters, targetting MCMC (and in general simulation-based) applications.
-
-[![Travis-CI Build Status](https://travis-ci.org/kcf-jackson/ADtools.svg?branch=master)](https://travis-ci.org/kcf-jackson/ADtools)
-
-[![Coverage status](https://codecov.io/gh/kcf-jackson/ADtools/branch/master/graph/badge.svg)](https://codecov.io/github/kcf-jackson/ADtools?branch=master)
 
 ### Installation
 
@@ -39,9 +37,9 @@ print(list(X = X, y = y, f = f(X, y)))
 ```
 
     ## $X
-    ##            [,1]        [,2]
-    ## [1,]  0.6008076  0.28125633
-    ## [2,] -0.7162415 -0.02514947
+    ##           [,1]       [,2]
+    ## [1,] 0.1575649  0.6943307
+    ## [2,] 0.4318833 -0.8566656
     ## 
     ## $y
     ##      [,1]
@@ -49,9 +47,9 @@ print(list(X = X, y = y, f = f(X, y)))
     ## [2,]    1
     ## 
     ## $f
-    ##           [,1]
-    ## [1,]  0.882064
-    ## [2,] -0.741391
+    ##            [,1]
+    ## [1,]  0.8518956
+    ## [2,] -0.4247823
 
 #### Auto-differentiation
 
@@ -63,9 +61,9 @@ f_AD <- auto_diff(f, list(X = X, y = y))
 get_deriv(f_AD)   # returns a Jacobian matrix
 ```
 
-    ##            d_X1 d_X2 d_X3 d_X4       d_y1        d_y2
-    ## d_output_1    1    0    1    0  0.6008076  0.28125633
-    ## d_output_2    0    1    0    1 -0.7162415 -0.02514947
+    ##            d_X1 d_X2 d_X3 d_X4      d_y1       d_y2
+    ## d_output_1    1    0    1    0 0.1575649  0.6943307
+    ## d_output_2    0    1    0    1 0.4318833 -0.8566656
 
 `auto_diff` also supports computing a partial Jacobian matrix. For instance, suppose we are only interested in the derivative w.r.t. `y`, then we can run
 
@@ -74,9 +72,9 @@ f_AD <- auto_diff(f, vary = list(y = y), fix = list(X = X))
 get_deriv(f_AD)   # returns a partial Jacobian matrix
 ```
 
-    ##                  d_y1        d_y2
-    ## d_output_1  0.6008076  0.28125633
-    ## d_output_2 -0.7162415 -0.02514947
+    ##                 d_y1       d_y2
+    ## d_output_1 0.1575649  0.6943307
+    ## d_output_2 0.4318833 -0.8566656
 
 #### Finite-differencing
 
@@ -87,9 +85,9 @@ f_FD <- finite_diff(f, list(X = X, y = y))
 f_FD
 ```
 
-    ##            d_X1 d_X2 d_X3 d_X4       d_y1        d_y2
-    ## d_output_1    1    0    1    0  0.6008076  0.28125633
-    ## d_output_2    0    1    0    1 -0.7162415 -0.02514947
+    ##            d_X1 d_X2 d_X3 d_X4      d_y1       d_y2
+    ## d_output_1    1    0    1    0 0.1575649  0.6943307
+    ## d_output_2    0    1    0    1 0.4318833 -0.8566656
 
 ------------------------------------------------------------------------
 
