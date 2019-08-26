@@ -155,16 +155,18 @@ setMethod(
       e2@x <- e1 * inv_a
       e2@dx <- as.numeric(e1) %*% d_inv_a
     } else {
-      for (j in 1:ncol(x)) {
-        for (i in 1:nrow(x)) {
-          deriv_rind <- i + (j - 1) * nrow(x)
-          inv_a <- as.numeric(1 / x[i, j, drop = F])
-          d_inv_a <- -inv_a^2 * dx[deriv_rind, , drop = F]
-          k <- ifelse(is_scalar(e1), e1, e1[i, j])
-          e2@x[i, j] <- k * inv_a
-          e2@dx[deriv_rind, ] <- k * d_inv_a
-        }
-      }
+      e2@x <- e1 / x
+      e2@dx <- - as.numeric(e1 / x^2) * dx
+      # for (j in 1:ncol(x)) {
+      #   for (i in 1:nrow(x)) {
+      #     deriv_rind <- i + (j - 1) * nrow(x)
+      #     inv_a <- as.numeric(1 / x[i, j, drop = F])
+      #     d_inv_a <- -inv_a^2 * dx[deriv_rind, , drop = F]
+      #     k <- ifelse(is_scalar(e1), e1, e1[i, j])
+      #     e2@x[i, j] <- k * inv_a
+      #     e2@dx[deriv_rind, ] <- k * d_inv_a
+      #   }
+      # }
     }
     return(e2)
   }

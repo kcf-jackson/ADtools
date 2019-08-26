@@ -48,26 +48,38 @@ rgamma0_dual <- function(n, shape, scale, method = "inv_tf") {
   len_scale <- length(scale)
   assertthat::assert_that(len_scale == 1 || len_scale == n)
 
-  rgamma_single <- function(shape, scale) {
+  rgamma_single <- function(shape) {
     g_dual <- shape
     g <- rgamma0(1, shape@x, scale = 1, method = method)
     g_dual@x <- g
     g_dual@dx <- d_rgamma(g, shape@x) * shape@dx
-    g_dual * scale
+    g_dual
   }
+  if (len_shape == 1) {
+    return(mapreduce(seq(n), ~rgamma_single(shape), rbind2) * scale)
+  } else {
+    return(mapreduce(seq(n), ~rgamma_single(shape[.x]), rbind2) * scale)
+  }
+  # rgamma_single <- function(shape, scale) {
+  #   g_dual <- shape
+  #   g <- rgamma0(1, shape@x, scale = 1, method = method)
+  #   g_dual@x <- g
+  #   g_dual@dx <- d_rgamma(g, shape@x) * shape@dx
+  #   g_dual * scale
+  # }
   # handle parameters of different length
-  if ((len_shape == 1) && (len_scale == 1)) {
-    return(mapreduce(seq(n), ~rgamma_single(shape, scale), rbind2))
-  }
-  if ((len_shape == 1) && (len_scale == n)) {
-    return(mapreduce(seq(n), ~rgamma_single(shape, scale[.x]), rbind2))
-  }
-  if ((len_shape == n) && (len_scale == 1)) {
-    return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale), rbind2))
-  }
-  if ((len_shape == n) && (len_scale == n)) {
-    return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale[.x]), rbind2))
-  }
+  # if ((len_shape == 1) && (len_scale == 1)) {
+  #   return(mapreduce(seq(n), ~rgamma_single(shape, scale), rbind2))
+  # }
+  # if ((len_shape == 1) && (len_scale == n)) {
+  #   return(mapreduce(seq(n), ~rgamma_single(shape, scale[.x]), rbind2))
+  # }
+  # if ((len_shape == n) && (len_scale == 1)) {
+  #   return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale), rbind2))
+  # }
+  # if ((len_shape == n) && (len_scale == n)) {
+  #   return(mapreduce(seq(n), ~rgamma_single(shape[.x], scale[.x]), rbind2))
+  # }
 }
 
 
