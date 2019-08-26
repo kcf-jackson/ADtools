@@ -68,7 +68,7 @@ test_that("Test Wishart simulation", {
   })
 
   purrr::map(2:10, function(i) {
-    # dual-numeric case
+    # numeric-dual case
     f2 <- function(M) {
       set.seed(123)
       rWishart0(v = i, M = M)

@@ -54,12 +54,16 @@ setMethod(
     g <- seq(nc)
 
     x_ind <- seq_along(x@x)
-    res_ind <- x_ind + rearrange(rep((g - 1) * r2, r1), nc)
-    res_dx[res_ind, ] <- x@dx[x_ind, ]
+    res_x_ind <- x_ind + rearrange(rep((g - 1) * r2, r1), nc)
+    # res_ind <- x_ind + rearrange(rep((g - 1) * r2, r1), nc)
+    # res_dx[res_ind, ] <- x@dx[x_ind, ]
 
     y_ind <- seq_along(y@x)
-    res_ind <- y_ind + rearrange(rep(g * r1, r2), nc)
-    res_dx[res_ind, ] <- y@dx[y_ind, ]
+    res_y_ind <- y_ind + rearrange(rep(g * r1, r2), nc)
+    # res_ind <- y_ind + rearrange(rep(g * r1, r2), nc)
+    # res_dx[res_ind, ] <- y@dx[y_ind, ]
+
+    res_dx <- res_dx[order(c(res_x_ind, res_y_ind)), , drop = FALSE]
 
     x@x <- res_x
     x@dx <- res_dx
