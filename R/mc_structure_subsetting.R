@@ -10,7 +10,15 @@ NULL
 #' @rdname index-subset
 subset.dual <- function(x, i, j, drop = F) {
   x@dx <- d_subset(x, i, j)
-  x@x <- x@x[i, j, drop = drop]
+  if (missing(i) && missing(j)) {
+    x@x <- x@x[,, drop = drop]
+  } else if (missing(i)) {
+    x@x <- x@x[, j, drop = drop]
+  } else if (missing(j)) {
+    x@x <- x@x[i, , drop = drop]
+  } else {
+    x@x <- x@x[i, j, drop = drop]
+  }
   x
 }
 
