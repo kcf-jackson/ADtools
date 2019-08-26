@@ -18,3 +18,18 @@ setMethod("nrow", signature(x = "dual"), function(x) nrow(x@x))
 #' Number of columns
 #' @param x A "dual" object.
 setMethod("ncol", signature(x = "dual"), function(x) ncol(x@x))
+
+
+#' Rounding of Numbers
+#' @param x A "dual" object.
+#' @param digits integer indicating the number of decimal places.
+#' @export
+round.dual <- function(x, digits = 0) {
+  x@x <- round(x@x, digits = digits)
+  return(x)
+}
+
+#' Rounding of Numbers
+#' @param x A "dual" object.
+#' @param digits integer indicating the number of decimal places.
+setMethod("round", signature(x = "dual", digits = "integer"), round.dual)
