@@ -26,7 +26,7 @@ rt_invt <- inverse_transform(pt)
 
 
 #' Simulate random variates from the student-t distribution
-#' @param n positive integer; number of observations.
+#' @param n positive integer; the number of samples.
 #' @param df degrees of freedom (> 0, maybe non-integer). df = Inf is allowed.
 #' @export
 rt0 <- function(n, df) {
@@ -39,7 +39,7 @@ rt0 <- function(n, df) {
 }
 
 #' Simulate random variates from the student-t distribution
-#' @param n A scalar; the random sample.
+#' @param n positive integer; the number of samples.
 #' @param df A dual number; the degree of freedom.
 setMethod(
   "rt0",
@@ -69,4 +69,23 @@ d_student_t <- function(x, df) {
   numerator <- -(pt(x, df = df + h) - pt(x, df = df)) / h
   denominator <- dt(x, df = df)
   numerator / denominator
+}
+
+
+#' Simulate random variates from the multivariate t distribution
+#' @param n positive integer; number of observations.
+#' @param sigma scale matrix.
+#' @param df degree of freedom.
+#' @param delta noncentrality parameters.
+#' @export
+rmvt0 <- function(n, sigma, df, delta = 0) {
+  sim <- function(v, mu, Sigma) {
+    sqrt_W <- sqrt(v / rchisq0(1, df = v))
+    A <- chol0(Sigma)
+    p <- nrow(Sigma)
+    Z <- rmvnorm0(1, mean = rep(0, p), sigma = diag(p))
+    t(mu + sqrt_W * A %*% t(Z))
+  }
+
+  mapreduce(1:n, ~ sim(v = df, mu = delta, Sigma = sigma), rbind2)
 }
