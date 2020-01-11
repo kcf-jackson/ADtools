@@ -206,7 +206,7 @@ det.dual <- function(x, ...) {
   px <- x@x
   det_x <- det(px, ...)
   x@x <- det_x
-  x@dx <- det_x * t(as.numeric(t(solve(px))))
+  x@dx <- det_x * t(as.numeric(t(solve(px)))) %*% x@dx
   x
 }
 
