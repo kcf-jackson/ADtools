@@ -51,8 +51,8 @@ setMethod(
 #' @return A numeric matrix, where every column is a sample.
 #' @export
 rmvnorm0 <- function(n, mean, sigma) {
-  mean + chol0(sigma) %*%
-    t(mvtnorm::rmvnorm(n, numeric(length(mean))))
+  Z <- t(mvtnorm::rmvnorm(n, numeric(length(mean))))
+  t(mean + chol0(sigma) %*% Z)
 }
 
 #' Simulate multivariate normal random variates
@@ -61,12 +61,12 @@ rmvnorm0 <- function(n, mean, sigma) {
 #' @param mean A numeric vector or a dual number; the mean of the normal distribution.
 #' @param sigma A numeric matrix or a dual number; the standard deviation of the normal distribution.
 rmvnorm0_dual <- function(n, mean, sigma) {
-  mapreduce(
+  L <- chol0(sigma)
+  t(mapreduce(
     seq(n),
-    ~ mean + chol0(sigma) %*%
-      t(mvtnorm::rmvnorm(1, numeric(length(mean)))),
+    ~ mean + L %*% t(mvtnorm::rmvnorm(1, numeric(length(mean)))),
     cbind2
-  )
+  ))
 }
 
 #' @rdname rmvnorm0_dual
