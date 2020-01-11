@@ -77,14 +77,14 @@ test_that("Test univariate normal simulation", {
 
 test_that("Test multivariate normal simulation", {
   # Test rmvnorm0 implementation matches with rmvnorm
-  purrr::map(2:15, function(i) {
+  purrr::map(1:15, function(i) {
     set.seed(123)
-    ref <- t(mvtnorm::rmvnorm(1, numeric(i), diag(i)))
+    ref <- mvtnorm::rmvnorm(1, numeric(i), diag(i))
     set.seed(123)
     imp <- rmvnorm0(1, numeric(i), diag(i))
     compare(ref, imp, display = F, err_fun = rel_err, epsilon = 1e-8)
   })
-  purrr::map(2:15, function(i) {
+  purrr::map(1:15, function(i) {
     f <- function(mean, sigma) {
       set.seed(123)
       rmvnorm0(n = i, mean = mean, sigma = sigma)

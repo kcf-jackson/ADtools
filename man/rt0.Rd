@@ -7,7 +7,7 @@
 rt0(n, df)
 }
 \arguments{
-\item{n}{positive integer; number of observations.}
+\item{n}{positive integer; the number of samples.}
 
 \item{df}{degrees of freedom (> 0, maybe non-integer). df = Inf is allowed.}
 }

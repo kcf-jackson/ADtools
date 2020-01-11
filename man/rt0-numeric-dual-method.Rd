@@ -8,7 +8,7 @@
 \S4method{rt0}{numeric,dual}(n, df)
 }
 \arguments{
-\item{n}{A scalar; the random sample.}
+\item{n}{positive integer; the number of samples.}
 
 \item{df}{A dual number; the degree of freedom.}
 }
