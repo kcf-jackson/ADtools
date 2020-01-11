@@ -62,3 +62,11 @@ setMethod(
   signature(x = "dual"),
   element_wise_derivative(log, lambda(1 / x))
 )
+
+#' Element-wise gamma of a dual object
+#' @param x A "dual" object.
+setMethod(
+  "gamma",
+  signature(x = "dual"),
+  element_wise_derivative(gamma, lambda(digamma(x) * gamma(x)))
+)

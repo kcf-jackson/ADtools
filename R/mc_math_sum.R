@@ -82,3 +82,15 @@ setMethod(
     sum(diag(x))
   }
 )
+
+#' Mean of vector or matrix elements
+#' @param x A "dual" object.
+setMethod(
+  "mean",
+  signature(x = "dual"),
+  function(x) {
+    x@dx <- t(colMeans(x@dx))
+    x@x <- mean(x@x)
+    x
+  }
+)
