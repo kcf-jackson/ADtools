@@ -4,7 +4,7 @@
 \alias{dmvt0}
 \title{The density of the multivariate t distribution}
 \usage{
-dmvt0(x, delta = 0, sigma, df = 1, log = TRUE)
+dmvt0(x, delta, sigma, df = 1, log = TRUE)
 }
 \arguments{
 \item{x}{vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.}
@@ -23,5 +23,5 @@ The density of the multivariate t distribution
 \examples{
 sigma <- crossprod(randn(3, 3))
 data <- rmvt0(2, sigma = sigma, df = 2)
-dmvt0(data, sigma = sigma, df = 2)
+dmvt0(data, delta = rep(0, 3), sigma = sigma, df = 2)
 }
