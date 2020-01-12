@@ -48,8 +48,8 @@ d_matrix_prod <- function(a, b) {
   B <- b@x
   dA <- a@dx
   dB <- b@dx
-  I_A <- Diagonal0(nrow(A))
-  I_B <- Diagonal0(ncol(B))
+  I_A <- Diagonal0(NROW(A))
+  I_B <- Diagonal0(NCOL(B))
   (I_B %x% A) %*% dB + (t(B) %x% I_A) %*% dA
   # I_x_B_times_C(A, dB) + A_x_I_times_C(t(B), dA)
 }
@@ -60,10 +60,10 @@ d_kronecker <- function(a, b) {
   dA <- a@dx
   dB <- b@dx
 
-  m <- nrow(A)
-  n <- ncol(A)
-  p <- nrow(B)
-  q <- ncol(B)
+  m <- NROW(A)
+  n <- NCOL(A)
+  p <- NROW(B)
+  q <- NCOL(B)
   I_n <- Diagonal0(n)
   K_qm <- commutation_matrix0(q, m)
   I_p <- Diagonal0(p)

@@ -21,7 +21,7 @@ setMethod(
   "cbind2",
   signature(x = "dual", y = "ANY"),
   function(x, y) {
-    y <- dual(y, get_param_dim(x), -1)
+    y <- empty_dual(y, ncol(x@dx))
     cbind2(x, y)
   }
 )
@@ -33,7 +33,7 @@ setMethod(
   "cbind2",
   signature(x = "ANY", y = "dual"),
   function(x, y) {
-    x <- dual(x, get_param_dim(y), -1)
+    x <- empty_dual(x, ncol(y@dx))
     cbind2(x, y)
   }
 )
@@ -78,7 +78,7 @@ setMethod(
   "rbind2",
   signature(x = "dual", y = "ANY"),
   function(x, y) {
-    y <- dual(y, get_param_dim(x), -1)
+    y <- empty_dual(y, ncol(x@dx))
     rbind2(x, y)
   }
 )
@@ -90,7 +90,7 @@ setMethod(
   "rbind2",
   signature(x = "ANY", y = "dual"),
   function(x, y) {
-    x <- dual(x, get_param_dim(y), -1)
+    x <- empty_dual(x, ncol(y@dx))
     rbind2(x, y)
   }
 )

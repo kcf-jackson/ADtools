@@ -7,9 +7,9 @@
 #' # we wish to attach dual components {dX, dY, dZ} to X.
 #' dual(randn(2, 2), list(X = 4, Y = 3, Z = 6), ind = 1)
 #' @export
-dual <- function(x, param_dims, ind) {
+dual <- function(x, param_dim, ind) {
   x <- cast_vector_into_matrix(x)
-  dx <- init_dx(length(x), param_dims, ind)
+  dx <- init_dx(length(x), param_dim, ind)
   new("dual", x = x, dx = dx)
 }
 

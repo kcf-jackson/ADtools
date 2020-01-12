@@ -8,7 +8,7 @@ setMethod(
   "+",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- parent_of(e1) + parent_of(e2)
+    x <- e1@x + e2@x
     dx <- d_sum(e1, e2)
     e1@x <- x
     e1@dx <- dx
@@ -23,8 +23,8 @@ setMethod(
   "-",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- parent_of(e1) - parent_of(e2)
-    new("dual", x = x, dx = d_minus(e1, e2), param = param_of(e1))
+    x <- e1@x - e2@x
+    new("dual", x = x, dx = d_minus(e1, e2))
   }
 )
 
@@ -35,7 +35,7 @@ setMethod(
   "*",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- parent_of(e1) * parent_of(e2)
+    x <- e1@x * e2@x
     dx <- d_scalar_prod(e1, e2)
     e1@x <- x
     e1@dx <- dx
@@ -50,8 +50,8 @@ setMethod(
   "/",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- parent_of(e1) / parent_of(e2)
-    new("dual", x = x, dx = d_divide(e1, e2), param = param_of(e1))
+    x <- e1@x / e2@x
+    new("dual", x = x, dx = d_divide(e1, e2))
   }
 )
 
@@ -62,8 +62,8 @@ setMethod(
   "%*%",
   signature(x = "dual", y = "dual"),
   function(x, y) {
-    res <- parent_of(x) %*% parent_of(y)
-    new("dual", x = res, dx = d_matrix_prod(x, y), param = param_of(x))
+    res <- x@x %*% y@x
+    new("dual", x = res, dx = d_matrix_prod(x, y))
   }
 )
 
@@ -74,8 +74,8 @@ setMethod(
   "kronecker",
   signature(X = "dual", Y = "dual"),
   function(X, Y) {
-    res <- parent_of(X) %x% parent_of(Y)
-    new("dual", x = res, dx = d_kronecker(X, Y), param = param_of(X))
+    res <- X@x %x% Y@x
+    new("dual", x = res, dx = d_kronecker(X, Y))
   }
 )
 

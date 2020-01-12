@@ -1,7 +1,7 @@
 #' Automatic differentiation
 #' @param f A function of which the derivative is seeked.
-#' @param vary A named list of variables; the variables to be varied.
-#' @param fix A named list of variables; the variables to be fixed.
+#' @param wrt Character vector; the name of the variables to differentiate with respect to.
+#' @param at A named list of variables; the point at which the derivative is evaluated.
 #' @examples
 #' f <- function(y, X, beta) { y - X %*% beta }
 #' auto_diff(
@@ -32,8 +32,8 @@ auto_diff <- function(f, wrt = NULL, at) {
 #' @examples
 #' \dontrun{
 #' X <- randn(2, 2)
-#' y <- randn(2)
-#' dual_list(list(X = X, y = y))
+#' y <- rnorm(2)
+#' duals(list(X = X, y = y))
 #' }
 #' @export
 duals <- function(vary) {
@@ -48,23 +48,24 @@ duals <- function(vary) {
 #' @param vary A named list of parameters
 tidy_dx <- function(x_dual, vary) {
   make_colnames <- function(x) {
-	magrittr::set_colnames(
-		x = x, 
-		purrr::map2_chr(
-			x = names(vary),
-			y = purrr::map(vary, length),
-			f = ~paste("d_", .x, .y, sep = "")
-		)
-	)
+  	magrittr::set_colnames(
+  		x = x,
+  		unlist(purrr::map2(
+  			.x = names(vary),
+  			.y = purrr::map(vary, seq_along),
+  			.f = ~paste("d_", .x, .y, sep = "")
+  		))
+  	)
   }
   make_rownames <- function(x) {
-	magrittr::set_rownames(
-		x = x, 
-		paste("d_output", seq(nrow(x)), sep = "_")
-	)
+  	magrittr::set_rownames(
+  		x = x,
+  		paste("d_output", seq(nrow(x)), sep = "_")
+  	)
   }
 
-  x_dual@dx %>%
-    magrittr::make_colnames()
-    magrittr::make_rownames()
+  x_dual@dx <- as.matrix(x_dual@dx) %>%
+    make_colnames() %>%
+    make_rownames()
+  x_dual
 }
