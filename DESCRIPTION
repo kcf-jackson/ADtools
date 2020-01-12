@@ -21,7 +21,8 @@ Suggests:
     testthat,
     covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    pryr
 Depends: 
     R (>= 3.5.0), 
     methods, 
