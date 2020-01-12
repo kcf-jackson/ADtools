@@ -4,28 +4,28 @@
 \alias{auto_diff}
 \title{Automatic differentiation}
 \usage{
-auto_diff(f, vary, fix = NULL)
+auto_diff(f, wrt = NULL, at)
 }
 \arguments{
 \item{f}{A function of which the derivative is seeked.}
 
-\item{vary}{A named list of variables; the variables to be varied.}
+\item{wrt}{Character vector; the name of the variables to differentiate with respect to.}
 
-\item{fix}{A named list of variables; the variables to be fixed.}
+\item{at}{A named list of variables; the point at which the derivative is evaluated.}
 }
 \description{
 Automatic differentiation
 }
 \examples{
 f <- function(y, X, beta) { y - X \%*\% beta }
-auto_diff(f,
-  vary = list(beta = c(5,6)),
-  fix = list(X = matrix(1:4, 2, 2), y = c(2,3))
+auto_diff(
+  f, wrt = "beta",
+  at = list(beta = c(5,6), X = matrix(1:4, 2, 2), y = c(2,3))
 )
 
 g <- function(X, Y) { X \%*\% Y }
 X <- randn(2, 2)
 Y <- randn(2, 2)
-auto_diff(g, vary = list(X = X, Y = Y))
+auto_diff(g, at = list(X = X, Y = Y))
 
 }

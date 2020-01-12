@@ -4,14 +4,14 @@
 \alias{finite_diff}
 \title{Finite differencing}
 \usage{
-finite_diff(f, vary, fix = NULL, h = 1e-08, seed)
+finite_diff(f, wrt = NULL, at, h = 1e-08, seed)
 }
 \arguments{
 \item{f}{A function of which the derivative is seeked.}
 
-\item{vary}{A named list of variables; the variables to be varied.}
+\item{wrt}{Character vector; the name of the variables to differentiate with respect to.}
 
-\item{fix}{A named list of variables; the variables to be fixed.}
+\item{at}{A named list of variables; the point at which the derivative is evaluated.}
 
 \item{h}{The finite differencing parameter; the size of perturbation.}
 
@@ -22,12 +22,12 @@ Finite differencing
 }
 \examples{
 f <- function(y, X, beta) { y - X \%*\% beta }
-finite_diff(f,
-  vary = list(beta = c(5, 6)),
-  fix = list(X = matrix(1:4, 2, 2), y = c(2, 3))
+finite_diff(
+  f, wrt = "beta",
+  at = list(X = matrix(1:4, 2, 2), y = c(2, 3), beta = c(5, 6))
 )
 
 g <- function(X, Y) { X \%*\% Y }
-finite_diff(g, vary = list(X = randn(2, 2), Y = randn(2, 2)))
+finite_diff(g, at = list(X = randn(2, 2), Y = randn(2, 2)))
 
 }
