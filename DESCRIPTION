@@ -21,7 +21,8 @@ Suggests:
     testthat,
     covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    pryr
 Depends: 
     R (>= 3.5.0), 
     methods, 
@@ -31,8 +32,7 @@ Imports:
     dplyr,
     magrittr,
     assertthat,
-    mvtnorm,
-    pryr
+    mvtnorm
 Collate:
     'ADtools.R'
     'auto_diff.R'

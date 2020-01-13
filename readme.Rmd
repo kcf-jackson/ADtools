@@ -1,8 +1,17 @@
+---
+title: ""
+output:
+  github_document:
+    pandoc_args: --webtex
+always_allow_html: yes    
+---
+
 ## R package 'ADtools'
 
+[![Travis-CI Build Status](https://travis-ci.org/kcf-jackson/ADtools.svg?branch=master)](https://travis-ci.org/kcf-jackson/ADtools)
+[![Coverage status](https://codecov.io/gh/kcf-jackson/ADtools/branch/master/graph/badge.svg)](https://codecov.io/github/kcf-jackson/ADtools?branch=master)
+
 Implements the forward-mode auto-differentiation for multivariate functions using the matrix-calculus notation from Magnus and Neudecker (1988). Two key features of the package are: (i) the package incorporates various optimisaton strategies to improve performance; this includes applying memoisation to cut down object construction time, using sparse matrix representation to save derivative calculation, and creating specialised matrix operations with Rcpp to reduce computation time; (ii) the package supports differentiating random variable with respect to their parameters, targetting MCMC (and in general simulation-based) applications.
-    
-<!-- [![Travis-CI Build Status](https://travis-ci.org/<USERNAME>/<REPO>.svg?branch=master)](https://travis-ci.org/<USERNAME>/<REPO>) -->
 
 ### Installation
 

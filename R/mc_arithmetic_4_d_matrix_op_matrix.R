@@ -7,7 +7,7 @@ d_matrix_minus_matrix <- function(a, b) {
 }
 
 d_matrix_multiply_matrix <- function(a, b) {
-  # Elementwise division
+  # Elementwise multiplication
   pa <- a@x
   pb <- b@x
   assertthat::assert_that(identical(dim(pa), dim(pb)))

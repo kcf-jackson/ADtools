@@ -22,10 +22,10 @@ test_fs <- function(fs, inputs, ctrl) {
 test_AD_with <- function(f, input, ctrl) {
   FD <- list(
     x = do.call(f, input),
-    dx = finite_diff(f, vary = input)
+    dx = finite_diff(f, at = input)
   )
-  AD <- auto_diff(f, vary = input) %>% {
-    list(x = parent_of(.), dx = get_deriv(.))
+  AD <- auto_diff(f, at = input) %>% {
+    list(x = .@x, dx = .@dx)
   }
   compare_ls(FD, AD, ctrl)
 }

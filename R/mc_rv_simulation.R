@@ -176,14 +176,14 @@ rWishart0 <- function(v, M, method = "inv_tf") {
 setMethod("rWishart0",
   signature(v = "dual", M = "dual"),
   function(v, M, method = "inv_tf") {
-    n <- nrow(parent_of(M))
+    n <- nrow(M@x)
     # Implement: diag(A) <- sqrt(rchisq(n, df = v - seq(n) + 1))
     chisq_samples <- mapreduce(
       seq(n), ~rchisq0(1, v - .x + 1, method = method), rbind2
     )
     A <- diag(as.vector(sqrt(chisq_samples)))
     # Changing lower triangular part of the matrix; this doesn't change dA
-    A_x <- parent_of(A)
+    A_x <- A@x
     A_x[lower.tri(A_x)] <- rnorm(sum(lower.tri(A_x)))
     A@x <- A_x
 
@@ -196,7 +196,7 @@ setMethod("rWishart0",
 setMethod("rWishart0",
   signature(v = "ANY", M = "dual"),
   function(v, M, method = "inv_tf") {
-    n <- nrow(parent_of(M))
+    n <- nrow(M@x)
     # Implement: diag(A) <- sqrt(rchisq(n, df = v - seq(n) + 1))
     chisq_samples <- seq(n) %>%
       purrr::map_dbl(~rchisq0(1, v - .x + 1, method = method))
@@ -218,7 +218,7 @@ setMethod("rWishart0",
     )
     A <- diag(as.vector(sqrt(chisq_samples)))
     # Changing lower triangular part of the matrix; this doesn't change dA
-    A_x <- parent_of(A)
+    A_x <- A@x
     A_x[lower.tri(A_x)] <- rnorm(sum(lower.tri(A_x)))
     A@x <- A_x
 

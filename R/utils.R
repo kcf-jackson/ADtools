@@ -37,3 +37,8 @@ if_null_then <- function(x, y) {
   if (is.null(x)) return(y)
   return(x)
 }
+
+
+`%||%` <- function (x, y) {
+  if (is.null(x)) y else x
+}

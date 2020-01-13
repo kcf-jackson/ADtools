@@ -13,14 +13,13 @@ element_wise_derivative <- function(f, df) {
   }                                      # nocov
 }
 
-lambda <- pryr::f
 
 #' Element-wise square-root of a dual object
 #' @param x A "dual" object.
 setMethod(
   "sqrt",
   signature(x = "dual"),
-  element_wise_derivative(sqrt, lambda(0.5 / sqrt(x)))
+  element_wise_derivative(sqrt, function(x) 0.5 / sqrt(x))
 )
 
 #' Element-wise sine of a dual object
@@ -36,7 +35,7 @@ setMethod(
 setMethod(
   "cos",
   signature(x = "dual"),
-  element_wise_derivative(cos, lambda(-sin(x)))
+  element_wise_derivative(cos, function(x) -sin(x))
 )
 
 #' Element-wise tangent of a dual object
@@ -44,7 +43,7 @@ setMethod(
 setMethod(
   "tan",
   signature(x = "dual"),
-  element_wise_derivative(tan, lambda(cos(x)^{-2}))
+  element_wise_derivative(tan, function(x) cos(x)^{-2})
 )
 
 #' Element-wise exponential of a dual object
@@ -60,7 +59,7 @@ setMethod(
 setMethod(
   "log",
   signature(x = "dual"),
-  element_wise_derivative(log, lambda(1 / x))
+  element_wise_derivative(log, function(x) 1 / x)
 )
 
 #' Element-wise gamma of a dual object

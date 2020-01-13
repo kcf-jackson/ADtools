@@ -222,15 +222,6 @@ setMethod(
 )
 
 
-get_param_dim <- function(x) {
-  param_dim <- param_of(x)
-  param_dim %>%
-    col_range_to_dim() %>%
-    setNames(names(param_dim)) %>%
-    as.list()
-}
-
-
 #' Matrix multiplication of 'dual'-class objects
 #' @param x A "dual" object.
 #' @param y "ANY" object.
@@ -238,9 +229,10 @@ setMethod(
   "%*%",
   signature(x = "dual", y = "ANY"),
   function(x, y) {
-    x %*% dual(y, get_param_dim(x), -1)
+    x %*% empty_dual(y, ncol(x@dx))
   }
 )
+
 
 #' Matrix multiplication of 'dual'-class objects
 #' @param x "ANY" object.
@@ -249,7 +241,7 @@ setMethod(
   "%*%",
   signature(x = "ANY", y = "dual"),
   function(x, y) {
-    dual(x, get_param_dim(y), -1) %*% y
+    empty_dual(x, ncol(y@dx)) %*% y
   }
 )
 
@@ -260,7 +252,7 @@ setMethod(
   "kronecker",
   signature(X = "dual", Y = "ANY"),
   function(X, Y) {
-    X %x% dual(Y, get_param_dim(X), -1)
+    X %x% empty_dual(Y, ncol(X@dx))
   }
 )
 
@@ -271,6 +263,10 @@ setMethod(
   "kronecker",
   signature(X = "ANY", Y = "dual"),
   function(X, Y) {
-    dual(X, get_param_dim(Y), -1) %x% Y
+    empty_dual(X, ncol(Y@dx)) %x% Y
   }
 )
+
+empty_dual <- function(x, d) {
+  new("dual", x = x, dx = zero_matrix0(length(x), d))
+}
