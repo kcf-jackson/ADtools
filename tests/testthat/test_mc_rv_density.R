@@ -19,6 +19,6 @@ testthat::test_that("Test multivariate t distribution", {
     dmvt0(x = x, df = df, delta = delta, sigma = sigma)
   }
   inputs <- list(list(df = df, delta = delta, sigma = sigma))
-  ctrl <- list(display = T, err_fun = abs_err, epsilon = 1e-6)
+  ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
   test_fs(list(f), inputs, ctrl)
 })

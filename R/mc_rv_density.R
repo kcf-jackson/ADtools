@@ -4,11 +4,11 @@
 #' @param sigma scale matrix.
 #' @param df degress of freedom.
 #' @param log logical; whether to return log density value.
-#' @export
 #' @examples
 #' sigma <- crossprod(randn(3, 3))
 #' data <- rmvt0(2, sigma = sigma, df = 2)
 #' dmvt0(data, delta = rep(0, 3), sigma = sigma, df = 2)
+#' @export
 dmvt0 <- function(x, delta, sigma, df = 1, log = TRUE) {
   p <- nrow(sigma)
   a <- log(gamma(0.5 * (df + p))) - log(gamma(df / 2))

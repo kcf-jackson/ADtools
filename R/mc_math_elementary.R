@@ -67,5 +67,5 @@ setMethod(
 setMethod(
   "gamma",
   signature(x = "dual"),
-  element_wise_derivative(gamma, lambda(digamma(x) * gamma(x)))
+  element_wise_derivative(gamma, function(x) digamma(x) * gamma(x))
 )
