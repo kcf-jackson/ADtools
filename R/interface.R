@@ -1,4 +1,4 @@
-#' @include special_matrix.R
+#' @include optim_special_matrix.R
 NULL
 
 #' Matrix of zeroes
@@ -15,10 +15,19 @@ zero_matrix0 <- memo_zero_matrix
 #' `nr` integer; number of rows.
 #'
 #' `nc` integer; number of columns.
+#' @export
+one_matrix0 <- memo_one_matrix
+
+
+#' Band matrix
+#' @param ...
+#' `nr` integer; number of rows.
+#'
+#' `nc` integer; number of columns.
 #'
 #' `x` A scalar or a vector to be placed on the diagonal of the matrix.
 #' @export
-one_matrix0 <- memo_one_matrix
+band_matrix0 <- memo_band_matrix
 
 
 #' Diagonal matrix

@@ -34,7 +34,7 @@ cast_vector_into_matrix <- function(x) {
 init_dx <- function(num_dim, denom_dim, num_ind) {
   deriv <- purrr::map(denom_dim, ~zero_matrix0(num_dim, .x))
   if (num_ind != -1) {
-    deriv[[num_ind]] <- one_matrix0(num_dim, denom_dim[[num_ind]])
+    deriv[[num_ind]] <- band_matrix0(num_dim, denom_dim[[num_ind]])
   }
   do.call(cbind, deriv)
 }
