@@ -27,13 +27,11 @@ d_rowSums <- function(x) {
   px <- x@x
   px_len <- length(px)
   px_nr <- nrow(px)
-
+  px_nc <- ncol(px)
   dx <- x@dx
-  purrr::map(
-    1:px_nr,
-    ~ colSums(dx[seq(.x, px_len, px_nr), ])
-  ) %>%
-    do.call(rbind, .)
+
+  m0 <- mapreduce(1:px_nr, ~cbind(.x, seq(.x, px_len, px_nr)), rbind)
+  Matrix::sparseMatrix(m0[,1], m0[,2], x = 1) %*% dx
 }
 
 
@@ -53,6 +51,7 @@ d_colSums <- function(x) {
   px <- x@x
   px_len <- length(px)
   px_nr <- nrow(px)
+  px_nc <- ncol(px)
 
   dx <- x@dx
   purrr::map2(

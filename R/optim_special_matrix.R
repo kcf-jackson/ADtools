@@ -18,7 +18,11 @@ zero_matrix <- function(nr, nc) {
   Matrix::Matrix(data = 0, nrow = nr, ncol = nc)
 }
 
-one_matrix <- function(nr, nc, x = 1) {
+one_matrix <- function(nr, nc) {
+  Matrix::Matrix(data = 1, nrow = nr, ncol = nc)
+}
+
+band_matrix <- function(nr, nc, x = 1) {
   dim0 <- c(nr, nc)
   seq_n <- seq(min(dim0))
   Matrix::sparseMatrix(seq_n, seq_n, x = x, dims = dim0)
@@ -42,6 +46,7 @@ memoize <- function(f) {
 
 memo_zero_matrix <- memoize(zero_matrix)
 memo_one_matrix <- memoize(one_matrix)
+memo_band_matrix <- memoize(band_matrix)
 memo_Diagonal <- memoize(Matrix::Diagonal)
 memo_commutation_matrix <- memoize(commutation_matrix)
 memo_elimination_matrix <- memoize(elimination_matrix)

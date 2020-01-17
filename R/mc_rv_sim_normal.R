@@ -61,13 +61,33 @@ rmvnorm0 <- function(n, mean, sigma) {
 #' @param mean A numeric vector or a dual number; the mean of the normal distribution.
 #' @param sigma A numeric matrix or a dual number; the standard deviation of the normal distribution.
 rmvnorm0_dual <- function(n, mean, sigma) {
-  L <- chol0(sigma)
-  t(mapreduce(
-    seq(n),
-    ~ mean + L %*% t(mvtnorm::rmvnorm(1, numeric(length(mean)))),
-    cbind2
-  ))
+  U <- t(chol0(sigma))
+  Z <- mvtnorm::rmvnorm(n, numeric(length(mean)))
+  add_vector_to_matrix_row(mean, Z %*% U)
 }
+
+
+#' Add a column vector to each column of a matrix
+#' @param v0 Column vector
+#' @param m0 Matrix
+#' @examples
+#' add_vector_to_matrix_column(1:4, matrix(1:12, nrow = 4))
+add_vector_to_matrix_column <- function(v0, m0) {
+  n <- ncol(m0)
+  m0 + v0 %*% one_matrix0(1, n)
+}
+
+
+#' Add a column vector to each row of a matrix
+#' @param v0 Column vector
+#' @param m0 Matrix
+#' @examples
+#' add_vector_to_matrix_row(1:4, matrix(1:12, nrow = 3))
+add_vector_to_matrix_row <- function(v0, m0) {
+  n <- nrow(m0)
+  m0 + one_matrix0(n, 1) %*% t(v0)
+}
+
 
 #' @rdname rmvnorm0_dual
 setMethod(

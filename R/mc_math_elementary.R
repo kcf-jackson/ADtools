@@ -4,9 +4,7 @@ element_wise_derivative <- function(f, df) {
     dx <- x@dx
 
     x@x <- f(px)
-    for (i in 1:nrow(dx)) {
-      dx[i, ] <- df(px[i]) * dx[i, ]
-    }                                    # nocov
+    dx <- scale_rows_by_vector(dx, as.numeric(df(px)))
     x@dx <- dx
 
     return(x)
