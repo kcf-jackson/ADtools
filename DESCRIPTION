@@ -39,7 +39,7 @@ Collate:
     'class_dual_construction.R'
     'class_dual_def.R'
     'finite_diff.R'
-    'special_matrix.R'
+    'optim_special_matrix.R'
     'interface.R'
     'mc_arithmetic_1.R'
     'mc_arithmetic_2_dual_op_dual.R'
@@ -57,5 +57,7 @@ Collate:
     'mc_structure_binding.R'
     'mc_structure_reshape.R'
     'mc_structure_subsetting.R'
+    'optim_kronecker_product.R'
+    'optim_matrix_chain_multiplication.R'
     'utils.R'
 VignetteBuilder: knitr
