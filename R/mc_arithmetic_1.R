@@ -14,6 +14,7 @@ setMethod(
   signature(e1 = "dual", e2 = "ANY"),
   function(e1, e2) {
     e1@x <- e1@x + e2
+    # case: vector + matrix
     if (is_matrix(e2) && (length(e2) != nrow(e1@dx))) {
       e1@dx <- mapreduce(numeric(length(e2)), ~e1@dx, rbind)
     }

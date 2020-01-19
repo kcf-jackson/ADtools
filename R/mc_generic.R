@@ -22,7 +22,12 @@ setMethod("ncol", signature(x = "dual"), function(x) ncol(x@x))
 
 #' Rounding of Numbers
 #' @param x A "dual" object.
-#' @param digits integer indicating the number of decimal places.
+#' @param digits An integer indicating the number of decimal places.
+#' @note The function 'round' does not have a derivative over the real line.
+#' The derivative will be kept unchanged. The reason of not dropping it is
+#' that sometimes one may need to round a matrix to correct floating-point errors.
+#' For example, this happens when an apparent symmetric matrix does not pass the
+#' symmetry check / test.
 #' @export
 round.dual <- function(x, digits = 0) {
   x@x <- round(x@x, digits = digits)

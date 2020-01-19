@@ -14,6 +14,3 @@ add_vector_to_matrix_column(v0, m0)
 \description{
 Add a column vector to each column of a matrix
 }
-\examples{
-add_vector_to_matrix_column(1:4, matrix(1:12, nrow = 4))
-}
