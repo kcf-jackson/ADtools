@@ -42,3 +42,13 @@ if_null_then <- function(x, y) {
 `%||%` <- function (x, y) {
   if (is.null(x)) y else x
 }
+
+
+scale_columns_by_vector <- function(m0, v0) {
+  t(v0 * t(m0))
+}
+
+
+diag_v0_times_m0 <- scale_rows_by_vector <- function(m0, v0) {
+  v0 * m0
+}

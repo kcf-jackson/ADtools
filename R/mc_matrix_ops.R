@@ -62,7 +62,7 @@ t.dual <- function(x) {
 d_transpose <- function(a) {
   X <- a@x
   dX <- a@dx
-  K_nq <- commutation_matrix0(nrow(X), ncol(X))
+  K_nq <- commutation_matrix0(NROW(X), NCOL(X))
   K_nq %*% dX
 }
 

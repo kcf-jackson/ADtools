@@ -4,7 +4,7 @@ element_wise_derivative <- function(f, df) {
     dx <- x@dx
 
     x@x <- f(px)
-    dx <- scale_rows_by_vector(dx, as.numeric(df(px)))
+    dx <- diag_v0_times_m0(as.numeric(df(px)), dx)
     x@dx <- dx
 
     return(x)
