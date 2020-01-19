@@ -1,4 +1,5 @@
 #' @keywords internal
+#' @useDynLib ADtools
 "_PACKAGE"
 
 # Suppress R CMD check note
@@ -6,4 +7,5 @@
 #' @importFrom magrittr %>%
 #' @importFrom utils relist
 #' @import Matrix
+#' @import Rcpp
 utils::globalVariables(c("Var1", "Var2", "."))
