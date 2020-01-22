@@ -48,10 +48,14 @@ d_matrix_prod <- function(a, b) {
   B <- b@x
   dA <- a@dx
   dB <- b@dx
-  I_A <- Diagonal0(NROW(A))
-  I_B <- Diagonal0(NCOL(B))
-  (I_B %x% A) %*% dB + (t(B) %x% I_A) %*% dA
-  # I_x_B_times_C(A, dB) + A_x_I_times_C(t(B), dA)
+  # I_A <- Diagonal0(NROW(A))
+  # I_B <- Diagonal0(NCOL(B))
+  # (I_B %x% A) %*% dB + (t(B) %x% I_A) %*% dA
+  if (!is.matrix(A)) A <- as.matrix(A)
+  if (!is.matrix(dA)) dA <- as.matrix(dA)
+  if (!is.matrix(B)) B <- as.matrix(B)
+  if (!is.matrix(dB)) dB <- as.matrix(dB)
+  IxCD(A, dB) + BxID(t(B), dA)
 }
 
 d_kronecker <- function(a, b) {
