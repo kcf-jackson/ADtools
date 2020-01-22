@@ -7,11 +7,10 @@ commutation_matrix <- function(r, c) {
 }
 
 elimination_matrix <- function(n) {
-  entries <- expand.grid(1:n, 1:n) %>%
-    cbind(src = 1:(n^2)) %>%
-    dplyr::filter(Var1 >= Var2) %>%
-    cbind(tgt = 1:(0.5*n*(n+1)))
-  Matrix::sparseMatrix(entries[,"tgt"], entries[,"src"], x = 1)
+  k <- 1:(n*(n+1)*0.5)
+  A <- n + 0.5
+  b <- ceiling(A - sqrt(A^2 - 2*k))
+  Matrix::sparseMatrix(i = k, j = k + 0.5 * b * (b - 1), x = 1)
 }
 
 zero_matrix <- function(nr, nc) {

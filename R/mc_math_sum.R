@@ -54,10 +54,8 @@ d_colSums <- function(x) {
   px_nc <- ncol(px)
 
   dx <- x@dx
-  purrr::map2(
-    seq(1, px_len, px_nr), seq(px_nr, px_len, px_nr),
-    ~ colSums(dx[.x:.y, ])
-  ) %>%
+  s <- seq(1, px_len, px_nr)
+  purrr::map2(s, s + px_nr - 1, ~colSums(dx[.x:.y, ])) %>%
     do.call(rbind, .)
 }
 

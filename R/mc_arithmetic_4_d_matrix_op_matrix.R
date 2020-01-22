@@ -23,6 +23,5 @@ d_matrix_divide_matrix <- function(a, b) {
   pb <- as.numeric(b@x)
   da <- a@dx
   db <- b@dx
-  diag_v0_times_m0(-pa / pb^2, db) +
-    diag_v0_times_m0(1 / pb, da)
+  diag_v0_times_m0(-pa / pb^2, db) + diag_v0_times_m0(1 / pb, da)
 }
