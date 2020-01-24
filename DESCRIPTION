@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: Auto-Differentiation toolbox
-Version: 0.4.8
+Version: 0.4.9.9999
 Author: Chun Fung Kwok <kwokcf@unimelb.edu.au>, Dan Zhu <dan.zhu@monash.edu> and Liana Jacobi <ljacobi@unimelb.edu.au>.
 Maintainer: Chun Fung Kwok <kwokcf@unimelb.edu.au>
 Description: Implements the forward-mode auto-differentiation for multivariate
@@ -22,7 +22,8 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    pryr
+    pryr,
+    MCMCpack
 Depends: 
     R (>= 3.5.0), 
     methods, 
@@ -46,12 +47,11 @@ Collate:
     'class_dual_def.R'
     'finite_diff.R'
     'optim_special_matrix.R'
-    'interface.R'
-    'mc_arithmetic_1.R'
-    'mc_arithmetic_2_dual_op_dual.R'
+    'interface_special_matrix.R'
+    'mc_arithmetic_1_cross_class.R'
+    'mc_arithmetic_2_same_class.R'
     'mc_arithmetic_3_d_arithmetic.R'
-    'mc_arithmetic_4_d_matrix_op_matrix.R'
-    'mc_arithmetic_4_d_scalar_op_matrix.R'
+    'mc_arithmetic_4_d_arithmetic_primitives.R'
     'mc_generic.R'
     'mc_math_elementary.R'
     'mc_math_sum.R'

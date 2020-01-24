@@ -67,28 +67,6 @@ rmvnorm0_dual <- function(n, mean, sigma) {
 }
 
 
-#' Add a column vector to each column of a matrix
-#' @param v0 Column vector
-#' @param m0 Matrix
-# @examples
-# add_vector_to_matrix_column(1:4, matrix(1:12, nrow = 4))
-add_vector_to_matrix_column <- function(v0, m0) {
-  n <- ncol(m0)
-  m0 + v0 %*% one_matrix0(1, n)
-}
-
-
-#' Add a column vector to each row of a matrix
-#' @param v0 Column vector
-#' @param m0 Matrix
-# @examples
-# add_vector_to_matrix_row(1:4, matrix(1:12, nrow = 3))
-add_vector_to_matrix_row <- function(v0, m0) {
-  n <- nrow(m0)
-  m0 + one_matrix0(n, 1) %*% t(v0)
-}
-
-
 #' @rdname rmvnorm0_dual
 setMethod(
   "rmvnorm0",

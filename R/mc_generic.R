@@ -5,6 +5,7 @@ NULL
 #' @param x A "dual" object.
 setMethod("length", signature(x = "dual"), function(x) length(x@x))
 
+
 #' Dimension of an Object
 #' @param x A "dual" object.
 setMethod("dim", signature(x = "dual"), function(x) dim(x@x))

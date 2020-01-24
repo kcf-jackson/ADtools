@@ -28,14 +28,8 @@ map2reduce <- function(x, y, f, g, ...) {
 }
 
 
-# call_S4 <- function(f_name, ...) {
-#   getMethod(f_name, list(...))@.Data
-# }
-
-
 if_null_then <- function(x, y) {
-  if (is.null(x)) return(y)
-  return(x)
+  if (is.null(x)) y else x
 }
 
 
