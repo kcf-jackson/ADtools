@@ -182,8 +182,26 @@ d_chol <- function(L, a) {
   E_n <- elimination_matrix0(n)
   D_n <- Matrix::t(E_n)
 
-  (D_n %*% solve(E_n %*% (I_nn + K_nn) %*% (L %x% I_n) %*% D_n, E_n)) %*% dA
+  # (D_n %*% solve(E_n %*% (I_nn + K_nn) %*% (L %x% I_n) %*% D_n, E_n)) %*% dA
+  mprod(D_n, solve(mprod(E_n, (I_nn + K_nn), (L %x% I_n), D_n), E_n), dA)
 }
+
+
+#' Cholesky decomposition of 'dual'-class objects
+#' @param x A "dual" object.
+#' @note The Cholesky decomposition used in this function returns an
+#' upper triangular matrix.
+setMethod("chol",
+  signature(x = "dual"),
+  function(x) {
+    px <- x@x
+    U <- chol(px)
+    dU <- commutation_matrix0(NROW(px), NCOL(px)) %*% d_chol(t(U), x)
+    x@x <- U
+    x@dx <- dU
+    x
+  }
+)
 
 
 #' Determinant of a matrix
