@@ -11,7 +11,7 @@ dmvt0(x, delta, sigma, df = 1, log = TRUE)
 
 \item{delta}{the vector of noncentrality parameters.}
 
-\item{sigma}{scale matrix.}
+\item{sigma}{numeric matrix; scale matrix.}
 
 \item{df}{degress of freedom.}
 

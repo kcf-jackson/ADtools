@@ -8,11 +8,7 @@ setMethod(
   "+",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- e1@x + e2@x
-    dx <- d_sum(e1, e2)
-    e1@x <- x
-    e1@dx <- dx
-    e1
+    new("dual", x = e1@x + e2@x, dx = d_sum(e1, e2))
   }
 )
 
@@ -23,8 +19,7 @@ setMethod(
   "-",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- e1@x - e2@x
-    new("dual", x = x, dx = d_minus(e1, e2))
+    new("dual", x = e1@x - e2@x, dx = d_minus(e1, e2))
   }
 )
 
@@ -35,11 +30,7 @@ setMethod(
   "*",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- e1@x * e2@x
-    dx <- d_scalar_prod(e1, e2)
-    e1@x <- x
-    e1@dx <- dx
-    e1
+    new("dual", x = e1@x * e2@x, dx = d_scalar_prod(e1, e2))
   }
 )
 
@@ -50,8 +41,7 @@ setMethod(
   "/",
   signature(e1 = "dual", e2 = "dual"),
   function(e1, e2) {
-    x <- e1@x / e2@x
-    new("dual", x = x, dx = d_divide(e1, e2))
+    new("dual", x = e1@x / e2@x, dx = d_divide(e1, e2))
   }
 )
 
@@ -74,8 +64,7 @@ setMethod(
   "kronecker",
   signature(X = "dual", Y = "dual"),
   function(X, Y) {
-    res <- X@x %x% Y@x
-    new("dual", x = res, dx = d_kronecker(X, Y))
+    new("dual", x = X@x %x% Y@x, dx = d_kronecker(X, Y))
   }
 )
 
@@ -94,8 +83,6 @@ setMethod(
     }
     px <- e1@x ^ e2@x
     dx <- as.numeric(px) * (e2 * log(e1))@dx
-    e1@x <- px
-    e1@dx <- dx
-    e1
+    new("dual", x = px, dx = dx)
   }
 )

@@ -76,5 +76,5 @@ d_kronecker <- function(a, b) {
 
   (I_n %x% K_qm %x% I_p) %*%
     ((I_mn %x% as.numeric(B)) %*% dA + (as.numeric(A) %x% I_pq) %*% dB)
-  # (as.numeric(A) %x% dB + dA %x% as.numeric(B))
+  # (as.numeric(A) %x% dB + dA %x% as.numeric(B))  # double-checked for correctness
 }
