@@ -43,26 +43,26 @@ print(list(X = X, y = y, f = f(X, y)))
 ```
 
 #### Auto-differentiation
-Since $X$ has dimension (`r dim(X)`) and $y$ has dimension (`r dim(y)`), the input space has dimension $2 \times 2 + 2 \times 1 = 6$, and the output has dimension $2$, i.e. $f$ maps $R^6$ to $R^2$ and the Jacobian of $f$ should be $2 \timesb6$.
+Since $X$ has dimension (`r dim(X)`) and $y$ has dimension (`r dim(y)`), the input space has dimension $2 \times 2 + 2 \times 1 = 6$, and the output has dimension $2$, i.e. $f$ maps $R^6$ to $R^2$ and the Jacobian of $f$ should be $2 \times 6 = 12$.
 
 ```{r}
 # Full Jacobian matrix
-f_AD <- auto_diff(f, list(X = X, y = y))
-get_deriv(f_AD)   # returns a Jacobian matrix
+f_AD <- auto_diff(f, at = list(X = X, y = y))
+f_AD@dx   # returns a Jacobian matrix
 ```
 
 `auto_diff` also supports computing a partial Jacobian matrix. For instance, suppose we are only interested in the derivative w.r.t. `y`, then we can run
 
 ```{r}
-f_AD <- auto_diff(f, vary = list(y = y), fix = list(X = X))
-get_deriv(f_AD)   # returns a partial Jacobian matrix
+f_AD <- auto_diff(f, at = list(X = X, y = y), wrt = "y")
+f_AD@dx   # returns a partial Jacobian matrix
 ```
 
 #### Finite-differencing
 
 It is good practice to always check the result with finite-differencing. This can be done by calling `finite_diff` which has the same interface as `auto_diff`. 
 ```{r}
-f_FD <- finite_diff(f, list(X = X, y = y))
+f_FD <- finite_diff(f, at = list(X = X, y = y))
 f_FD
 ```
 
@@ -84,7 +84,7 @@ y <- X %*% beta + rnorm(n)
 ```{r}
 gradient_descent <- function(f, vary, fix, learning_rate = 0.01, tol = 1e-6, show = F) {
   repeat {
-    df <- auto_diff(f, vary, fix)
+    df <- auto_diff(f, at = append(vary, fix), wrt = names(vary))
     if (show) print(df@x)
     delta <- learning_rate * as.numeric(df@dx)
     vary <- relist(unlist(vary) - delta, vary)
@@ -158,11 +158,10 @@ $$y \sim N(X\beta, \sigma^2), \quad \beta \sim N(\mathbf{b_0}, \mathbf{B_0}), \q
 
 #### Inference using Gibbs sampler
 ```{r, eval = F}
-gibbs_gaussian <- function(X, y, b_0, B_0, alpha_0, delta_0, init_sigma, num_steps = 1e4) {
-  if (missing(init_sigma))
-    init_sigma <- 1 / sqrt(rgamma0(1, alpha_0 / 2, scale = 2 / delta_0))
-
+gibbs_gaussian <- function(X, y, b_0, B_0, alpha_0, delta_0, num_steps = 1e4) {
   # Initialisation
+  init_sigma <- 1 / sqrt(rgamma0(1, alpha_0 / 2, scale = 2 / delta_0))
+  
   n <- length(y)
   alpha_1 <- alpha_0 + n
   sigma_g <- init_sigma
@@ -178,7 +177,7 @@ gibbs_gaussian <- function(X, y, b_0, B_0, alpha_0, delta_0, init_sigma, num_ste
     # Update beta
     B_g <- solve(sigma_g^(-2) * XTX + inv_B_0)
     b_g <- B_g %*% (sigma_g^(-2) * XTy + inv_B_0_times_b_0)
-    beta_g <- rmvnorm0(1, b_g, B_g)
+    beta_g <- t(rmvnorm0(1, b_g, B_g))
 
     # Update sigma
     delta_g <- delta_0 + sum((y - X %*% beta_g)^2)
@@ -198,8 +197,11 @@ gibbs_gaussian <- function(X, y, b_0, B_0, alpha_0, delta_0, init_sigma, num_ste
 ```{r, eval = F}
 gibbs_deriv <- auto_diff(
   gibbs_gaussian,
-  vary = list(b_0 = numeric(p), B_0 = diag(p), alpha_0 = 4, delta_0 = 4),
-  fix = list(X = X, y = y, num_steps = 5000)
+  at = list(
+    b_0 = numeric(p), B_0 = diag(p), alpha_0 = 4, delta_0 = 4,
+    X = X, y = y, num_steps = 5000
+  ),
+  wrt = c("b_0", "B_0", "alpha_0", "delta_0")
 )
 ```
 
@@ -219,7 +221,7 @@ matrix_ls_to_array <- function(x) {
 
 tidy_mcmc <- function(mcmc_res, var0) {
   mcmc_res[[var0]] %>% 
-    purrr::map(get_deriv) %>% 
+    purrr::map(~.x@dx) %>% 
     matrix_ls_to_array()
 }
 

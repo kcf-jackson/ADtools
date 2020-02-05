@@ -23,7 +23,7 @@ auto_diff <- function(f, wrt = NULL, at) {
 
   dual_args <- append(duals(vary), fix)
   AD_result <- do.call(f, dual_args)
-  tidy_dx(AD_result, vary)
+  recursive_tidy(AD_result, vary)
 }
 
 
@@ -40,6 +40,16 @@ duals <- function(vary) {
   dims <- purrr::map(vary, length)
   ind <- seq_along(vary)
   purrr::map2(vary, ind, ~dual(.x, dims, .y))
+}
+
+
+# An interface to call tidy_dx recursively
+recursive_tidy <- function(x, vary) {
+  if (is.list(x)) {
+    purrr::map(x, recursive_tidy, vary = vary)
+  } else {
+    if (class(x) == "dual") tidy_dx(x, vary) else x
+  }
 }
 
 
