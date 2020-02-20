@@ -180,3 +180,32 @@ setMethod("matrix", signature(data = "dual"), matrix.dual)
 matrix <- function(data, ...) {
   UseMethod("matrix", data, ...)
 }
+
+
+#' Construct a triangular matrix from a vector
+#' @rdname lower-triangular
+#' @param data A numeric vector.
+#' @param nrow A positive integer; the desired number of rows.
+#' @param ncol A positive integer; the desired number of rows.
+#' @param diag A logical; should the diagonal be included ?
+#' @export
+lower_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = F) {
+  y <- matrix(0, nrow = nrow, ncol = ncol)
+  y[lower.tri(y, diag = diag)] <- data
+  y
+}
+
+#' @rdname lower-triangular
+setMethod(
+  "lower_tri_matrix",
+  signature(data = "dual"),
+  function(data, nrow = 1, ncol = 1, diag = F) {
+    x <- lower_tri_matrix(data@x, nrow = nrow, ncol = ncol, diag)
+    dx <- matrix(0, nrow = nrow * ncol, ncol = ncol(data@dx))
+
+    ind <- which(lower.tri(x, diag = diag))
+    dx[ind, ] <- as.matrix(data@dx)
+
+    new("dual", x = x, dx = dx)
+  }
+)
