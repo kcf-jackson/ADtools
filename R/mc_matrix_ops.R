@@ -32,7 +32,7 @@ setMethod("solve",
 
 d_solve <- function(a, inv_a) {
   da <- a@dx
-  -(t(inv_a) %x% inv_a) %*% da
+  (-t(inv_a) %x% inv_a) %*% da
 }
 
 solve_dual <- function(a, b, ...) {
