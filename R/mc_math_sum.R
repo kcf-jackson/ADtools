@@ -91,3 +91,28 @@ setMethod(
     x
   }
 )
+
+#' Row mean of a matrix.
+#' @param x A "dual" object.
+setMethod(
+  "rowMeans",
+  signature(x = "dual"),
+  function(x) {
+    x@dx <- d_rowSums(x) / NCOL(x@x)
+    x@x <- rowMeans(x@x)
+    x
+  }
+)
+
+
+#' Column mean of a matrix.
+#' @param x A "dual" object.
+setMethod(
+  "colMeans",
+  signature(x = "dual"),
+  function(x) {
+    x@dx <- d_colSums(x) / NROW(x@x)
+    x@x <- colMeans(x@x)
+    x
+  }
+)
