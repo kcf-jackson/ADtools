@@ -43,19 +43,35 @@ d_divide <- function(a, b) {
   ))
 }
 
+is_sparse <- function(x, threshold = 0.25) {
+  is_sparse_matrix(x) && (nnzero(x) / length(x) < threshold)
+}
+
 d_matrix_prod <- function(a, b) {
   A <- a@x
   B <- b@x
   dA <- a@dx
   dB <- b@dx
-  # I_A <- Diagonal0(NROW(A))
-  # I_B <- Diagonal0(NCOL(B))
-  # (I_B %x% A) %*% dB + (t(B) %x% I_A) %*% dA
-  if (!is.matrix(A)) A <- as.matrix(A)
-  if (!is.matrix(dA)) dA <- as.matrix(dA)
-  if (!is.matrix(B)) B <- as.matrix(B)
-  if (!is.matrix(dB)) dB <- as.matrix(dB)
-  IxCD(A, dB) + BxID(t(B), dA)
+
+  sum_1 <- if (is_sparse(dB)) {
+    I_B <- Diagonal0(NCOL(B))
+    (I_B %x% A) %*% dB
+  } else {
+    if (!is.matrix(A)) A <- as.matrix(A)
+    if (!is.matrix(dB)) dB <- as.matrix(dB)
+    IxCD(A, dB)
+  }
+
+  sum_2 <- if (is_sparse(dA)) {
+    I_A <- Diagonal0(NROW(A))
+    (t(B) %x% I_A) %*% dA
+  } else {
+    if (!is.matrix(B)) B <- as.matrix(B)
+    if (!is.matrix(dA)) dA <- as.matrix(dA)
+    BxID(t(B), dA)
+  }
+
+  sum_1 + sum_2
 }
 
 d_kronecker <- function(a, b) {
