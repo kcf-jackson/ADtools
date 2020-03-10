@@ -1,39 +1,40 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
-language: R
-sudo: false
-cache: packages
-
-r_github_packages:
-  - r-lib/covr
+name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.config.os }}
+  runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+  name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - {os: windows-latest, r: '3.5.3'}
-          - {os: windows-latest, r: '3.6.1'}
-          - {os: macOS-latest, r: '3.5.3'}
-          - {os: macOS-latest, r: '3.6.1'}
-          - {os: ubuntu-18.04, r: '3.5.3', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
-          - {os: ubuntu-18.04, r: '3.6.1', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+  strategy:
+    fail-fast: false
+    matrix:
+      config:
+        - {os: windows-latest, r: '3.5.3'}
+        - {os: windows-latest, r: '3.6.1'}
+        - {os: macOS-latest, r: '3.5.3'}
+        - {os: macOS-latest, r: '3.6.1'}
+        - {os: ubuntu-18.04, r: '3.5.3', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+        - {os: ubuntu-18.04, r: '3.6.1', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
 
-    env:
-      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      RSPM: ${{ matrix.config.rspm }}
+  env:
+    R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+    RSPM: ${{ matrix.config.rspm }}
 
-    steps:
-      - uses: actions/checkout@master
+  steps:
+    - uses: actions/checkout@master
 
-      - name: Setup R
-        uses: actions/setup-R@v1
-        with:
-          r-version: ${{ matrix.config.r }}
+    - name: Setup R
+    uses: actions/setup-R@v1
+    with:
+      r-version: ${{ matrix.config.r }}
 
-      - run: Rscript -e 'covr::codecov()'
+    - run: Rscript -e 'covr::codecov()'
