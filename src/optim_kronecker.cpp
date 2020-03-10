@@ -11,10 +11,11 @@ arma::mat lcircledast(arma::mat x, arma::mat y) {
   arma::mat retval = arma::zeros(num_x_blk_out * size_x_blk, size_y_blk);
 
   for (int i = 0; i < num_x_blk_out; i++) {
+    arma::mat tempval = arma::zeros(size_x_blk, size_y_blk);
     for (int j = 0; j < num_x_blk_in; j++) {
-      retval(arma::span(i*size_x_blk, (i+1)*size_x_blk-1), arma::span::all) +=
-        x(i, j) * y(arma::span(j*size_x_blk, (j+1)*size_x_blk-1), arma::span::all);
+      tempval += x(i, j) * y(arma::span(j*size_x_blk, (j+1)*size_x_blk-1), arma::span::all);
     }
+    retval(arma::span(i*size_x_blk, (i+1)*size_x_blk-1), arma::span::all) = tempval;
   }
   return retval;
 }
@@ -45,10 +46,11 @@ arma::mat rcircledast(arma::mat x, arma::mat y) {
   arma::mat retval = arma::zeros(size_x_blk, size_y_blk * num_y_blk_out);
 
   for (int j = 0; j < num_y_blk_out; j++) {
+    arma::mat tempval = arma::zeros(size_x_blk, size_y_blk);
     for (int i = 0; i < num_y_blk_in; i++) {
-      retval(arma::span::all, arma::span(j*size_y_blk, (j+1)*size_y_blk-1)) +=
-        x(arma::span::all, arma::span(i*size_y_blk, (i+1)*size_y_blk-1)) * y(i, j);
+      tempval += x(arma::span::all, arma::span(i*size_y_blk, (i+1)*size_y_blk-1)) * y(i, j);
     }
+    retval(arma::span::all, arma::span(j*size_y_blk, (j+1)*size_y_blk-1)) = tempval;
   }
   return retval;
 }
