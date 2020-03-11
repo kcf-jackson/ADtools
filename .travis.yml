@@ -8,11 +8,9 @@ cache: packages
 os:
 - linux
 - osx
-- windows
 
 r:
-- 3.5.3
-- 3.6.3
+- 3.6.1
 
 after_success:
 - Rscript -e 'covr::codecov()'
