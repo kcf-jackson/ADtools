@@ -8,4 +8,4 @@
 #' @importFrom utils relist
 #' @import Matrix
 #' @import Rcpp
-utils::globalVariables(c("Var1", "Var2", "."))
+utils::globalVariables(c("."))
