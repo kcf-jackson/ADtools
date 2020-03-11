@@ -182,7 +182,7 @@ matrix <- function(data, ...) {
 }
 
 
-#' Construct a triangular matrix from a vector
+#' Construct a lower triangular matrix from a vector
 #' @rdname lower-triangular
 #' @param data A numeric vector.
 #' @param nrow A positive integer; the desired number of rows.
@@ -204,6 +204,35 @@ setMethod(
     dx <- matrix(0, nrow = nrow * ncol, ncol = ncol(data@dx))
 
     ind <- which(lower.tri(x, diag = diag))
+    dx[ind, ] <- as.matrix(data@dx)
+
+    new("dual", x = x, dx = dx)
+  }
+)
+
+
+#' Construct a lower triangular matrix from a vector
+#' @rdname upper-triangular
+#' @param data A numeric vector.
+#' @param nrow A positive integer; the desired number of rows.
+#' @param ncol A positive integer; the desired number of rows.
+#' @param diag A logical; should the diagonal be included ?
+#' @export
+upper_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = F) {
+  y <- matrix(0, nrow = nrow, ncol = ncol)
+  y[upper.tri(y, diag = diag)] <- data
+  y
+}
+
+#' @rdname upper-triangular
+setMethod(
+  "upper_tri_matrix",
+  signature(data = "dual"),
+  function(data, nrow = 1, ncol = 1, diag = F) {
+    x <- upper_tri_matrix(data@x, nrow = nrow, ncol = ncol, diag)
+    dx <- matrix(0, nrow = nrow * ncol, ncol = ncol(data@dx))
+
+    ind <- which(upper.tri(x, diag = diag))
     dx[ind, ] <- as.matrix(data@dx)
 
     new("dual", x = x, dx = dx)
