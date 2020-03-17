@@ -1,7 +1,7 @@
 #' @include optim_special_matrix.R
 NULL
 
-#' Matrix of zeroes
+#' Matrix of zeroes (Memoised)
 #' @param ...
 #' `nr` integer; number of rows.
 #'
@@ -10,7 +10,7 @@ NULL
 zero_matrix0 <- memo_zero_matrix
 
 
-#' Matrix of ones
+#' Matrix of ones (Memoised)
 #' @param ...
 #' `nr` integer; number of rows.
 #'
@@ -19,7 +19,7 @@ zero_matrix0 <- memo_zero_matrix
 one_matrix0 <- memo_one_matrix
 
 
-#' Band matrix
+#' Band matrix (Memoised)
 #' @param ...
 #' `nr` integer; number of rows.
 #'
@@ -30,7 +30,7 @@ one_matrix0 <- memo_one_matrix
 band_matrix0 <- memo_band_matrix
 
 
-#' Diagonal matrix
+#' Diagonal matrix (Memoised)
 #' @param ...
 #' `n` integer; the dimension of the square matrix.
 #'
@@ -39,7 +39,7 @@ band_matrix0 <- memo_band_matrix
 Diagonal0 <- memo_Diagonal
 
 
-#' Commutation matrix
+#' Commutation matrix (Memoised)
 #' @param ...
 #' `r` integer; row dimension.
 #'
@@ -48,7 +48,7 @@ Diagonal0 <- memo_Diagonal
 commutation_matrix0 <- memo_commutation_matrix
 
 
-#' Elimination matrix
+#' Elimination matrix (Memoised)
 #' @param ...
 #' `n` integer, row or column dimension.
 #' @export

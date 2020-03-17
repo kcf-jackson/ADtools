@@ -2,7 +2,7 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{one_matrix0}
 \alias{one_matrix0}
-\title{Matrix of ones}
+\title{Matrix of ones (Memoised)}
 \usage{
 one_matrix0(...)
 }
@@ -12,5 +12,5 @@ one_matrix0(...)
 `nc` integer; number of columns.}
 }
 \description{
-Matrix of ones
+Matrix of ones (Memoised)
 }

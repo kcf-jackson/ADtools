@@ -2,7 +2,7 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{zero_matrix0}
 \alias{zero_matrix0}
-\title{Matrix of zeroes}
+\title{Matrix of zeroes (Memoised)}
 \usage{
 zero_matrix0(...)
 }
@@ -12,5 +12,5 @@ zero_matrix0(...)
 `nc` integer; number of columns.}
 }
 \description{
-Matrix of zeroes
+Matrix of zeroes (Memoised)
 }

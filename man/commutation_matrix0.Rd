@@ -2,7 +2,7 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{commutation_matrix0}
 \alias{commutation_matrix0}
-\title{Commutation matrix}
+\title{Commutation matrix (Memoised)}
 \usage{
 commutation_matrix0(...)
 }
@@ -12,5 +12,5 @@ commutation_matrix0(...)
 `c` integer; column dimension.}
 }
 \description{
-Commutation matrix
+Commutation matrix (Memoised)
 }

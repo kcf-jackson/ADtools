@@ -2,7 +2,7 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{band_matrix0}
 \alias{band_matrix0}
-\title{Band matrix}
+\title{Band matrix (Memoised)}
 \usage{
 band_matrix0(...)
 }
@@ -14,5 +14,5 @@ band_matrix0(...)
 `x` A scalar or a vector to be placed on the diagonal of the matrix.}
 }
 \description{
-Band matrix
+Band matrix (Memoised)
 }

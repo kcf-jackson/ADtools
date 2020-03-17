@@ -2,7 +2,7 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{elimination_matrix0}
 \alias{elimination_matrix0}
-\title{Elimination matrix}
+\title{Elimination matrix (Memoised)}
 \usage{
 elimination_matrix0(...)
 }
@@ -10,5 +10,5 @@ elimination_matrix0(...)
 \item{...}{`n` integer, row or column dimension.}
 }
 \description{
-Elimination matrix
+Elimination matrix (Memoised)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{Diagonal0}
 \alias{Diagonal0}
-\title{Diagonal matrix}
+\title{Diagonal matrix (Memoised)}
 \usage{
 Diagonal0(...)
 }
@@ -12,5 +12,5 @@ Diagonal0(...)
 `x` A scalar or a vector to be placed on the diagonal of the matrix.}
 }
 \description{
-Diagonal matrix
+Diagonal matrix (Memoised)
 }
