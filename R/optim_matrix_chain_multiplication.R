@@ -4,7 +4,9 @@
 #' @export
 matrix_prod <- function(..., method = "optimal") {
   matrix_ls <- list(...)
-  if (method != "optimal") {
+  if (length(matrix_ls) == 2) {
+    matrix_ls[[1]] %*% matrix_ls[[2]]
+  } else if (method != "optimal") {
     purrr::reduce(matrix_ls, `%*%`)
   } else {
     optim_prod(matrix_ls)
