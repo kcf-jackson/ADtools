@@ -140,3 +140,16 @@ testthat::test_that("Taking element-wise power", {
     testthat::expect_error(dual(3, c(1, 2, 3), 1)^dual(1:3, c(1, 2, 3), 1))  # must have scalar exponent
   })
 })
+
+
+# Additional tests for cross-class arithmetic
+testthat::test_that("Testing cross-class arithmetic", {
+  ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-6)
+
+  f <- function(x) x + 1:2
+  test_fs(list(f), list(list(x = 5), list(x = 2:3)), ctrl)
+
+  f2 <- function(x) x + matrix(1:4, 2, 2)
+  f3 <- function(x) diag(x) + matrix(1:4, 2, 2)
+  test_fs(list(f2, f3), list(list(x = matrix(1:4, 2, 2))), ctrl)
+})

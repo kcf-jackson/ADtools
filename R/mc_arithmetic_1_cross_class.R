@@ -13,10 +13,18 @@ setMethod(
   "+",
   signature(e1 = "dual", e2 = "ANY"),
   function(e1, e2) {
+    fail_recycling <- (length(e1@x) %% length(e2) != 0) &&
+      (length(e2) %% length(e1@x) != 0)
+
+    if (fail_recycling) {
+      stop("Dimensions of e1 and e2 do not match.")
+    }
+
     e1@x <- e1@x + e2
-    # case: vector + matrix
-    if (is_matrix(e2) && (length(e2) != nrow(e1@dx))) {
-      e1@dx <- mapreduce(numeric(length(e2)), ~e1@dx, rbind)
+    # if the size has increased after the addition,
+    # then dx should expand to the appropriate length.
+    if (nrow(e1@dx) != length(e1@x)) {
+      e1@dx <- mapreduce(numeric(length(e2) / nrow(e1@dx)), ~e1@dx, rbind)
     }
     e1
   }
