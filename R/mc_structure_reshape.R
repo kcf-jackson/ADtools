@@ -24,7 +24,7 @@
 diag.dual <- function(x) {
   x@dx <- d_diagonal(x)
   m0 <- x@x
-  if (is.matrix(m0)) {
+  if (is_matrix(m0)) {
     if (ncol(m0) == 1) {
       m0 <- as.vector(m0)  # then proceeds as the vector case
     } else {
@@ -32,22 +32,21 @@ diag.dual <- function(x) {
       return(x)
     }
   }
-  if (is.vector(m0)) {
-    if (is_scalar(m0)) {
-      x@x <- Diagonal0(n = m0)
-      return(x)
-    } else {
-      x@x <- Diagonal0(x = m0)
-      return(x)
-    }
+  if (is_vector(m0)) {
+    x@x <- Diagonal0(x = m0)
+    return(x)
   }
-  stop("The input must be a (dual) matrix / vector.")
+  if (is_scalar(m0)) {
+    x@x <- Diagonal0(n = m0)
+    return(x)
+  }
+  stop("The input must be a (dual) matrix / vector / scalar.")
 }
 
 d_diagonal <- function(x) {
   m0 <- x@x
   dx <- x@dx
-  if (is.matrix(m0) && (ncol(m0) > 1)) {
+  if (is_matrix(m0) && (ncol(m0) > 1)) {
     # extract from dx the corresponding diagonal entries
     diag_ind <- seq(1, length(m0), nrow(m0) + 1)
     return(dx[diag_ind, , drop = F])
