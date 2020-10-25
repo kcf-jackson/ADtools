@@ -19,5 +19,5 @@ This class attaches a dual component to a number / matrix.
 
 \note{
 Users should not construct the object directly, instead, use the
-constructor helper `dual` provided.
+constructor helper \link{dual} provided.
 }

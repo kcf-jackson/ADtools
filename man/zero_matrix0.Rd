@@ -2,15 +2,17 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{zero_matrix0}
 \alias{zero_matrix0}
-\title{Matrix of zeroes (Memoised)}
+\title{Matrix of zeroes (memoised)}
 \usage{
 zero_matrix0(...)
 }
 \arguments{
 \item{...}{`nr` integer; number of rows.
 
-`nc` integer; number of columns.}
+`nc` integer; number of columns.
+
+Use empty argument to clear the cache.}
 }
 \description{
-Matrix of zeroes (Memoised)
+Matrix of zeroes (memoised)
 }

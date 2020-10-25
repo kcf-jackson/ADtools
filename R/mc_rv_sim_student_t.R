@@ -26,8 +26,14 @@ rt_invt <- inverse_transform(pt)
 
 
 #' Simulate random variates from the student-t distribution
+#'
 #' @param n positive integer; the number of samples.
 #' @param df degrees of freedom (> 0, maybe non-integer). df = Inf is allowed.
+#'
+#' @examples
+#' n <- 10
+#' rt0(10, df = 3)
+#'
 #' @export
 rt0 <- function(n, df) {
   assertthat::assert_that(length(df) == 1 || length(df) == n)
@@ -73,10 +79,17 @@ d_student_t <- function(x, df) {
 
 
 #' Simulate random variates from the multivariate t distribution
+#'
 #' @param n positive integer; number of observations.
 #' @param sigma scale matrix.
 #' @param df degree of freedom.
-#' @param delta noncentrality parameters.
+#' @param delta non-centrality parameters.
+#'
+#' @examples
+#' n <- 10
+#' d <- 3
+#' rmvt0(n, sigma = crossprod(randn(d, d)), df = 2)
+#'
 #' @export
 rmvt0 <- function(n, sigma, df, delta = 0) {
   sim <- function(v, mu, Sigma) {

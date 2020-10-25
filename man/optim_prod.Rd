@@ -7,7 +7,7 @@
 optim_prod(matrix_ls)
 }
 \arguments{
-\item{matrix_ls}{a list of matrices to be multiplied}
+\item{matrix_ls}{A list of matrices to be multiplied}
 }
 \description{
 Executing the matrix multiplication given the optimal order

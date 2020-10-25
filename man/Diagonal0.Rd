@@ -2,15 +2,17 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{Diagonal0}
 \alias{Diagonal0}
-\title{Diagonal matrix (Memoised)}
+\title{Diagonal matrix (memoised)}
 \usage{
 Diagonal0(...)
 }
 \arguments{
 \item{...}{`n` integer; the dimension of the square matrix.
 
-`x` A scalar or a vector to be placed on the diagonal of the matrix.}
+`x` A scalar or a vector to be placed on the diagonal of the matrix.
+
+Use empty argument to clear the cache.}
 }
 \description{
-Diagonal matrix (Memoised)
+Diagonal matrix (memoised)
 }

@@ -18,3 +18,11 @@ dmvnorm0(x, mean, sigma, log = FALSE)
 \description{
 The density of the multivariate normal distribution
 }
+\examples{
+n <- 10
+d <- 2
+sigma <- crossprod(randn(d, d))
+x <- rmvnorm0(n, mean = numeric(d), sigma = sigma)
+dmvnorm0(x, mean = numeric(d), sigma = sigma)
+
+}

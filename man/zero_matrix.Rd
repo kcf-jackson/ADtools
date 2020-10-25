@@ -14,3 +14,9 @@ zero_matrix(nr, nc)
 \description{
 Matrix of zeroes
 }
+\examples{
+zero_matrix(1, 3)
+zero_matrix(5, 1)
+zero_matrix(2, 2)
+
+}

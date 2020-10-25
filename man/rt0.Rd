@@ -14,3 +14,8 @@ rt0(n, df)
 \description{
 Simulate random variates from the student-t distribution
 }
+\examples{
+n <- 10
+rt0(10, df = 3)
+
+}

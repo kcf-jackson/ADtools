@@ -17,3 +17,8 @@ rWishart0(v, M, method = "inv_tf")
 \description{
 Simulate Wishart random variates
 }
+\examples{
+d <- 4
+rWishart0(3, crossprod(randn(d, d)))
+
+}

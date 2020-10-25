@@ -1,7 +1,7 @@
 #' @include class_dual_def.R
 NULL
 
-#' Addition of 'dual'-class objects
+#' Addition of 'dual'-class objects (dual-dual)
 #' @param e1 A "dual" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -12,7 +12,7 @@ setMethod(
   }
 )
 
-#' Subtraction of 'dual'-class objects
+#' Subtraction of 'dual'-class objects (dual-dual)
 #' @param e1 A "dual" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -23,7 +23,7 @@ setMethod(
   }
 )
 
-#' (Element-wise) Multiplication of 'dual'-class objects
+#' (Element-wise) Multiplication of 'dual'-class objects (dual-dual)
 #' @param e1 A "dual" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -34,7 +34,7 @@ setMethod(
   }
 )
 
-#' (Element-wise) Division of 'dual'-class objects
+#' (Element-wise) Division of 'dual'-class objects (dual-dual)
 #' @param e1 A "dual" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -45,7 +45,7 @@ setMethod(
   }
 )
 
-#' Matrix multiplication of 'dual'-class objects
+#' Matrix multiplication of 'dual'-class objects (dual-dual)
 #' @param x A "dual" object.
 #' @param y A "dual" object.
 setMethod(
@@ -57,7 +57,7 @@ setMethod(
   }
 )
 
-#' Kronecker multiplication of 'dual'-class objects
+#' Kronecker product of 'dual'-class objects (dual-dual)
 #' @param X A "dual" object.
 #' @param Y A "dual" object.
 setMethod(
@@ -68,7 +68,7 @@ setMethod(
   }
 )
 
-#' Powers of 'dual'-class objects
+#' Powers of 'dual'-class objects (dual-dual)
 #' @param e1 A "dual" object.
 #' @param e2 A "dual" object.
 setMethod(

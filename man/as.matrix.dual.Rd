@@ -2,9 +2,12 @@
 % Please edit documentation in R/mc_structure_reshape.R
 \name{as.matrix.dual}
 \alias{as.matrix.dual}
+\alias{as.matrix,dual-method}
 \title{Coerce the first component of the dual object into a matrix.}
 \usage{
 \method{as.matrix}{dual}(x, ...)
+
+\S4method{as.matrix}{dual}(x, ...)
 }
 \arguments{
 \item{x}{A "dual" object.}

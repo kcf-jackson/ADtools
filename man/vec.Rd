@@ -12,3 +12,8 @@ vec(x)
 \description{
 Vectorisation
 }
+\examples{
+A <- randn(3, 3)
+vec(A)
+
+}

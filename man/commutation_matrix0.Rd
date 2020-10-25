@@ -2,15 +2,17 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{commutation_matrix0}
 \alias{commutation_matrix0}
-\title{Commutation matrix (Memoised)}
+\title{Commutation matrix (memoised)}
 \usage{
 commutation_matrix0(...)
 }
 \arguments{
 \item{...}{`r` integer; row dimension.
 
-`c` integer; column dimension.}
+`c` integer; column dimension.
+
+Use empty argument to clear the cache.}
 }
 \description{
-Commutation matrix (Memoised)
+Commutation matrix (memoised)
 }

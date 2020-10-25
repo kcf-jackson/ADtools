@@ -1,11 +1,11 @@
 check_dual <- function(object) {
   x <- object@x
   dx <- object@dx
-  
+
   x_check <- is_scalar(x) || is_vector(x) || is_matrix(x)
   dx_check <- is_matrix(dx)
   dim_check <- nrow(dx) == length(x)   # match dimension
-  
+
   x_check && dx_check && dim_check
 }
 
@@ -33,9 +33,11 @@ is_sparse_matrix <- function(x) {
 #' @slot x scalar, vector or matrix; also accepts any matrix classes from the "Matrix" package.
 #' @slot dx matrix; also accepts any matrix classes from the "Matrix" package.
 #' @slot param a named list, containing the column indices each variable occupies.
+#'
 #' @import methods
+#'
 #' @note Users should not construct the object directly, instead, use the
-#' constructor helper `dual` provided.
+#' constructor helper \link{dual} provided.
 setClass(
   "dual",
   representation(x = "ANY", dx = "ANY"),

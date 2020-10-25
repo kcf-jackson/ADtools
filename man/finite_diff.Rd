@@ -2,12 +2,12 @@
 % Please edit documentation in R/finite_diff.R
 \name{finite_diff}
 \alias{finite_diff}
-\title{Finite differencing}
+\title{Finite difference method}
 \usage{
 finite_diff(f, wrt = NULL, at, h = 1e-08, seed)
 }
 \arguments{
-\item{f}{A function of which the derivative is seeked.}
+\item{f}{A function of which the derivative is sought.}
 
 \item{wrt}{Character vector; the name of the variables to differentiate with respect to.}
 
@@ -17,8 +17,11 @@ finite_diff(f, wrt = NULL, at, h = 1e-08, seed)
 
 \item{seed}{Seed; for pathwise derivative only.}
 }
+\value{
+A numeric matrix; the Jacobian matrix.
+}
 \description{
-Finite differencing
+Finite difference method
 }
 \examples{
 f <- function(y, X, beta) { y - X \%*\% beta }

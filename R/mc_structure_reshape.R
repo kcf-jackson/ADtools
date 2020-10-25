@@ -7,6 +7,9 @@
 #   UseMethod("diag", x, ...)
 # }
 
+# #' Diagonal matrix
+# #' @inheritParams base::diag
+# #' @export
 # diag <- function(x, nrow, ncol, names = TRUE) {
 #   if (class(x) == "dual") {
 #     return(diag.dual(x))
@@ -49,7 +52,7 @@ d_diagonal <- function(x) {
   if (is_matrix(m0) && (ncol(m0) > 1)) {
     # extract from dx the corresponding diagonal entries
     diag_ind <- seq(1, length(m0), nrow(m0) + 1)
-    return(dx[diag_ind, , drop = F])
+    return(dx[diag_ind, , drop = FALSE])
   }
 
   m0 <- as.vector(m0)
@@ -68,8 +71,16 @@ d_diagonal <- function(x) {
 setMethod("diag", signature(x = "dual"), diag.dual)
 
 
+
+
 #' Vectorisation
+#' 
 #' @param x A matrix.
+#' 
+#' @examples 
+#' A <- randn(3, 3)
+#' vec(A)
+#' 
 #' @export
 vec <- function(x) {
   as.matrix(as.numeric(x))
@@ -88,14 +99,22 @@ setMethod(
 )
 
 
+
+
 #' Half-vectorisation
+#' 
 #' @param x A matrix.
+#' 
+#' @examples 
+#' A <- randn(3, 3)
+#' vech(A)
+#' 
 #' @export
 vech <- function(x) {
   if (nrow(x) != ncol(x)) {
     stop("Input should be a square matrix")
   }
-  as.matrix(x[lower.tri(x, diag = T)])
+  as.matrix(x[lower.tri(x, diag = TRUE)])
 }
 # References
 # 1. matrixcalc::vech
@@ -108,11 +127,13 @@ setMethod(
   "vech",
   signature(x = "dual"),
   function(x) {
-    ind <- which(lower.tri(x@x, diag = T))
+    ind <- which(lower.tri(x@x, diag = TRUE))
     x <- vec(x)
-    x[ind, , drop = F]
+    x[ind, , drop = FALSE]
   }
 )
+
+
 
 
 #' Coerce the first component of the dual object into a vector.
@@ -127,6 +148,8 @@ setMethod(
 )
 
 
+
+
 #' Coerce the first component of the dual object into a matrix.
 #' @name as.matrix.dual
 #' @method as.matrix dual
@@ -137,7 +160,10 @@ as.matrix.dual <- function(x, ...) {
   x@x <- as.matrix(x@x)
   x
 }
+#' @rdname as.matrix.dual
 setMethod("as.matrix", signature(x = "dual"), as.matrix.dual)
+
+
 
 
 #' Coerce the first component of the dual object into a matrix.
@@ -145,7 +171,7 @@ setMethod("as.matrix", signature(x = "dual"), as.matrix.dual)
 #' @inheritParams matrix
 #' @rdname matrix.dual
 #' @export
-matrix.dual <- function(data, nrow, ncol = 1, byrow = F, dimnames = NULL) {
+matrix.dual <- function(data, nrow, ncol = 1, byrow = FALSE, dimnames = NULL) {
   if (missing(nrow)) {
     nrow <- round(length(data@x) / ncol)
   }
@@ -155,7 +181,7 @@ matrix.dual <- function(data, nrow, ncol = 1, byrow = F, dimnames = NULL) {
     byrow = byrow, dimnames = dimnames
   )
   if (byrow) {
-    ind <- as.numeric(matrix(seq_along(data@x), nrow = nrow, ncol = ncol, byrow = T))
+    ind <- as.numeric(matrix(seq_along(data@x), nrow = nrow, ncol = ncol, byrow = TRUE))
     data@dx <- data@dx[ind, ]
   }
   data
@@ -164,12 +190,11 @@ matrix.dual <- function(data, nrow, ncol = 1, byrow = F, dimnames = NULL) {
 #' @rdname matrix.dual
 setMethod("matrix", signature(data = "dual"), matrix.dual)
 
-
 #' Matrices
 #' @param data A "dual" object.
 #' @param nrow a positive integer; the desired number of rows.
 #' @param ncol a positive integer; the desired number of rows.
-#' @param byrow T or F; whether to fill the matrix by rows.
+#' @param byrow TRUE or FALSE; whether to fill the matrix by rows.
 #' @param dimnames A dimnames attribute for the matrix: NULL or
 #' a list of length 2 giving the row and column names respectively.
 #' An empty list is treated as NULL, and a list of length one as
@@ -181,14 +206,23 @@ matrix <- function(data, ...) {
 }
 
 
+
+
 #' Construct a lower triangular matrix from a vector
+#'
 #' @rdname lower-triangular
+#'
 #' @param data A numeric vector.
 #' @param nrow A positive integer; the desired number of rows.
 #' @param ncol A positive integer; the desired number of rows.
 #' @param diag A logical; should the diagonal be included ?
+#'
+#' @examples
+#' lower_tri_matrix(1:3, 3, 3)
+#' lower_tri_matrix(1:6, 3, 3, diag = TRUE)
+#' 
 #' @export
-lower_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = F) {
+lower_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = FALSE) {
   y <- matrix(0, nrow = nrow, ncol = ncol)
   y[lower.tri(y, diag = diag)] <- data
   y
@@ -198,7 +232,7 @@ lower_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = F) {
 setMethod(
   "lower_tri_matrix",
   signature(data = "dual"),
-  function(data, nrow = 1, ncol = 1, diag = F) {
+  function(data, nrow = 1, ncol = 1, diag = FALSE) {
     x <- lower_tri_matrix(data@x, nrow = nrow, ncol = ncol, diag)
     dx <- matrix(0, nrow = nrow * ncol, ncol = ncol(data@dx))
 
@@ -210,14 +244,23 @@ setMethod(
 )
 
 
-#' Construct a lower triangular matrix from a vector
+
+
+#' Construct an upper triangular matrix from a vector
+#' 
 #' @rdname upper-triangular
+#' 
 #' @param data A numeric vector.
 #' @param nrow A positive integer; the desired number of rows.
 #' @param ncol A positive integer; the desired number of rows.
 #' @param diag A logical; should the diagonal be included ?
+#' 
+#' @examples
+#' upper_tri_matrix(1:3, 3, 3)
+#' upper_tri_matrix(1:6, 3, 3, diag = TRUE)
+#' 
 #' @export
-upper_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = F) {
+upper_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = FALSE) {
   y <- matrix(0, nrow = nrow, ncol = ncol)
   y[upper.tri(y, diag = diag)] <- data
   y
@@ -227,7 +270,7 @@ upper_tri_matrix <- function(data, nrow = 1, ncol = 1, diag = F) {
 setMethod(
   "upper_tri_matrix",
   signature(data = "dual"),
-  function(data, nrow = 1, ncol = 1, diag = F) {
+  function(data, nrow = 1, ncol = 1, diag = FALSE) {
     x <- upper_tri_matrix(data@x, nrow = nrow, ncol = ncol, diag)
     dx <- matrix(0, nrow = nrow * ncol, ncol = ncol(data@dx))
 

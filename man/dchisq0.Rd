@@ -16,3 +16,9 @@ dchisq0(x, df, log = FALSE)
 \description{
 The density of the chi-squared distribution
 }
+\examples{
+n <- 10
+x <- rchisq0(n, df = 3)
+dchisq0(x, df = 3)
+
+}

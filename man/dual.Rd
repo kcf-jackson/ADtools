@@ -13,6 +13,10 @@ dual(x, param_dim, ind)
 
 \item{ind}{Integer; the index in `param_dim` corresponding to `x`. Use `-1` if it is not applicable.}
 }
+\value{
+A dual number with components "x" and "dx". The first gives the value of `f`, and the
+second gives the derivative of `f`.
+}
 \description{
 Dual number constructor
 }
@@ -20,4 +24,5 @@ Dual number constructor
 # Suppose X is a 2 x 2 matrix, Y is a 3 x 1 vector, Z is a 2 x 3 matrix, and
 # we wish to attach dual components {dX, dY, dZ} to X.
 dual(randn(2, 2), list(X = 4, Y = 3, Z = 6), ind = 1)
+
 }

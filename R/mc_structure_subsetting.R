@@ -6,9 +6,10 @@ NULL
 #' @param x A "dual" object.
 #' @param i integer; the row index.
 #' @param j integer; the column index.
-#' @param drop T or F; if T, returns a vector when one dimension of the matrix is 1.
+#' @param drop TRUE or FALSE; if TRUE, returns a vector when one
+#' dimension of the matrix is 1.
 #' @rdname index-subset
-Extract.dual <- function(x, i, j, drop = F) {
+Extract.dual <- function(x, i, j, drop = FALSE) {
   x@dx <- d_subset(x, i, j)
   if (missing(i) && missing(j)) {
     x@x <- x@x[,, drop = drop]
@@ -50,6 +51,7 @@ setMethod("[", signature(x = "dual", i = "numeric", j = "numeric"), Extract.dual
 
 
 #' Return the First or Last Part of an Object
+#' @rdname head.dual
 #' @param x A "dual" object.
 #' @param n A single integer.
 head.dual <- function(x, n = 6) {
@@ -60,13 +62,15 @@ head.dual <- function(x, n = 6) {
   assertthat::assert_that((-L < n) && (n != 0))
 
   n <- ifelse(n < 0, max(L + n, 0), min(n, L))
-  x[seq_len(n), , drop = F]
+  x[seq_len(n), , drop = FALSE]
 }
 
+#' @rdname head.dual
 setMethod("head", signature(x = "dual"), head.dual)
 
 
 #' Return the First or Last Part of an Object
+#' @rdname tail.dual
 #' @param x A "dual" object.
 #' @param n A single integer.
 tail.dual <- function(x, n = 6) {
@@ -78,7 +82,8 @@ tail.dual <- function(x, n = 6) {
 
   n <- ifelse(n < 0, max(L + n, 0), min(L, n))
   ind <- seq.int(to = L, length.out = n)
-  x[ind, , drop = F]
+  x[ind, , drop = FALSE]
 }
 
+#' @rdname tail.dual
 setMethod("tail", signature(x = "dual"), tail.dual)

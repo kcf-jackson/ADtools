@@ -4,3 +4,5 @@
 ^\.travis\.yml$
 ^readme.*$
 ^dev$
+^doc$
+^Meta$

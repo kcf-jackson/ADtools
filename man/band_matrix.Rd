@@ -16,3 +16,9 @@ band_matrix(nr, nc, x = 1)
 \description{
 Band matrix
 }
+\examples{
+band_matrix(2, 3)
+band_matrix(2, 3, c(999))
+band_matrix(2, 3, c(999, 111))
+
+}

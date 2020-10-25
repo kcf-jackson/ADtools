@@ -2,9 +2,12 @@
 % Please edit documentation in R/mc_matrix_ops.R
 \name{t.dual}
 \alias{t.dual}
+\alias{t,dual-method}
 \title{Transpose of 'dual'-class objects}
 \usage{
 \method{t}{dual}(x)
+
+\S4method{t}{dual}(x)
 }
 \arguments{
 \item{x}{A "dual" object.}

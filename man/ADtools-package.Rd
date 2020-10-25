@@ -4,16 +4,34 @@
 \name{ADtools-package}
 \alias{ADtools}
 \alias{ADtools-package}
-\title{ADtools: Auto-Differentiation toolbox}
+\title{ADtools: Automatic Differentiation}
 \description{
-Implements the forward-mode auto-differentiation for multivariate
-    functions using the matrix-calculus notation from Magnus and Neudecker (1988).
-    Two key features of the package are: (i) the package incorporates various 
-    optimisaton strategies to improve performance; this includes applying 
-    memoisation to cut down object construction time, using sparse matrix 
-    representation to save derivative calculation, and creating specialised 
-    matrix operations with Rcpp to reduce computation time; (ii) the package 
-    supports differentiating random variable with respect to their parameters,
-    targetting MCMC (and in general simulation-based) applications.
+Implements the forward-mode automatic differentiation for
+    multivariate functions using the matrix-calculus notation from Magnus and
+    Neudecker (2019) <doi:10.1002/9781119541219>. Two key features of the package
+    are: (i) the package incorporates various optimisaton strategies to improve
+    performance; this includes applying memoisation to cut down object construction
+    time, using sparse matrix representation to speed up derivative calculation,
+    and creating specialised matrix operations with 'Rcpp' to reduce computation
+    time; (ii) the package supports differentiating random variates with respect
+    to their parameters, targeting MCMC and general simulation-based applications.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/kcf-jackson/ADtools}
+  \item Report bugs at \url{https://github.com/kcf-jackson/ADtools/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Chun Fung Kwok \email{kwokcf@unimelb.edu.au} (\href{https://orcid.org/0000-0002-0716-3879}{ORCID})
+
+Authors:
+\itemize{
+  \item Dan Zhu \email{dan.zhu@monash.edu} (\href{https://orcid.org/0000-0003-1487-2232}{ORCID})
+  \item Liana Jacobi \email{ljacobi@unimelb.edu.au} (\href{https://orcid.org/0000-0001-7210-0500}{ORCID})
+}
+
 }
 \keyword{internal}

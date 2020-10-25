@@ -12,15 +12,22 @@ NULL
 # Gamma distribution
 #---------------------------------------------------------------
 #' Simulate gamma random variates
+#'
 #' @param n Positive integer; the number of samples.
 #' @param shape Positive number; the shape of the gamma distribution.
 #' @param scale Positive number; the scale of the gamma distribution.
 #' @param method 'base' or 'inv_tf'; 'base' refers to `stats::rgamma` while
 #' 'inv_tf' refers to inverse transform.
+#'
 #' @note Inverse transform is slower, but it is provided to remedy that
 #' base R uses two algorithms to simulate gamma random variables
 #' in different parameter regions, which creates a discontinuity in the
 #' pathwise derivative.
+#'
+#' @examples
+#' n <- 10
+#' rgamma0(n, shape = 1, scale = 1)
+#'
 #' @export
 rgamma0 <- function(n, shape, scale, method = "inv_tf") {
   if (method == "base")   return(rgamma(n, shape, scale = scale))
@@ -84,12 +91,15 @@ rgamma0_dual <- function(n, shape, scale, method = "inv_tf") {
 
 
 #' Simulate gamma random variates
+#'
 #' @param n Positive integer; the number of samples.
 #' @param shape A dual number or a scalar; the shape of the gamma distribution.
 #' @param scale A dual number or a scalar; the scale of the gamma distribution.
 #' @param method 'base' or 'inv_tf'; 'base' refers to `stats::rgamma` while
 #' 'inv_tf' refers to inverse transform.
+#'
 #' @note At least one of `shape` and `scale` should be a dual number.
+#'
 #' @rdname gamma-rv
 setMethod("rgamma0",
   signature(n = "numeric", shape = "dual", scale = "dual"),
@@ -151,10 +161,16 @@ setMethod("rgamma0",
 # Wishart / Inverse-Wishart distribution
 #---------------------------------------------------------------
 #' Simulate Wishart random variates
+#'
 #' @param v A scalar; degrees of freedom.
 #' @param M A matrix; the matrix parameter of the Wishart distribution.
 #' @param method base or inv_tf; base refers to the function in the
 #' `stats` package while inv_tf refers to inverse transform.
+#'
+#' @examples
+#' d <- 4
+#' rWishart0(3, crossprod(randn(d, d)))
+#'
 #' @export
 rWishart0 <- function(v, M, method = "inv_tf") {
   if (method == "base") return(stats::rWishart(1, v, M)[,,1])
@@ -239,10 +255,16 @@ setMethod("rWishart0",
 # Exponential and Chi-squared distribution
 #---------------------------------------------------------------
 #' Simulate Chi-square random variates
+#'
 #' @param n Positive integer; number of observations.
 #' @param df Degrees of freedom (can be non-integer).
 #' @param method base or inv_tf; base refers to `stats::rchisq` while
 #' inv_tf refers to inverse transform.
+#'
+#' @examples
+#' n <- 10
+#' rchisq0(n, df = 3)
+#'
 #' @export
 rchisq0 <- function(n, df, method = "inv_tf") {
   if (method == "base") return(stats::rchisq(n, df))

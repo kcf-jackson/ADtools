@@ -61,7 +61,16 @@ d_colSums <- function(x) {
 
 
 #' Trace of a matrix
-#' @param x A square matrix
+#' 
+#' @param x A square numeric matrix
+#' 
+#' @examples 
+#' A <- randn(2, 2)
+#' tr(A)
+#' 
+#' B <- randn(3, 3)
+#' tr(B)
+#' 
 #' @export
 tr <- function(x) {
   if (nrow(x) != ncol(x)) {

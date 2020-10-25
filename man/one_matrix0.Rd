@@ -2,15 +2,17 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{one_matrix0}
 \alias{one_matrix0}
-\title{Matrix of ones (Memoised)}
+\title{Matrix of ones (memoised)}
 \usage{
 one_matrix0(...)
 }
 \arguments{
 \item{...}{`nr` integer; number of rows.
 
-`nc` integer; number of columns.}
+`nc` integer; number of columns.
+
+Use empty argument to clear the cache.}
 }
 \description{
-Matrix of ones (Memoised)
+Matrix of ones (memoised)
 }

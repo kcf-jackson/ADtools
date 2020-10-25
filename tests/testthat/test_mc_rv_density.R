@@ -157,12 +157,12 @@ testthat::test_that("Test Wishart density", {
   # Check function implementation
   testthat::expect_equal(
     purrr::map_dbl(y, ~MCMCpack::dwish(.x, v = df, S = Sigma)),
-    purrr::map_dbl(y, ~dWishart0(.x, df = df, Scale = Sigma))
+    purrr::map_dbl(y, ~dWishart0(.x, v = df, M = Sigma))
   )
 
   # Auto-differentiation
   f <- function(df, Sigma) {
-    dWishart0(y[[1]], df = df, Scale = Sigma)
+    dWishart0(y[[1]], v = df, M = Sigma)
   }
   inputs <- list(list(df = df, Sigma = Sigma))
   ctrl <- list(display = F, err_fun = abs_err, epsilon = 1e-6)
@@ -180,12 +180,12 @@ testthat::test_that("Test inverse Wishart density", {
   # Check function implementation
   testthat::expect_equal(
     purrr::map_dbl(x, ~MCMCpack::diwish(.x, v = df, S = Sigma)),
-    purrr::map_dbl(x, ~dinvWishart0(.x, df = df, Scale = Sigma))
+    purrr::map_dbl(x, ~dinvWishart0(.x, v = df, M = Sigma))
   )
 
   # Auto-differentiation
   f <- function(df, Sigma) {
-    dinvWishart0(x[[1]], df = df, Scale = Sigma)
+    dinvWishart0(x[[1]], v = df, M = Sigma)
   }
   inputs <- list(list(df = df, Sigma = Sigma))
   ctrl <- list(display = F, err_fun = rel_err, epsilon = 1e-5)

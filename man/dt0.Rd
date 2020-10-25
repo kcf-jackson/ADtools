@@ -16,3 +16,9 @@ dt0(x, df, log = FALSE)
 \description{
 The density of the student-t distribution
 }
+\examples{
+n <- 10
+x <- rt0(n, df = 3)
+dt0(x, df = 3)
+
+}

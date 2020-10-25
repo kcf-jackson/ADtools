@@ -20,3 +20,9 @@ dgamma0(x, shape, rate, scale = 1/rate, log = FALSE)
 \description{
 The density of the gamma distribution
 }
+\examples{
+n <- 10
+x <- rgamma0(n, shape = 1, scale = 5)
+dgamma0(x, shape = 1, scale = 5)
+
+}

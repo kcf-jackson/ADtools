@@ -7,8 +7,16 @@
 tr(x)
 }
 \arguments{
-\item{x}{A square matrix}
+\item{x}{A square numeric matrix}
 }
 \description{
 Trace of a matrix
+}
+\examples{
+A <- randn(2, 2)
+tr(A)
+
+B <- randn(3, 3)
+tr(B)
+
 }

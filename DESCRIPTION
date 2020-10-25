@@ -1,22 +1,26 @@
 Package: ADtools
 Type: Package
-Title: Auto-Differentiation toolbox
-Version: 0.5.1.9999
-Author: Chun Fung Kwok <kwokcf@unimelb.edu.au>, Dan Zhu <dan.zhu@monash.edu> and Liana Jacobi <ljacobi@unimelb.edu.au>.
+Title: Automatic Differentiation Toolbox
+Version: 0.5.3
+Authors@R: c(
+    person("Chun Fung", "Kwok", email = "kwokcf@unimelb.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0716-3879")),
+    person("Dan", "Zhu", email = "dan.zhu@monash.edu", role = "aut", comment = c(ORCID = "0000-0003-1487-2232")),
+    person("Liana", "Jacobi", email = "ljacobi@unimelb.edu.au", role = "aut", comment= c(ORCID = "0000-0001-7210-0500"))
+    )
 Maintainer: Chun Fung Kwok <kwokcf@unimelb.edu.au>
-Description: Implements the forward-mode auto-differentiation for multivariate
-    functions using the matrix-calculus notation from Magnus and Neudecker (1988).
-    Two key features of the package are: (i) the package incorporates various 
-    optimisaton strategies to improve performance; this includes applying 
-    memoisation to cut down object construction time, using sparse matrix 
-    representation to save derivative calculation, and creating specialised 
-    matrix operations with Rcpp to reduce computation time; (ii) the package 
-    supports differentiating random variable with respect to their parameters,
-    targetting MCMC (and in general simulation-based) applications.
+Description: Implements the forward-mode automatic differentiation for
+    multivariate functions using the matrix-calculus notation from Magnus and
+    Neudecker (2019) <doi:10.1002/9781119541219>. Two key features of the package
+    are: (i) it incorporates various optimisation strategies to improve
+    performance; this includes applying memoisation to cut down object construction
+    time, using sparse matrix representation to speed up derivative calculation,
+    and creating specialised matrix operations with 'Rcpp' to reduce computation
+    time; (ii) it supports differentiating random variates with respect
+    to their parameters, targeting MCMC and general simulation-based applications.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Suggests:
     testthat,
     covr,
@@ -34,8 +38,7 @@ Imports:
     magrittr,
     assertthat,
     mvtnorm,
-    Rcpp,
-    RcppArmadillo
+    Rcpp
 LinkingTo: 
     Rcpp,
     RcppArmadillo
@@ -68,3 +71,5 @@ Collate:
     'optim_matrix_chain_multiplication.R'
     'utils.R'
 VignetteBuilder: knitr
+URL: https://github.com/kcf-jackson/ADtools
+BugReports: https://github.com/kcf-jackson/ADtools/issues

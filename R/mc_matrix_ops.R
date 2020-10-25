@@ -2,24 +2,16 @@
 NULL
 
 #' Inverse of 'dual'-class objects
+#' 
 #' @method solve dual
 #' @rdname solve.dual
-#' @param a A numeric matrix or a "dual" object.
-#' @param b A numeric vector or matrix or a "dual" object.
+#' 
+#' @param a A numeric square matrix or a corresponding "dual" object.
+#' @param b A numeric vector or matrix or a corresponding "dual" object.
 #' @param ... Other arguments passed to 'base::solve'. See '?solve' for detail.
-#' @note At least one of `a` and `b` must be a dual object, the other one may be
-#' any appropriate numeric matrix.
-# @export
-# solve.dual <- function(a, b, ...) {
-#   if (missing(b)) {
-#     fun <- call_S4("solve", a = "dual", b = "missing")
-#   } else {
-#     fun <- solve_dual
-#   }
-#   fun(a, b, ...)
-# }
-
-#' @rdname solve.dual
+#' 
+#' @note At least one of `a` and `b` must be a dual object, and the other one 
+#' may be any appropriate numeric matrix.
 setMethod("solve",
   signature(a = "dual", b = "missing"),
   function(a, b, ...) {
@@ -49,9 +41,16 @@ setMethod("solve", signature(a = "ANY", b = "dual"), solve_dual)
 setMethod("solve", signature(a = "dual", b = "ANY"), solve_dual)
 
 
+
+
 #' Transpose of 'dual'-class objects
-#' @param x A "dual" object.
+#' 
+#' @rdname t.dual
+#' 
 #' @method t dual
+#' 
+#' @param x A "dual" object.
+#' 
 #' @export
 t.dual <- function(x) {
   x@dx <- d_transpose(x)
@@ -66,14 +65,24 @@ d_transpose <- function(a) {
   K_nq %*% dX
 }
 
-#' Transpose of 'dual'-class objects
-#' @param x A "dual" object.
+#' @rdname t.dual
 setMethod("t", signature(x = "dual"), t.dual)
 
 
+
+
+tcrossprod_dual <- function(x, y) { x %*% t(y) }
+
 #' Crossproduct of 'dual'-class objects
-#' @param x A "dual" object.
-#' @param y A "dual" object.
+#' @rdname tcrossprod.dual
+#' @param x A numeric matrix, or the corresponding "dual" object.
+#' @param y A numeric matrix, or the corresponding "dual" object.
+setMethod("tcrossprod", signature(x = "dual", y = "ANY"), tcrossprod_dual)
+
+#' @rdname tcrossprod.dual
+setMethod("tcrossprod", signature(x = "dual", y = "dual"), tcrossprod_dual)
+
+#' @rdname tcrossprod.dual
 setMethod("tcrossprod",
   signature(x = "dual", y = "missing"),
   function(x, y) {
@@ -94,44 +103,35 @@ d_XXT <- function(a) {
   ((I_nn + K_nn) %*% (X %x% I_n)) %*% dX
 }
 
-tcrossprod_dual <- function(x, y) { x %*% t(y) }
 
-#' Crossproduct of 'dual'-class objects
-#' @param x A "dual" object.
-#' @param y Numeric matrix.
-setMethod("tcrossprod", signature(x = "dual", y = "ANY"), tcrossprod_dual)
-
-#' Crossproduct of 'dual'-class objects
-#' @param x A "dual" object.
-#' @param y A "dual" object.
-setMethod("tcrossprod", signature(x = "dual", y = "dual"), tcrossprod_dual)
 
 
 crossprod_dual <- function(x, y) { t(x) %*% y }
 
 #' Crossproduct of 'dual'-class objects
-#' @param x A "dual" object.
-#' @param y A "dual" object.
+#' @rdname crossprod.dual
+#' @param x A numeric matrix, or the corresponding "dual" object.
+#' @param y A numeric matrix, or the corresponding "dual" object.
 setMethod("crossprod",
   signature(x = "dual", y = "missing"),
   function(x, y) { t(x) %*% x }
 )
 
-#' Crossproduct of 'dual'-class objects
-#' @param x A "dual" object.
-#' @param y Numeric matrix.
+#' @rdname crossprod.dual
 setMethod("crossprod", signature(x = "dual", y = "ANY"), crossprod_dual)
 
-#' Crossproduct of 'dual'-class objects
-#' @param x A "dual" object.
-#' @param y A "dual" object.
+#' @rdname crossprod.dual
 setMethod("crossprod", signature(x = "dual", y = "dual"), crossprod_dual)
 
 
+
+
 #' Cholesky decomposition
+#' 
 #' @param x A numeric matrix.
-#' @export
+#' 
 #' @note This function uses only the lower-triangular part of the input and returns a lower-triangular matrix.
+#' 
 #' @details \code{chol0} is implemented as (t o chol o t) becauase the Cholesky decomposition
 #' in R (\code{chol}) \enumerate{
 #'   \item returns an upper-triangle matrix;
@@ -154,6 +154,8 @@ setMethod("crossprod", signature(x = "dual", y = "dual"), crossprod_dual)
 #' and this is what we want.
 #' (Additional note: finite-differencing with Cholesky is not too accurate
 #' due to the many floating point operations involved.)
+#' 
+#' @export
 chol0 <- function(x) { t(chol(t(x))) }
 
 #' Cholesky decomposition of 'dual'-class objects
@@ -186,7 +188,6 @@ d_chol <- function(L, a) {
   mprod(D_n, solve(mprod(E_n, (I_nn + K_nn), (L %x% I_n), D_n), E_n), dA)
 }
 
-
 #' Cholesky decomposition of 'dual'-class objects
 #' @param x A "dual" object.
 #' @note The Cholesky decomposition used in this function returns an
@@ -204,9 +205,13 @@ setMethod("chol",
 )
 
 
+
+
 #' Determinant of a matrix
+#' 
 #' @name matrix_determinant
-#' @inherit base::det
+#' @inheritParams base::det
+#' 
 #' @export
 det <- function(x, ...) {
   UseMethod("det", x)
@@ -217,8 +222,12 @@ det <- function(x, ...) {
 det.default <- base::det
 
 #' Determinant of a 'dual'-class object
+#' 
+#' @method det dual
+#' 
 #' @param x A "dual" object.
 #' @param ... Other parameters to be passed to `base::det`.
+#' 
 #' @export
 det.dual <- function(x, ...) {
   px <- x@x

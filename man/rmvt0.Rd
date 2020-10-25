@@ -13,8 +13,14 @@ rmvt0(n, sigma, df, delta = 0)
 
 \item{df}{degree of freedom.}
 
-\item{delta}{noncentrality parameters.}
+\item{delta}{non-centrality parameters.}
 }
 \description{
 Simulate random variates from the multivariate t distribution
+}
+\examples{
+n <- 10
+d <- 3
+rmvt0(n, sigma = crossprod(randn(d, d)), df = 2)
+
 }

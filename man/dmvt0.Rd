@@ -21,7 +21,10 @@ dmvt0(x, delta, sigma, df = 1, log = TRUE)
 The density of the multivariate t distribution
 }
 \examples{
-sigma <- crossprod(randn(3, 3))
-data <- rmvt0(2, sigma = sigma, df = 2)
-dmvt0(data, delta = rep(0, 3), sigma = sigma, df = 2)
+n <- 10
+d <- 3
+sigma <- crossprod(randn(d, d))
+x <- rmvt0(n, sigma = sigma, df = 2)
+dmvt0(x, delta = numeric(d), sigma = sigma, df = 2)
+
 }

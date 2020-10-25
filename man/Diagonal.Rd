@@ -14,3 +14,9 @@ Diagonal(n, x = NULL)
 \description{
 Diagonal matrix
 }
+\examples{
+Diagonal(3)
+Diagonal(3, 999)
+Diagonal(3, c(11, 22, 33))
+
+}

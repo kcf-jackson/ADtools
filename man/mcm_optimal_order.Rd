@@ -7,7 +7,7 @@
 mcm_optimal_order(x)
 }
 \arguments{
-\item{x}{is a vector of matrix dimensions}
+\item{x}{A numeric vector of matrix dimensions}
 }
 \description{
 Find the optimal order of multiplying a matrix chain

@@ -1,13 +1,18 @@
 #' The density of the multivariate t distribution
+#'
 #' @param x vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.
 #' @param delta the vector of noncentrality parameters.
 #' @param sigma numeric matrix; scale matrix.
 #' @param df degress of freedom.
 #' @param log logical; whether to return log density value.
+#'
 #' @examples
-#' sigma <- crossprod(randn(3, 3))
-#' data <- rmvt0(2, sigma = sigma, df = 2)
-#' dmvt0(data, delta = rep(0, 3), sigma = sigma, df = 2)
+#' n <- 10
+#' d <- 3
+#' sigma <- crossprod(randn(d, d))
+#' x <- rmvt0(n, sigma = sigma, df = 2)
+#' dmvt0(x, delta = numeric(d), sigma = sigma, df = 2)
+#'
 #' @export
 dmvt0 <- function(x, delta, sigma, df = 1, log = TRUE) {
   p <- nrow(sigma)
@@ -33,10 +38,19 @@ quadratic_form <- function(x, A) {
 
 
 #' The density of the multivariate normal distribution
+#'
 #' @param x vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.
 #' @param mean numeric vector; the mean vector.
 #' @param sigma numeric matrix; the covariance matrix.
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' n <- 10
+#' d <- 2
+#' sigma <- crossprod(randn(d, d))
+#' x <- rmvnorm0(n, mean = numeric(d), sigma = sigma)
+#' dmvnorm0(x, mean = numeric(d), sigma = sigma)
+#'
 #' @export
 dmvnorm0 <- function(x, mean, sigma, log = FALSE) {
   d <- length(mean)
@@ -48,10 +62,17 @@ dmvnorm0 <- function(x, mean, sigma, log = FALSE) {
 
 
 #' The density of the normal distribution
+#'
 #' @param x vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.
 #' @param mean numeric vector; the mean vector.
 #' @param sd numeric vector; the sd vector.
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' n <- 10
+#' x <- rnorm0(n, mean = 0, sd = 1)
+#' dnorm0(x, mean = 0, sd = 1)
+#'
 #' @export
 dnorm0 <- function(x, mean, sd, log = FALSE) {
   cx <- x + one_matrix0(NROW(x), 1) %*% t(-mean)
@@ -61,9 +82,16 @@ dnorm0 <- function(x, mean, sd, log = FALSE) {
 
 
 #' The density of the student-t distribution
+#'
 #' @param x vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.
 #' @param df degrees of freedom (> 0, maybe non-integer).
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' n <- 10
+#' x <- rt0(n, df = 3)
+#' dt0(x, df = 3)
+#'
 #' @export
 dt0 <- function(x, df, log = FALSE) {
   logretval <- log(gamma((df + 1) / 2)) - 0.5 * log(df * pi) -
@@ -73,11 +101,18 @@ dt0 <- function(x, df, log = FALSE) {
 
 
 #' The density of the gamma distribution
+#'
 #' @param x vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.
 #' @param shape positive number; the shape parameter.
 #' @param rate positive number; the rate parameter.
 #' @param scale positive number; the scale parameter.
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' n <- 10
+#' x <- rgamma0(n, shape = 1, scale = 5)
+#' dgamma0(x, shape = 1, scale = 5)
+#'
 #' @export
 dgamma0 <- function(x, shape, rate, scale = 1 / rate, log = FALSE) {
   if (!missing(rate) && !missing(scale)) {
@@ -94,9 +129,16 @@ dgamma0 <- function(x, shape, rate, scale = 1 / rate, log = FALSE) {
 
 
 #' The density of the chi-squared distribution
+#'
 #' @param x vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.
 #' @param df degrees of freedom (> 0, maybe non-integer).
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' n <- 10
+#' x <- rchisq0(n, df = 3)
+#' dchisq0(x, df = 3)
+#'
 #' @export
 dchisq0 <- function(x, df, log = FALSE) {
   half_k <- df / 2
@@ -106,9 +148,16 @@ dchisq0 <- function(x, df, log = FALSE) {
 
 
 #' The density of the exponential distribution
+#'
 #' @param x vector or matrix of quantiles. If x is a matrix, each row is taken to be a quantile.
 #' @param rate positive number; the rate parameter.
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' n <- 10
+#' x <- rexp0(n, rate = 3)
+#' dexp0(x, rate = 3)
+#'
 #' @export
 dexp0 <- function(x, rate = 1, log = FALSE) {
   retval <- rate * exp(-rate * x)
@@ -117,16 +166,24 @@ dexp0 <- function(x, rate = 1, log = FALSE) {
 
 
 #' The density of the Wishart distribution
+#'
 #' @param X numeric matrix.
-#' @param df degrees of freedom (> 0, maybe non-integer).
-#' @param Scale numeric matrix; the scale matrix.
+#' @param v degrees of freedom (> 0, maybe non-integer).
+#' @param M numeric matrix; the scale matrix.
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' d <- 3
+#' mat0 <- crossprod(randn(d, d))
+#' X <- rWishart0(v = 10, M = mat0)
+#' dWishart0(X, v = 10, M = mat0)
+#'
 #' @export
-dWishart0 <- function(X, df, Scale, log = FALSE) {
+dWishart0 <- function(X, v, M, log = FALSE) {
   p <- nrow(X)
-  n <- df
+  n <- v
   # assertthat::assert_that(n > p - 1)
-  V <- Scale
+  V <- M
 
   logretval <- (n - p - 1) / 2 * log(det(X)) - tr(solve(V, X)) / 2 -
     (n * p / 2) * log(2) - n / 2 * log(det(V)) - lmvgamma(p, n / 2)
@@ -144,16 +201,24 @@ lmvgamma <- function(p, a) {
 
 
 #' The density of the inverse Wishart distribution
+#'
 #' @param X numeric matrix.
-#' @param df degrees of freedom (> 0, maybe non-integer).
-#' @param Scale numeric matrix; the scale matrix.
+#' @param v degrees of freedom (> 0, maybe non-integer).
+#' @param M numeric matrix; the scale matrix.
 #' @param log logical; if TRUE, returns the log value.
+#'
+#' @examples
+#' d <- 3
+#' mat0 <- crossprod(randn(d, d))
+#' X <- solve(rWishart0(v = 10, M = solve(mat0)))
+#' dinvWishart0(X, v = 10, M = mat0)
+#'
 #' @export
-dinvWishart0 <- function(X, df, Scale, log = FALSE) {
+dinvWishart0 <- function(X, v, M, log = FALSE) {
   p <- nrow(X)
-  v <- df
+  v <- v
   # assertthat::assert_that(v > p - 1)
-  Phi <- Scale
+  Phi <- M
 
   logretval <- v / 2 * log(det(Phi)) - (v + p + 1) / 2 * log(det(X)) -
     0.5 * tr(Phi %*% solve(X)) - (v * p / 2) * log(2) - lmvgamma(p, v / 2)

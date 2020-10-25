@@ -1,7 +1,12 @@
 #' Automatic differentiation
-#' @param f A function of which the derivative is seeked.
-#' @param wrt Character vector; the name of the variables to differentiate with respect to.
+#'
+#' @param f A function of which the derivative is sought.
+#' @param wrt A character vector; the name of the variables to differentiate with respect to.
 #' @param at A named list of variables; the point at which the derivative is evaluated.
+#'
+#' @return A dual number with components "x" and "dx". The first gives the value of `f`, and the
+#' second gives the derivative of `f`.
+#'
 #' @examples
 #' f <- function(y, X, beta) { y - X %*% beta }
 #' auto_diff(
@@ -28,13 +33,16 @@ auto_diff <- function(f, wrt = NULL, at) {
 
 
 #' Converting a list of parameters into a list of dual numbers
+#'
 #' @param vary A named list of parameters
+#'
+#' @return A named list of dual numbers.
+#'
 #' @examples
-#' \dontrun{
 #' X <- randn(2, 2)
 #' y <- rnorm(2)
 #' duals(list(X = X, y = y))
-#' }
+#'
 #' @export
 duals <- function(vary) {
   dims <- purrr::map(vary, length)
@@ -54,6 +62,7 @@ recursive_tidy <- function(x, vary) {
 
 
 #' Add rownames and colnames to the dual component
+#'
 #' @param x_dual A dual number
 #' @param vary A named list of parameters
 tidy_dx <- function(x_dual, vary) {

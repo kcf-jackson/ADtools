@@ -1,7 +1,7 @@
 #' @include class_dual_def.R
 NULL
 
-#' Combine 'dual'-class objects by Columns
+#' Combine 'dual'-class objects by Columns (dual-dual)
 #' @param x A "dual" object.
 #' @param y A "dual" object.
 setMethod(
@@ -14,7 +14,7 @@ setMethod(
   }
 )
 
-#' Combine 'dual'-class objects by Columns
+#' Combine 'dual'-class objects by Columns (dual-ANY)
 #' @param x A "dual" object.
 #' @param y ANY object.
 setMethod(
@@ -26,7 +26,7 @@ setMethod(
   }
 )
 
-#' Combine 'dual'-class objects by Columns
+#' Combine 'dual'-class objects by Columns (ANY-dual)
 #' @param x ANY object.
 #' @param y A "dual" object.
 setMethod(
@@ -39,7 +39,7 @@ setMethod(
 )
 
 
-#' Combine 'dual'-class objects by Rows.
+#' Combine 'dual'-class objects by Rows (dual-dual)
 #' @param x A "dual" object.
 #' @param y A "dual" object.
 setMethod(
@@ -75,7 +75,7 @@ rearrange <- function(vec0, group_size) {
   as.numeric(t(matrix(vec0, nrow = group_size)))
 }
 
-#' Combine 'dual'-class objects by Rows
+#' Combine 'dual'-class objects by Rows (dual-ANY)
 #' @param x A "dual" object.
 #' @param y ANY object.
 setMethod(
@@ -87,7 +87,7 @@ setMethod(
   }
 )
 
-#' Combine 'dual'-class objects by Rows
+#' Combine 'dual'-class objects by Rows (ANY-dual)
 #' @param x ANY object.
 #' @param y A "dual" object.
 setMethod(

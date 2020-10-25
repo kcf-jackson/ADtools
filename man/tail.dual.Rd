@@ -2,9 +2,12 @@
 % Please edit documentation in R/mc_structure_subsetting.R
 \name{tail.dual}
 \alias{tail.dual}
+\alias{tail,dual-method}
 \title{Return the First or Last Part of an Object}
 \usage{
 tail.dual(x, n = 6)
+
+\S4method{tail}{dual}(x, n = 6)
 }
 \arguments{
 \item{x}{A "dual" object.}

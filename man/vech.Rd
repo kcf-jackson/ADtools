@@ -12,3 +12,8 @@ vech(x)
 \description{
 Half-vectorisation
 }
+\examples{
+A <- randn(3, 3)
+vech(A)
+
+}

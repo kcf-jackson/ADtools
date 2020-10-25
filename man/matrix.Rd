@@ -4,8 +4,7 @@
 \alias{matrix}
 \title{Matrices}
 \usage{
-matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE,
-  dimnames = NULL)
+matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE, dimnames = NULL)
 }
 \arguments{
 \item{data}{A "dual" object.}
@@ -14,7 +13,7 @@ matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE,
 
 \item{ncol}{a positive integer; the desired number of rows.}
 
-\item{byrow}{T or F; whether to fill the matrix by rows.}
+\item{byrow}{TRUE or FALSE; whether to fill the matrix by rows.}
 
 \item{dimnames}{A dimnames attribute for the matrix: NULL or
 a list of length 2 giving the row and column names respectively.

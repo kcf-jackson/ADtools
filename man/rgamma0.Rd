@@ -25,3 +25,8 @@ base R uses two algorithms to simulate gamma random variables
 in different parameter regions, which creates a discontinuity in the
 pathwise derivative.
 }
+\examples{
+n <- 10
+rgamma0(n, shape = 1, scale = 1)
+
+}

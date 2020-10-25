@@ -4,17 +4,24 @@
 \alias{dinvWishart0}
 \title{The density of the inverse Wishart distribution}
 \usage{
-dinvWishart0(X, df, Scale, log = FALSE)
+dinvWishart0(X, v, M, log = FALSE)
 }
 \arguments{
 \item{X}{numeric matrix.}
 
-\item{df}{degrees of freedom (> 0, maybe non-integer).}
+\item{v}{degrees of freedom (> 0, maybe non-integer).}
 
-\item{Scale}{numeric matrix; the scale matrix.}
+\item{M}{numeric matrix; the scale matrix.}
 
 \item{log}{logical; if TRUE, returns the log value.}
 }
 \description{
 The density of the inverse Wishart distribution
+}
+\examples{
+d <- 3
+mat0 <- crossprod(randn(d, d))
+X <- solve(rWishart0(v = 10, M = solve(mat0)))
+dinvWishart0(X, v = 10, M = mat0)
+
 }

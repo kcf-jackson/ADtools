@@ -17,7 +17,7 @@ Rounding of Numbers
 \note{
 The function 'round' does not have a derivative over the real line.
 The derivative will be kept unchanged. The reason of not dropping it is
-that sometimes one may need to round a matrix to correct floating-point errors.
-For example, this happens when an apparent symmetric matrix does not pass the
-symmetry check / test.
+that sometimes one may need to round a matrix to correct floating-point
+errors. This is often used when an apparent symmetric matrix does not pass
+the symmetry test.
 }

@@ -10,5 +10,15 @@ elimination_matrix(n)
 \item{n}{integer, row or column dimension.}
 }
 \description{
-Elimination matrix
+Suppose A is a (n x n) symmetric matrix, then a (n(n-1)/2 x n^2) matrix E
+is an elimination matrix if E %*% vec(A) = vech(A).
+}
+\examples{
+A <- crossprod(randn(3, 3))
+E <- elimination_matrix(3)
+compare <- function(x, y) {
+    cbind(x, y, err = abs(x - y))
+}
+compare(E \%*\% vec(A), vech(A))
+
 }

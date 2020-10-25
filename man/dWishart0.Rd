@@ -4,17 +4,24 @@
 \alias{dWishart0}
 \title{The density of the Wishart distribution}
 \usage{
-dWishart0(X, df, Scale, log = FALSE)
+dWishart0(X, v, M, log = FALSE)
 }
 \arguments{
 \item{X}{numeric matrix.}
 
-\item{df}{degrees of freedom (> 0, maybe non-integer).}
+\item{v}{degrees of freedom (> 0, maybe non-integer).}
 
-\item{Scale}{numeric matrix; the scale matrix.}
+\item{M}{numeric matrix; the scale matrix.}
 
 \item{log}{logical; if TRUE, returns the log value.}
 }
 \description{
 The density of the Wishart distribution
+}
+\examples{
+d <- 3
+mat0 <- crossprod(randn(d, d))
+X <- rWishart0(v = 10, M = mat0)
+dWishart0(X, v = 10, M = mat0)
+
 }

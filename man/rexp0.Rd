@@ -3,6 +3,16 @@
 \name{rexp0}
 \alias{rexp0}
 \title{Simulate exponential random variates}
+\source{
+\code{dexp}, \code{pexp} and \code{qexp} are all calculated
+  from numerically stable versions of the definitions.
+
+  \code{rexp} uses
+
+  Ahrens, J. H. and Dieter, U. (1972).
+  Computer methods for sampling from the exponential and normal distributions.
+  \emph{Communications of the ACM}, \bold{15}, 873--882.
+}
 \usage{
 rexp0(n, rate = 1)
 }
@@ -59,8 +69,8 @@ Becker, R. A., Chambers, J. M. and Wilks, A. R. (1988)
 \seealso{
 \code{\link{exp}} for the exponential function.
 
-  \link{Distributions} for other standard distributions, including
-  \code{\link{dgamma}} for the gamma distribution and
-  \code{\link{dweibull}} for the Weibull distribution, both of which
+  \link[stats]{Distributions} for other standard distributions, including
+  \code{\link[stats]{dgamma}} for the gamma distribution and
+  \code{\link[stats]{dweibull}} for the Weibull distribution, both of which
   generalize the exponential.
 }

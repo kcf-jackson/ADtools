@@ -14,3 +14,11 @@ matrix_prod(..., method = "optimal")
 \description{
 Interface for optimal matrix chain multiplication
 }
+\examples{
+A <- randn(20, 5)
+B <- randn(5, 40)
+C <- randn(40, 2)
+system.time({ matrix_prod(A, B, C, method = "optimal") })
+system.time({ matrix_prod(A, B, C, method = "natural") })
+
+}

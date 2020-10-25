@@ -18,3 +18,9 @@ dnorm0(x, mean, sd, log = FALSE)
 \description{
 The density of the normal distribution
 }
+\examples{
+n <- 10
+x <- rnorm0(n, mean = 0, sd = 1)
+dnorm0(x, mean = 0, sd = 1)
+
+}

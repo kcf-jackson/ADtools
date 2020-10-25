@@ -7,11 +7,15 @@
 auto_diff(f, wrt = NULL, at)
 }
 \arguments{
-\item{f}{A function of which the derivative is seeked.}
+\item{f}{A function of which the derivative is sought.}
 
-\item{wrt}{Character vector; the name of the variables to differentiate with respect to.}
+\item{wrt}{A character vector; the name of the variables to differentiate with respect to.}
 
 \item{at}{A named list of variables; the point at which the derivative is evaluated.}
+}
+\value{
+A dual number with components "x" and "dx". The first gives the value of `f`, and the
+second gives the derivative of `f`.
 }
 \description{
 Automatic differentiation

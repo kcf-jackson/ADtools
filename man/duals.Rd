@@ -9,13 +9,15 @@ duals(vary)
 \arguments{
 \item{vary}{A named list of parameters}
 }
+\value{
+A named list of dual numbers.
+}
 \description{
 Converting a list of parameters into a list of dual numbers
 }
 \examples{
-\dontrun{
 X <- randn(2, 2)
 y <- rnorm(2)
 duals(list(X = X, y = y))
-}
+
 }

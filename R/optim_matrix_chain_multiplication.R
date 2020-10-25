@@ -1,6 +1,15 @@
 #' Interface for optimal matrix chain multiplication
+#' 
 #' @param ... Numeric matrices.
 #' @param method "optimal" order or "natural" left-to-right order.
+#' 
+#' @examples 
+#' A <- randn(20, 5)
+#' B <- randn(5, 40)
+#' C <- randn(40, 2)
+#' system.time({ matrix_prod(A, B, C, method = "optimal") })
+#' system.time({ matrix_prod(A, B, C, method = "natural") })
+#' 
 #' @export
 matrix_prod <- function(..., method = "optimal") {
   matrix_ls <- list(...)
@@ -17,7 +26,7 @@ mprod <- matrix_prod   # Alias for internal use
 
 
 #' Executing the matrix multiplication given the optimal order
-#' @param matrix_ls a list of matrices to be multiplied
+#' @param matrix_ls A list of matrices to be multiplied
 optim_prod <- function(matrix_ls) {
   d <- c(NROW(matrix_ls[[1]]), Map_dbl(NCOL, matrix_ls))
   S <- mcm_optimal_order(d)$S
@@ -37,7 +46,7 @@ optim_prod <- function(matrix_ls) {
 
 
 #' Find the optimal order of multiplying a matrix chain
-#' @param x is a vector of matrix dimensions
+#' @param x A numeric vector of matrix dimensions
 mcm_optimal_order <- function(x) {
   n <- length(x) - 1     # Number of matrices
   S <- matrix(0, n, n)   # Keep track of the optimal order

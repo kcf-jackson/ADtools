@@ -17,3 +17,8 @@ inv_tf refers to inverse transform.}
 \description{
 Simulate Chi-square random variates
 }
+\examples{
+n <- 10
+rchisq0(n, df = 3)
+
+}

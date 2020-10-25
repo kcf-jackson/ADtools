@@ -2,7 +2,7 @@
 % Please edit documentation in R/interface_special_matrix.R
 \name{band_matrix0}
 \alias{band_matrix0}
-\title{Band matrix (Memoised)}
+\title{Band matrix (memoised)}
 \usage{
 band_matrix0(...)
 }
@@ -11,8 +11,10 @@ band_matrix0(...)
 
 `nc` integer; number of columns.
 
-`x` A scalar or a vector to be placed on the diagonal of the matrix.}
+`x` A scalar or a vector to be placed on the diagonal of the matrix.
+
+Use empty argument to clear the cache.}
 }
 \description{
-Band matrix (Memoised)
+Band matrix (memoised)
 }

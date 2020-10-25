@@ -16,3 +16,9 @@ dexp0(x, rate = 1, log = FALSE)
 \description{
 The density of the exponential distribution
 }
+\examples{
+n <- 10
+x <- rexp0(n, rate = 3)
+dexp0(x, rate = 3)
+
+}

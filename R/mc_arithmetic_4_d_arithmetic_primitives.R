@@ -66,7 +66,7 @@ d_scalar_op_matrix <- function(a, b, d_op) {
   db <- b@dx
   assertthat::assert_that(length(pa) == 1)
 
-  da <- matrix(rep(da, NROW(db)), nrow = NROW(db), byrow = T)
+  da <- matrix(rep(da, NROW(db)), nrow = NROW(db), byrow = TRUE)
   d_op(da, db, pa, as.numeric(pb))
 }
 
@@ -78,7 +78,7 @@ d_matrix_op_scalar <- function(a, b, d_op) {
   db <- b@dx
   assertthat::assert_that(length(pb) == 1)
 
-  db <- matrix(rep(db, NROW(da)), nrow = NROW(da), byrow = T)
+  db <- matrix(rep(db, NROW(da)), nrow = NROW(da), byrow = TRUE)
   d_op(da, db, as.numeric(pa), pb)
 }
 

@@ -6,7 +6,7 @@ NULL
 # it is assumed to be performed component-wise. Furthermore, all
 # non-dual objects are assumed to have zero matrices as Jacobian.
 
-#' Addition of 'dual'-class objects
+#' Addition of 'dual'-class objects (dual-ANY)
 #' @param e1 A "dual" object.
 #' @param e2 "ANY" object.
 setMethod(
@@ -21,8 +21,10 @@ setMethod(
     }
 
     e1@x <- e1@x + e2
-    # if the size has increased after the addition,
-    # then dx should expand to the appropriate length.
+    # If the size has increased after the addition, e.g. when e1
+    # has length 1 and e2 has length 3, then dx should expand to
+    # the appropriate length. e1@dx is duplicated because e1@x is
+    # recycled.
     if (nrow(e1@dx) != length(e1@x)) {
       e1@dx <- mapreduce(numeric(length(e2) / nrow(e1@dx)), ~e1@dx, rbind)
     }
@@ -30,7 +32,7 @@ setMethod(
   }
 )
 
-#' Addition of 'dual'-class objects
+#' Addition of 'dual'-class objects (ANY-dual)
 #' @param e1 "ANY" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -41,7 +43,7 @@ setMethod(
   }
 )
 
-#' Subtraction of 'dual'-class objects
+#' Subtraction of 'dual'-class objects (dual-ANY)
 #' @param e1 A "dual" object.
 #' @param e2 "ANY" object.
 setMethod(
@@ -52,9 +54,9 @@ setMethod(
   }
 )
 
-#' Subtraction of 'dual'-class objects
+#' Subtraction of 'dual'-class objects (unary dual)
 #' @param e1 A "dual" object.
-#' @param e2 "ANY" object.
+#' @param e2 "missing" object.
 setMethod(
   "-",
   signature(e1 = "dual", e2 = "missing"),
@@ -65,7 +67,7 @@ setMethod(
   }
 )
 
-#' Subtraction of 'dual'-class objects
+#' Subtraction of 'dual'-class objects (dual-ANY)
 #' @param e1 "ANY" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -76,7 +78,7 @@ setMethod(
   }
 )
 
-#' (Element-wise) Multiplication of 'dual'-class objects
+#' (Element-wise) Multiplication of 'dual'-class objects (dual-ANY)
 #' @param e1 A "dual" object.
 #' @param e2 "ANY" object.
 setMethod(
@@ -101,7 +103,7 @@ setMethod(
   }
 )
 
-#' (Element-wise) Multiplication of 'dual'-class objects
+#' (Element-wise) Multiplication of 'dual'-class objects (ANY-dual)
 #' @param e1 "ANY" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -126,7 +128,7 @@ setMethod(
   }
 )
 
-#' (Element-wise) Division of 'dual'-class objects
+#' (Element-wise) Division of 'dual'-class objects (dual-ANY)
 #' @param e1 A "dual" object.
 #' @param e2 "ANY" object.
 setMethod(
@@ -149,7 +151,7 @@ setMethod(
   }
 )
 
-#' (Element-wise) Division of 'dual'-class objects
+#' (Element-wise) Division of 'dual'-class objects (ANY-dual)
 #' @param e1 "ANY" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -172,7 +174,7 @@ setMethod(
 )
 
 
-#' Powers of 'dual'-class objects
+#' Powers of 'dual'-class objects (dual-ANY)
 #' @param e1 A "dual" object.
 #' @param e2 "ANY" object.
 setMethod(
@@ -199,7 +201,7 @@ setMethod(
 )
 
 
-#' Powers of 'dual'-class objects
+#' Powers of 'dual'-class objects (ANY-dual)
 #' @param e1 "ANY" object.
 #' @param e2 A "dual" object.
 setMethod(
@@ -221,7 +223,7 @@ setMethod(
 )
 
 
-#' Matrix multiplication of 'dual'-class objects
+#' Matrix multiplication of 'dual'-class objects (dual-ANY)
 #' @param x A "dual" object.
 #' @param y "ANY" object.
 setMethod(
@@ -233,7 +235,7 @@ setMethod(
 )
 
 
-#' Matrix multiplication of 'dual'-class objects
+#' Matrix multiplication of 'dual'-class objects (ANY-dual)
 #' @param x "ANY" object.
 #' @param y A "dual" object.
 setMethod(
@@ -244,7 +246,7 @@ setMethod(
   }
 )
 
-#' Kronecker multiplication of 'dual'-class objects
+#' Kronecker multiplication of 'dual'-class objects (dual-ANY)
 #' @param X A "dual" object.
 #' @param Y "ANY" object.
 setMethod(
@@ -255,7 +257,7 @@ setMethod(
   }
 )
 
-#' Kronecker multiplication of 'dual'-class objects
+#' Kronecker multiplication of 'dual'-class objects (ANY-dual)
 #' @param X "ANY" object.
 #' @param Y A "dual" object.
 setMethod(

@@ -1,9 +1,13 @@
-#' Finite differencing
-#' @param f A function of which the derivative is seeked.
+#' Finite difference method
+#'
+#' @param f A function of which the derivative is sought.
 #' @param wrt Character vector; the name of the variables to differentiate with respect to.
 #' @param at A named list of variables; the point at which the derivative is evaluated.
 #' @param h The finite differencing parameter; the size of perturbation.
 #' @param seed Seed; for pathwise derivative only.
+#'
+#' @return A numeric matrix; the Jacobian matrix.
+#'
 #' @examples
 #' f <- function(y, X, beta) { y - X %*% beta }
 #' finite_diff(
@@ -40,13 +44,13 @@ vec_finite_diff <- function(f, x, h = 1e-8) {
     (to_vec(f(x)) - ufx) / h
   }
 
-  perturbate <- function(v, h) {
+  perturb <- function(v, h) {
     purrr::map(seq_along(v), function(i) { v[i] <- v[i] + h; v })
   }
 
-  perturbate(x, h) %>%
+  perturb(x, h) %>%
     purrr::map(finite_deriv) %>%
-    dplyr::bind_cols()
+    do.call(cbind, .)
 }
 
 # Alternative implementation (where perturbation is done on-the-fly)

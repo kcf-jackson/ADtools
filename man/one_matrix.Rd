@@ -14,3 +14,9 @@ one_matrix(nr, nc)
 \description{
 Matrix of ones
 }
+\examples{
+one_matrix(1, 3)
+one_matrix(5, 1)
+one_matrix(2, 2)
+
+}
