@@ -9,11 +9,11 @@
 Implements the forward-mode automatic differentiation for
     multivariate functions using the matrix-calculus notation from Magnus and
     Neudecker (2019) <doi:10.1002/9781119541219>. Two key features of the package
-    are: (i) the package incorporates various optimisaton strategies to improve
+    are: (i) it incorporates various optimisation strategies to improve
     performance; this includes applying memoisation to cut down object construction
     time, using sparse matrix representation to speed up derivative calculation,
     and creating specialised matrix operations with 'Rcpp' to reduce computation
-    time; (ii) the package supports differentiating random variates with respect
+    time; (ii) it supports differentiating random variates with respect
     to their parameters, targeting MCMC and general simulation-based applications.
 }
 \seealso{
