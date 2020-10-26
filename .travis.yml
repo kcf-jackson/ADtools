@@ -9,10 +9,8 @@ os:
 - linux
 - osx
 
-osx_image: xcode12
-
 r:
-- 3.6.1
+- 4.0.3
 - 4.0.2
 
 after_success:
