@@ -9,15 +9,7 @@ os:
 - linux
 - osx
 
-compiler:
-- clang
-- gcc
-
-exclude:
-- os: linux
-  compiler: gcc
-- os: osx
-  compiler: clang
+osx_image: xcode12
 
 r:
 - 3.6.1
