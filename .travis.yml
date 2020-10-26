@@ -10,8 +10,12 @@ os:
 - osx
 
 r:
-- 4.0.3
 - 4.0.2
+- 3.6.3
+
+exclude:
+- os: osx
+  r: 3.6.3
 
 after_success:
 - Rscript -e 'covr::codecov()'
