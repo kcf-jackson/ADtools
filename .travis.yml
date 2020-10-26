@@ -9,8 +9,19 @@ os:
 - linux
 - osx
 
+compiler:
+- clang
+- gcc
+
+exclude:
+- os: linux
+  compiler: gcc
+- os: osx
+  compiler: clang
+
 r:
 - 3.6.1
+- 4.0.2
 
 after_success:
 - Rscript -e 'covr::codecov()'
