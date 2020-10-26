@@ -1,6 +1,7 @@
 # References
 # 1. https://docs.travis-ci.com/user/build-matrix/
 
+dist: xenial
 language: r
 sudo: false
 cache: packages
@@ -13,9 +14,10 @@ r:
 - 4.0.2
 - 3.6.3
 
-exclude:
-- os: osx
-  r: 3.6.3
+matrix:
+  exclude:
+  - os: osx
+    r: 3.6.3
 
 after_success:
 - Rscript -e 'covr::codecov()'
