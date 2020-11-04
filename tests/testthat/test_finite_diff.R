@@ -13,6 +13,18 @@ testthat::test_that("Test finite difference main function", {
       err_fun = rel_err,
       epsilon = 1e-6
     )
+
+    compare(
+      finite_diff(f, at = list(X = X, y = y), method = "central"),
+      cbind(t(y %x% diag(2)), X),
+      display = F,
+      err_fun = rel_err,
+      epsilon = 1e-6
+    )
+
+    testthat::expect_error(
+      finite_diff(f, at = list(X = X, y = y), method = "ERROR")
+    )
   }
 })
 

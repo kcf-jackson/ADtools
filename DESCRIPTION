@@ -1,7 +1,7 @@
 Package: ADtools
 Type: Package
 Title: Automatic Differentiation Toolbox
-Version: 0.5.3
+Version: 0.5.4
 Authors@R: c(
     person("Chun Fung", "Kwok", email = "kwokcf@unimelb.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0716-3879")),
     person("Dan", "Zhu", email = "dan.zhu@monash.edu", role = "aut", comment = c(ORCID = "0000-0003-1487-2232")),
@@ -11,12 +11,12 @@ Maintainer: Chun Fung Kwok <kwokcf@unimelb.edu.au>
 Description: Implements the forward-mode automatic differentiation for
     multivariate functions using the matrix-calculus notation from Magnus and
     Neudecker (2019) <doi:10.1002/9781119541219>. Two key features of the package
-    are: (i) it incorporates various optimisation strategies to improve
-    performance; this includes applying memoisation to cut down object construction
-    time, using sparse matrix representation to speed up derivative calculation,
-    and creating specialised matrix operations with 'Rcpp' to reduce computation
-    time; (ii) it supports differentiating random variates with respect
-    to their parameters, targeting MCMC and general simulation-based applications.
+    are: (i) it incorporates various optimisation strategies to improve performance;
+    this includes applying memoisation to cut down object construction time, using
+    sparse matrix representation to speed up derivative calculation, and creating
+    specialised matrix operations to reduce computation time; (ii) it supports
+    differentiating random variates with respect to their parameters, targeting
+    Markov chain Monte Carlo (MCMC) and general simulation-based applications.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
