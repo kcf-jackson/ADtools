@@ -4,7 +4,7 @@
 \alias{finite_diff}
 \title{Finite difference method}
 \usage{
-finite_diff(f, wrt = NULL, at, h = 1e-08, seed)
+finite_diff(f, wrt = NULL, at, h = 1e-08, seed, method = "forward")
 }
 \arguments{
 \item{f}{A function of which the derivative is sought.}
@@ -16,6 +16,8 @@ finite_diff(f, wrt = NULL, at, h = 1e-08, seed)
 \item{h}{The finite differencing parameter; the size of perturbation.}
 
 \item{seed}{Seed; for pathwise derivative only.}
+
+\item{method}{"forward" for forward differencing or "central" for central differencing.}
 }
 \value{
 A numeric matrix; the Jacobian matrix.
@@ -32,5 +34,9 @@ finite_diff(
 
 g <- function(X, Y) { X \%*\% Y }
 finite_diff(g, at = list(X = randn(2, 2), Y = randn(2, 2)))
+
+h <- function(x) { exp(-x^2) }
+finite_diff(h, at = list(x = 0.01), wrt = "x")
+finite_diff(h, at = list(x = 0.01), wrt = "x", method = "central")
 
 }

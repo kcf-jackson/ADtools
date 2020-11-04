@@ -1,15 +1,15 @@
 #' Interface for optimal matrix chain multiplication
-#' 
+#'
 #' @param ... Numeric matrices.
 #' @param method "optimal" order or "natural" left-to-right order.
-#' 
-#' @examples 
+#'
+#' @examples
 #' A <- randn(20, 5)
 #' B <- randn(5, 40)
 #' C <- randn(40, 2)
 #' system.time({ matrix_prod(A, B, C, method = "optimal") })
 #' system.time({ matrix_prod(A, B, C, method = "natural") })
-#' 
+#'
 #' @export
 matrix_prod <- function(..., method = "optimal") {
   matrix_ls <- list(...)
@@ -48,8 +48,9 @@ optim_prod <- function(matrix_ls) {
 #' Find the optimal order of multiplying a matrix chain
 #' @param x A numeric vector of matrix dimensions
 mcm_optimal_order <- function(x) {
-  n <- length(x) - 1     # Number of matrices
-  S <- matrix(0, n, n)   # Keep track of the optimal order
+  n <- length(x) - 1       # Number of matrices
+  e <- new.env()
+  e$S <- matrix(0, n, n)   # Keep track of the optimal order
 
   recursion <- function(i, j, k) {
     optim_mcm(i, k) + optim_mcm(k+1, j) + x[i] * x[k+1] * x[j+1]
@@ -60,12 +61,12 @@ mcm_optimal_order <- function(x) {
       return(0)
     } else {
       cost <- Map_dbl(recursion, i = i, j = j, k = i:(j - 1))
-      S[i, j] <<- i + which.min(cost) - 1
+      e$S[i, j] <- i + which.min(cost) - 1
       min(cost)
     }
   }
 
-  list(cost = optim_mcm(1, n), S = S)
+  list(cost = optim_mcm(1, n), S = e$S)
 }
 
 

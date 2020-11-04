@@ -33,13 +33,12 @@ cast_vector_into_matrix <- function(x) {
 #'
 #' @return A numeric matrix; the dual component.
 #'
-#' @examples
-#' init_dx(4, c(2, 5, 1), -1)
-#' init_dx(4, c(2, 5, 1), 1)
-#' init_dx(4, c(2, 5, 1), 2)
-#' init_dx(4, c(2, 5, 1), 3)
-#'
-#' @noRd
+# #' @examples
+# #' init_dx(4, c(2, 5, 1), -1)
+# #' init_dx(4, c(2, 5, 1), 1)
+# #' init_dx(4, c(2, 5, 1), 2)
+# #' init_dx(4, c(2, 5, 1), 3)
+# #'
 #' @keywords internal
 init_dx <- function(num_dim, denom_dim, num_ind) {
   deriv <- purrr::map(denom_dim, ~zero_matrix0(num_dim, .x))
