@@ -6,30 +6,6 @@
 
 using namespace Rcpp;
 
-// lcircledast
-arma::mat lcircledast(arma::mat x, arma::mat y);
-RcppExport SEXP _ADtools_lcircledast(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(lcircledast(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// lboxdot
-arma::mat lboxdot(arma::mat x, arma::mat y);
-RcppExport SEXP _ADtools_lboxdot(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(lboxdot(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rcircledast
 arma::mat rcircledast(arma::mat x, arma::mat y);
 RcppExport SEXP _ADtools_rcircledast(SEXP xSEXP, SEXP ySEXP) {
@@ -54,12 +30,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lboxdot
+NumericMatrix lboxdot(NumericMatrix x, NumericMatrix y);
+RcppExport SEXP _ADtools_lboxdot(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(lboxdot(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lcircledast
+NumericMatrix lcircledast(NumericMatrix x, NumericMatrix y);
+RcppExport SEXP _ADtools_lcircledast(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(lcircledast(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_ADtools_lcircledast", (DL_FUNC) &_ADtools_lcircledast, 2},
-    {"_ADtools_lboxdot", (DL_FUNC) &_ADtools_lboxdot, 2},
     {"_ADtools_rcircledast", (DL_FUNC) &_ADtools_rcircledast, 2},
     {"_ADtools_rboxdot", (DL_FUNC) &_ADtools_rboxdot, 2},
+    {"_ADtools_lboxdot", (DL_FUNC) &_ADtools_lboxdot, 2},
+    {"_ADtools_lcircledast", (DL_FUNC) &_ADtools_lcircledast, 2},
     {NULL, NULL, 0}
 };
 

@@ -3,22 +3,6 @@
 
 
 // [[Rcpp::export]]
-arma::mat lboxdot(arma::mat x, arma::mat y) {
-  int size_x_blk_in = x.n_cols;
-  int size_x_blk_out = x.n_rows;
-  int size_y_blk = y.n_cols;
-  int num_x_blk = y.n_rows / size_x_blk_in;
-
-  arma::mat retval = arma::zeros(size_x_blk_out * num_x_blk, size_y_blk);
-  for (int i = 0; i < num_x_blk; i++) {
-    retval(arma::span(size_x_blk_out*i, size_x_blk_out*(i+1)-1), arma::span::all) =
-      x * y(arma::span(size_x_blk_in*i, size_x_blk_in*(i+1)-1), arma::span::all);
-  }
-  return retval;
-}
-
-
-// [[Rcpp::export]]
 arma::mat rcircledast(arma::mat x, arma::mat y) {
   int num_y_blk_in = y.n_rows;
   int num_y_blk_out = y.n_cols;
