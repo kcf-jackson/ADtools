@@ -75,4 +75,3 @@ Collate:
 VignetteBuilder: knitr
 URL: https://github.com/kcf-jackson/ADtools
 BugReports: https://github.com/kcf-jackson/ADtools/issues
-SystemRequirements: GNU make
